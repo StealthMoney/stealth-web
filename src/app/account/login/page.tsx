@@ -96,7 +96,7 @@ export default function Page() {
                     <p className="text-[15px] text-black">
                         Don&apos;t have an account?{" "}
                         <Link
-                            href="/api/auth/signin"
+                            href="/register"
                             className="text-blue-500 font-semibold"
                         >
                             Sign up
