@@ -39,7 +39,7 @@ export default function Page() {
         <form
             method="POST"
             action={formAction}
-            className="flex flex-col absolute top-[45%] left-[50%] -translate-x-[50%] -translate-y-[45%]"
+            className="col-span-3 p-11 justify-self-center"
         >
             <div
                 className={`bg-none ${

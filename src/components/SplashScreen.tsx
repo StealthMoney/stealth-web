@@ -8,7 +8,7 @@ import wallet from "../assets/wallet.svg"
 const SplashScreen = () => {
   return (
     <section 
-      className='col-span-2 bg-stealth-gray text-white p-[35px]'
+      className='hidden md:block col-span-2 bg-stealth-gray text-white p-[35px]'
     >
       {/* Stealth Logo */}
       <Image
