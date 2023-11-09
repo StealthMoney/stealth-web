@@ -79,7 +79,7 @@ const Form = ({ action, ...props }: FormProps) => {
         <form
             action={formAction}
             {...props}
-            className="col-span-3 items-center p-11 px-[150px]"
+            className="col-span-5 md:col-span-3 justify-self-center p-11"
         >
             <section>
                 <h2 
