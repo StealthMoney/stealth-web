@@ -1,9 +1,9 @@
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import AuthProvider from "./context/AuthProvider"
+import localFont from "next/font/local"
 
-const inter = Inter({ subsets: ["latin"] })
+const satoshi = localFont({src: '../assets/Satoshi-Regular.woff2'})
 
 export const metadata: Metadata = {
     title: "Stealth Money",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body style={{"backgroundColor": "#010101"}}>
+            <body className={`${satoshi.className} bg-stealth-black text-white`}>
                 <AuthProvider>{children}</AuthProvider>
             </body>
         </html>

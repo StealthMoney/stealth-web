@@ -79,8 +79,21 @@ const Form = ({ action, ...props }: FormProps) => {
         <form
             action={formAction}
             {...props}
-            className="flex flex-col absolute top-[45%] left-[50%] -translate-x-[50%] -translate-y-[45%]"
+            className="col-span-3 items-center p-11 px-[150px]"
         >
+            <section>
+                <h2 
+                    className="text-xl font-bold"
+                >
+                    Come on Board!
+                </h2>
+                <p
+                    className="text-gray-400 text-[14px]"
+                >
+                    It&apos;s not your Bitcoin until you self custody it.
+                     Start your journey to becoming a Bitcoin owner today.
+                </p>
+            </section>
             <div
                 className={`bg-none ${
                     error ? "bg-red-100" : ""
@@ -89,19 +102,17 @@ const Form = ({ action, ...props }: FormProps) => {
                 {error ? <p>{error}</p> : null}
             </div>
 
-            <div className="bg-slate-50 w-[300px] h-fit rounded-xl pt-3 pb-8">
-                <h2 className="text-[20px] font-semibold text-black text-center pt-3">
-                    Create Account
-                </h2>
+            <div>
+                
                 <div className="flex flex-col px-5 py-2">
                     <label
                         htmlFor="email"
-                        className="text-[14px] font-semibold text-black mb-1"
+                        className="text-[14px] mb-1"
                     >
-                        Email
+                        Email Address <span className="text-red-600">*</span>
                     </label>
                     <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
+                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
                         type="email"
                         name="email"
                         required
@@ -113,12 +124,16 @@ const Form = ({ action, ...props }: FormProps) => {
                 <div className="flex flex-col px-5 py-2">
                     <label
                         htmlFor="password"
-                        className="text-[14px] font-semibold text-black mb-1"
+                        className="text-[14px] mb-1"
                     >
-                        Password
+                        Password 
+                        <span className="text-stealth-orange">
+                            (minimum of 8 characters)
+                        </span>
+                        <span className="text-red-600">*</span>
                     </label>
                     <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
+                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
                         required
                         name="password"
                         type="password"
@@ -130,12 +145,12 @@ const Form = ({ action, ...props }: FormProps) => {
                 <div className="flex flex-col px-5 py-4">
                     <label
                         htmlFor="confirm-password"
-                        className="text-[14px] font-semibold text-black mb-1"
+                        className="text-[14px] mb-1"
                     >
-                        Confirm Password
+                        Confirm Password<span className="text-red-600">*</span>
                     </label>
                     <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
+                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
                         required
                         type="password"
                         value={confirmPassword}
@@ -145,22 +160,43 @@ const Form = ({ action, ...props }: FormProps) => {
                         }
                     />
                 </div>
+                <div className=" px-5 py-4 text-[14px]">
+                   <input type="checkbox" name="agree" id="agree" required />
+                   &nbsp;
+                   <label htmlFor="agree">
+                    I agree to the &nbsp;
+                    <Link 
+                        href={"#"}
+                        className="text-stealth-orange"
+                    >
+                        Terms of Services
+                    </Link> 
+                    &nbsp; and the &nbsp;
+                    <Link 
+                        href={"#"}
+                        className="text-stealth-orange"
+                    >
+                        Privacy Policy
+                    </Link> 
+                    &nbsp; of Stealth Money
+                   </label>
+                </div>
                 <div className="flex flex-col px-5 py-2">
                     <button
                         disabled={isButtonDisabled}
-                        className="bg-black disabled:cursor-not-allowed disabled:bg-slate-400 text-white rounded-lg px-3 py-2 text-[16px] font-semibold"
+                        className="bg-stealth-orange disabled:cursor-not-allowed disabled:bg-stealth-gray text-white px-3 py-2 text-[18px]"
                     >
-                        Register
+                        Create Account
                     </button>
                 </div>
                 <div className="flex flex-col items-center px-5 py-2">
-                    <p className="text-[15px] text-black">
+                    <p className="text-[15px]">
                         Already have an account?{" "}
                         <Link
                             href="/api/auth/signin"
-                            className="text-blue-500 font-semibold"
+                            className="text-stealth-orange"
                         >
-                            Login
+                            Log in
                         </Link>
                     </p>
                 </div>
