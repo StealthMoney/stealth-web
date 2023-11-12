@@ -81,126 +81,118 @@ const Form = ({ action, ...props }: FormProps) => {
             {...props}
             className="col-span-5 md:col-span-3 justify-self-center p-11"
         >
-            <section>
-                <h2 
-                    className="text-xl font-bold"
-                >
-                    Come on Board!
-                </h2>
-                <p
-                    className="text-gray-400 text-[14px]"
-                >
-                    It&apos;s not your Bitcoin until you self custody it.
-                     Start your journey to becoming a Bitcoin owner today.
-                </p>
-            </section>
-            <div
-                className={`bg-none ${
-                    error ? "bg-red-100" : ""
-                } rounded-lg px-5 py-4 mb-5 flex items-center justify-center text-[14px] text-red-700 font-semibold opacity-[0.8]`}
-            >
-                {error ? <p>{error}</p> : null}
-            </div>
-
-            <div>
-                
-                <div className="flex flex-col px-5 py-2">
-                    <label
-                        htmlFor="email"
-                        className="text-[14px] mb-1"
-                    >
-                        Email Address <span className="text-red-600">*</span>
-                    </label>
-                    <input
-                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
-                        type="email"
-                        name="email"
-                        required
-                        value={email}
-                        placeholder="theo@stealth.money"
-                        onChange={(event) => setEmail(event.target.value)}
-                    />
-                </div>
-                <div className="flex flex-col px-5 py-2">
-                    <label
-                        htmlFor="password"
-                        className="text-[14px] mb-1"
-                    >
-                        Password 
-                        <span className="text-stealth-orange">
-                            (minimum of 8 characters)
-                        </span>
-                        <span className="text-red-600">*</span>
-                    </label>
-                    <input
-                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
-                        required
-                        name="password"
-                        type="password"
-                        value={password}
-                        placeholder="Password"
-                        onChange={(event) => setPassword(event.target.value)}
-                    />
-                </div>
-                <div className="flex flex-col px-5 py-4">
-                    <label
-                        htmlFor="confirm-password"
-                        className="text-[14px] mb-1"
-                    >
-                        Confirm Password<span className="text-red-600">*</span>
-                    </label>
-                    <input
-                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px] text-black"
-                        required
-                        type="password"
-                        value={confirmPassword}
-                        placeholder="Password"
-                        onChange={(event) =>
-                            setConfirmPassword(event.target.value)
-                        }
-                    />
-                </div>
-                <div className=" px-5 py-4 text-[14px]">
-                   <input type="checkbox" name="agree" id="agree" required />
-                   &nbsp;
-                   <label htmlFor="agree">
-                    I agree to the &nbsp;
-                    <Link 
-                        href={"#"}
-                        className="text-stealth-orange"
-                    >
-                        Terms of Services
-                    </Link> 
-                    &nbsp; and the &nbsp;
-                    <Link 
-                        href={"#"}
-                        className="text-stealth-orange"
-                    >
-                        Privacy Policy
-                    </Link> 
-                    &nbsp; of Stealth Money
-                   </label>
-                </div>
-                <div className="flex flex-col px-5 py-2">
-                    <button
-                        disabled={isButtonDisabled}
-                        className="bg-stealth-orange disabled:cursor-not-allowed disabled:bg-stealth-gray text-white px-3 py-2 text-[18px]"
-                    >
-                        Create Account
-                    </button>
-                </div>
-                <div className="flex flex-col items-center px-5 py-2">
-                    <p className="text-[15px]">
-                        Already have an account?{" "}
-                        <Link
-                            href="/api/auth/signin"
-                            className="text-stealth-orange"
-                        >
-                            Log in
-                        </Link>
+            <main className="max-w-[450px]">
+                <section>
+                    <h2 className="text-xl font-bold">Come on Board!</h2>
+                    <p className="text-gray-400 text-[14px]">
+                        It&apos;s not your Bitcoin until you self custody it.
+                        Start your journey to becoming a Bitcoin owner today.
                     </p>
+                </section>
+                <div
+                    className={`bg-none ${
+                        error ? "bg-red-100" : ""
+                    } rounded-lg px-5 py-4 mb-5 flex items-center justify-center text-[14px] text-red-700 font-semibold opacity-[0.8]`}
+                >
+                    {error ? <p>{error}</p> : null}
                 </div>
-            </div>
+
+                <div>
+                    <div className="flex flex-col px-5 py-2">
+                        <label htmlFor="email" className="text-[14px] mb-1">
+                            Email Address{" "}
+                            <span className="text-red-600">*</span>
+                        </label>
+                        <input
+                            className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px]"
+                            type="email"
+                            name="email"
+                            required
+                            value={email}
+                            placeholder="theo@stealth.money"
+                            onChange={(event) => setEmail(event.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col px-5 py-2">
+                        <label htmlFor="password" className="text-[14px] mb-1">
+                            Password
+                            <span className="text-stealth-orange">
+                                (minimum of 8 characters)
+                            </span>
+                            <span className="text-red-600">*</span>
+                        </label>
+                        <input
+                            className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px]"
+                            required
+                            name="password"
+                            type="password"
+                            value={password}
+                            placeholder="Password"
+                            onChange={(event) =>
+                                setPassword(event.target.value)
+                            }
+                        />
+                    </div>
+                    <div className="flex flex-col px-5 py-4">
+                        <label
+                            htmlFor="confirm-password"
+                            className="text-[14px] mb-1"
+                        >
+                            Confirm Password
+                            <span className="text-red-600">*</span>
+                        </label>
+                        <input
+                            className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px]"
+                            required
+                            type="password"
+                            value={confirmPassword}
+                            placeholder="Password"
+                            onChange={(event) =>
+                                setConfirmPassword(event.target.value)
+                            }
+                        />
+                    </div>
+                    <div className=" px-5 py-4 text-[14px]">
+                        <input
+                            type="checkbox"
+                            name="agree"
+                            id="agree"
+                            required
+                        />
+                        &nbsp;
+                        <label htmlFor="agree">
+                            I agree to the &nbsp;
+                            <Link href={"#"} className="text-stealth-orange">
+                                Terms of Services
+                            </Link>
+                            &nbsp; and the &nbsp;
+                            <Link href={"#"} className="text-stealth-orange">
+                                Privacy Policy
+                            </Link>
+                            &nbsp; of Stealth Money
+                        </label>
+                    </div>
+                    <div className="flex flex-col px-5 py-2">
+                        <button
+                            disabled={isButtonDisabled}
+                            className="bg-stealth-orange disabled:cursor-not-allowed disabled:bg-stealth-gray text-white px-3 py-2 text-[18px]"
+                        >
+                            Create Account
+                        </button>
+                    </div>
+                    <div className="flex flex-col items-center px-5 py-2">
+                        <p className="text-[15px]">
+                            Already have an account?{" "}
+                            <Link
+                                href="/api/auth/signin"
+                                className="text-stealth-orange"
+                            >
+                                Log in
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </main>
         </form>
     )
 }

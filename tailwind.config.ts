@@ -15,9 +15,9 @@ const config: Config = {
             },
             colors: {
                 stealth: {
-                    "black": "#010101",
-                    "gray": "#1E1E1E",
-                    "orange": "#F7931A"
+                    black: "#010101",
+                    gray: "#1E1E1E",
+                    orange: "#F7931A"
                 }
             }
         }

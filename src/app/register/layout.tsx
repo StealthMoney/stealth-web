@@ -1,14 +1,14 @@
 import SplashScreen from "@/components/SplashScreen"
 
 export default function RegisterLayout({
-    children,
-  }: {
+    children
+}: {
     children: React.ReactNode
-  }) {
-    return(
-        <main className="grid grid-cols-5 min-h-screen">
+}) {
+    return (
+        <main className="grid grid-cols-5 min-h-screen pr-8">
             <SplashScreen />
             {children}
         </main>
     )
-  }
+}
