@@ -39,7 +39,7 @@ export default function Page() {
         <form
             method="POST"
             action={formAction}
-            className="col-span-3 p-11 justify-self-center"
+            className="col-span-5 md:col-span-3 justify-self-center p-11"
         >
             <main className="max-w-[450px]">
                 <div

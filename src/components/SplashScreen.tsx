@@ -6,12 +6,12 @@ import wallet from "../assets/wallet.svg"
 
 const SplashScreen = () => {
     return (
-        <section className="hidden md:block col-span-2 bg-stealth-gray text-white pl-12 p-[35px]">
+        <section className="hidden md:grid col-span-2 bg-stealth-gray text-white pl-12 p-[35px]">
             {/* Stealth Logo */}
             <Image src={logo} alt="Stealth transparent logo" width={85} />
 
             {/* Welcome text */}
-            <h1 className="text-[30px] mt-8 leading-loose">
+            <h1 className="text-[30px] w-fit mt-8 leading-loose">
                 Fully control and build <br /> your Bitcoin wealth with
                 <br />
                 <span className="flex items-center font-semibold">
