@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/Satoshi-Black.woff') format('woff'),
+         url('../assets/Satoshi-Regular.woff2') format('woff2');
+}  
+
+body {
+    background-color: #010101;
+    color: white;
+    font-family: 'Satoshi' sans-serif;
+}
