@@ -1,5 +1,8 @@
 "use client"
 
+import * as Dialog from '@radix-ui/react-dialog';
+import { Cross2Icon } from '@radix-ui/react-icons';
+
 import Spinner from "@/components/spinner"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -94,17 +97,15 @@ export default function Activate({
     }
 
     return (
-        <div className="flex flex-col items-center bg-green-50 px-28 py-10 rounded-lg">
-            <h1 className="font-semibold text-xl text-black-500">
-                Activate Your Account
-            </h1>
-
-            <button
-                onClick={activateAccount}
-                className="bg-green-500 text-white px-5 py-2 rounded-lg mt-5"
-            >
-                activate
-            </button>
-        </div>
+            <Dialog.Root>
+                <Dialog.Trigger asChild>
+                    <button
+                    onClick={activateAccount} 
+                        className='bg-stealth-orange text-xl font-semibold p-3'
+                    >
+                        Activate your account
+                    </button>
+                </Dialog.Trigger>
+            </Dialog.Root>
     )
 }
