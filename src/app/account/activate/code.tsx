@@ -1,7 +1,7 @@
 "use client"
 
-import * as Dialog from '@radix-ui/react-dialog';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import * as Dialog from "@radix-ui/react-dialog"
+import { Cross2Icon } from "@radix-ui/react-icons"
 
 import Spinner from "@/components/spinner"
 import Link from "next/link"
@@ -97,15 +97,15 @@ export default function Activate({
     }
 
     return (
-            <Dialog.Root>
-                <Dialog.Trigger asChild>
-                    <button
-                    onClick={activateAccount} 
-                        className='bg-stealth-orange text-xl font-semibold p-3'
-                    >
-                        Activate your account
-                    </button>
-                </Dialog.Trigger>
-            </Dialog.Root>
+        <Dialog.Root>
+            <Dialog.Trigger asChild>
+                <button
+                    onClick={activateAccount}
+                    className="bg-stealth-orange text-xl font-semibold p-3"
+                >
+                    Activate your account
+                </button>
+            </Dialog.Trigger>
+        </Dialog.Root>
     )
 }
