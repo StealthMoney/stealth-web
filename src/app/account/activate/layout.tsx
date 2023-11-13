@@ -1,7 +1,8 @@
+
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body className="bg-white flex flex-col absolute top-[45%] left-[50%] -translate-x-[50%] -translate-y-[45%]">
+            <body className="min-h-screen grid place-content-center">
                 {children}
             </body>
         </html>
