@@ -9,7 +9,7 @@ const Spinner = ({ size = "small" }: SpinnerProps) => {
 
     return (
         <div
-            className={`${height} ${width} border ${borderTop} border-green-300 border-solid rounded-full animate-spin`}
+            className={`${height} ${width} border ${borderTop} border-stealth-orange border-solid rounded-full animate-spin`}
         ></div>
     )
 }
