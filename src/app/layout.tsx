@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import AuthProvider from "./context/AuthProvider"
 import localFont from "next/font/local"
 
-const satoshi = localFont({src: '../assets/Satoshi-Regular.woff2'})
+const satoshi = localFont({ src: "../assets/Satoshi-Regular.woff2" })
 
 export const metadata: Metadata = {
     title: "Stealth Money",
@@ -17,7 +17,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${satoshi.className} bg-stealth-black text-white`}>
+            <body
+                className={`${satoshi.className} bg-stealth-black text-white`}
+            >
                 <AuthProvider>{children}</AuthProvider>
             </body>
         </html>

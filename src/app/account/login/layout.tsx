@@ -1,4 +1,4 @@
-import SplashScreen from "@/components/SplashScreen";
+import SplashScreen from "@/components/SplashScreen"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (

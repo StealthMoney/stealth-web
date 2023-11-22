@@ -1,21 +1,14 @@
-import React from 'react'
-import Image from 'next/image'
+import React from "react"
+import Image from "next/image"
 import logo from "../assets/logo-transparent.svg"
 import circle from "../assets/circle-drawing.svg"
 import wallet from "../assets/wallet.svg"
 
-
 const SplashScreen = () => {
-  return (
-    <section 
-      className='hidden md:grid col-span-2 bg-stealth-gray text-white p-[35px]'
-    >
-      {/* Stealth Logo */}
-      <Image
-        src={logo}
-        alt='Stealth transparent logo'
-        width={85}
-      />
+    return (
+        <section className="hidden md:grid col-span-2 bg-stealth-gray text-white p-[35px]">
+            {/* Stealth Logo */}
+            <Image src={logo} alt="Stealth transparent logo" width={85} />
 
             {/* Welcome text */}
             <h1 className="text-[30px] w-fit mt-8 leading-loose">
@@ -32,14 +25,10 @@ const SplashScreen = () => {
                 </span>
             </h1>
 
-      {/* Wallet image */}
-      <Image 
-        src={wallet}
-        alt='Bitcoin wallet illustration'
-        width={400}
-      />
-    </section>
-  )
+            {/* Wallet image */}
+            <Image src={wallet} alt="Bitcoin wallet illustration" width={400} />
+        </section>
+    )
 }
 
 export default SplashScreen
