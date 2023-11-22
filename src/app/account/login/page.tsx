@@ -41,27 +41,28 @@ export default function Page() {
             action={formAction}
             className="col-span-5 md:col-span-3 justify-self-center p-11"
         >
-            <div
-                className={`bg-none ${
-                    error ? "bg-red-100" : ""
-                } rounded-lg px-5 py-4 mb-5 flex items-center justify-center text-[14px] text-red-700 font-semibold opacity-[0.8]`}
-            >
-                {error ? <p>{error}</p> : null}
-            </div>
+            <main className="max-w-[450px]">
+                <div
+                    className={`bg-none ${
+                        error ? "bg-red-100" : ""
+                    } rounded-lg px-5 py-4 mb-5 flex items-center justify-center text-[14px] text-red-700 font-semibold opacity-[0.8]`}
+                >
+                    {error ? <p>{error}</p> : null}
+                </div>
 
-            <div className="bg-slate-100 w-[300px] h-fit rounded-xl pt-3 pb-8">
-                <h2 className="text-[20px] font-semibold text-black text-center pt-3">
-                    Sign in
-                </h2>
+                <section>
+                    <h2 className="text-xl font-bold">Welcome Back!</h2>
+                    <p className="text-gray-400 text-[14px]">
+                        Please enter your login credentials to access your
+                        account.
+                    </p>
+                </section>
                 <div className="flex flex-col px-5 py-2">
-                    <label
-                        htmlFor="email"
-                        className="text-[14px] font-semibold text-black mb-1"
-                    >
-                        Email/Username
+                    <label htmlFor="email" className="text-[14px] mb-1">
+                        Email Address
                     </label>
                     <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
+                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px]"
                         type="email"
                         name="email"
                         required
@@ -71,12 +72,12 @@ export default function Page() {
                 <div className="flex flex-col px-5 py-2">
                     <label
                         htmlFor="password"
-                        className="text-[14px] font-semibold text-black mb-1"
+                        className="text-[14px] font-semibold mb-1"
                     >
                         Password
                     </label>
                     <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
+                        className="border border-gray-800 bg-stealth-gray px-3 py-2 text-[14px]"
                         required
                         name="password"
                         type="password"
@@ -87,23 +88,20 @@ export default function Page() {
                 <div className="flex flex-col px-5 py-2">
                     <button
                         disabled={loading}
-                        className="bg-black disabled:cursor-not-allowed disabled:bg-slate-500 text-white rounded-lg px-3 py-2 text-[16px] font-semibold"
+                        className="bg-stealth-orange disabled:cursor-not-allowed disabled:bg-stealth-gray px-3 py-2 text-[16px] font-semibold"
                     >
                         Login
                     </button>
                 </div>
                 <div className="flex flex-col items-center px-5 py-2">
-                    <p className="text-[15px] text-black">
+                    <p className="text-[15px]">
                         Don&apos;t have an account?{" "}
-                        <Link
-                            href="/register"
-                            className="text-blue-500 font-semibold"
-                        >
+                        <Link href="/register" className="text-stealth-orange">
                             Sign up
                         </Link>
                     </p>
                 </div>
-            </div>
+            </main>
         </form>
     )
 }

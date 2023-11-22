@@ -12,6 +12,13 @@ const config: Config = {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "gradient-conic":
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
+            },
+            colors: {
+                stealth: {
+                    black: "#010101",
+                    gray: "#1E1E1E",
+                    orange: "#F7931A"
+                }
             }
         }
     },

@@ -6,7 +6,7 @@ import wallet from "../assets/wallet.svg"
 
 const SplashScreen = () => {
     return (
-        <section className="hidden md:grid col-span-2 bg-stealth-gray text-white p-[35px]">
+        <section className="hidden md:grid col-span-2 bg-stealth-gray text-white pl-12 p-[35px]">
             {/* Stealth Logo */}
             <Image src={logo} alt="Stealth transparent logo" width={85} />
 
