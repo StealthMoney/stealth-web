@@ -11,7 +11,6 @@ import circle from "../../../assets/CheckCircle.png"
 import xcircle from "../../../assets/XCircle.png"
 import mail from "../../../assets/Mail.png"
 
-
 export default function Activate({
     action
 }: {
@@ -25,7 +24,6 @@ export default function Activate({
     const [loading, setLoading] = React.useState(false)
     const [activated, setActivated] = React.useState(false)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-
 
     const handleOpen = () => setIsDialogOpen(true)
     const handleClose = () => setIsDialogOpen(false)
@@ -60,12 +58,16 @@ export default function Activate({
                 title="We sent you a mail"
             >
                 <div className="grid">
-                <Image src={mail} alt="check your email" className="place-self-center" />
+                    <Image
+                        src={mail}
+                        alt="check your email"
+                        className="place-self-center"
+                    />
                     <p>
-                        Activate your account by clicking the link we sent to your email.
+                        Activate your account by clicking the link we sent to
+                        your email.
                     </p>
                 </div>
-
             </CustomDialog>
         )
     }
@@ -86,12 +88,16 @@ export default function Activate({
                 title="Account Activation Error"
             >
                 <div className="grid">
-                    <Image src={xcircle} alt="failed" className="place-self-center" />
+                    <Image
+                        src={xcircle}
+                        alt="failed"
+                        className="place-self-center"
+                    />
                     <p>
-                        Sorry! We could not activate your account. Plese try again later.
+                        Sorry! We could not activate your account. Plese try
+                        again later.
                     </p>
                 </div>
-
             </CustomDialog>
         )
     }
@@ -103,21 +109,25 @@ export default function Activate({
                 onDismiss={handleClose}
                 title="Account Activated!"
             >
-            <div className="grid">
-
-                <Image src={circle} alt="activated!!" className="place-self-center" />
-               <p className="text-center text-lg pt-3">
-                    Your account has been activated.
-                </p>
-                <p className="text-center text-[14px] pt-3">
-                    If you are not automatically
-                    redirected <Link 
-                    href="/account/login" 
-                    className="text-stealth-orange border-b border-dotted border-stealth-orange"
-                    >click here</Link>
-                </p>
-            
-            </div>
+                <div className="grid">
+                    <Image
+                        src={circle}
+                        alt="activated!!"
+                        className="place-self-center"
+                    />
+                    <p className="text-center text-lg pt-3">
+                        Your account has been activated.
+                    </p>
+                    <p className="text-center text-[14px] pt-3">
+                        If you are not automatically redirected{" "}
+                        <Link
+                            href="/account/login"
+                            className="text-stealth-orange border-b border-dotted border-stealth-orange"
+                        >
+                            click here
+                        </Link>
+                    </p>
+                </div>
             </CustomDialog>
         )
     }
