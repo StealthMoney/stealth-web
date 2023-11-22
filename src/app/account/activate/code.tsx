@@ -1,12 +1,16 @@
 "use client"
 
-import * as Dialog from "@radix-ui/react-dialog"
-import { Cross2Icon } from "@radix-ui/react-icons"
-
+import React from "react"
+import CustomDialog from "@/components/dialog"
 import Spinner from "@/components/spinner"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import React from "react"
+
+import circle from "../../../assets/CheckCircle.png"
+import xcircle from "../../../assets/XCircle.png"
+import mail from "../../../assets/Mail.png"
+
 
 export default function Activate({
     action
@@ -20,8 +24,16 @@ export default function Activate({
     const [error, setError] = React.useState("")
     const [loading, setLoading] = React.useState(false)
     const [activated, setActivated] = React.useState(false)
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+
+
+    const handleOpen = () => setIsDialogOpen(true)
+    const handleClose = () => setIsDialogOpen(false)
 
     async function activateAccount() {
+        // Open the popup
+        handleOpen()
+
         if (!code) {
             return
         }
@@ -42,15 +54,19 @@ export default function Activate({
 
     if (!code) {
         return (
-            <div className="flex flex-col items-center bg-slate-50 p-7 rounded-lg">
-                <p className="text-center text-lg font-semibold pt-3">
-                    We sent you a mail
-                </p>
-                <p className="text-center text-lg pt-3">
-                    Activate your account by clicking the link sent to your
-                    email.
-                </p>
-            </div>
+            <CustomDialog
+                isOpen={isDialogOpen}
+                onDismiss={handleClose}
+                title="We sent you a mail"
+            >
+                <div className="grid">
+                <Image src={mail} alt="check your email" className="place-self-center" />
+                    <p>
+                        Activate your account by clicking the link we sent to your email.
+                    </p>
+                </div>
+
+            </CustomDialog>
         )
     }
 
@@ -64,48 +80,56 @@ export default function Activate({
 
     if (error) {
         return (
-            <div className="flex flex-col items-center bg-red-50 p-7 rounded-lg">
-                <h1 className="font-semibold text-xl text-red-500">
-                    Account Activation Error!
-                </h1>
-                <p className="text-center text-lg pt-3">
-                    Sorry we could not activate your account. Please try again
-                    later
-                </p>
-            </div>
+            <CustomDialog
+                isOpen={isDialogOpen}
+                onDismiss={handleClose}
+                title="Account Activation Error"
+            >
+                <div className="grid">
+                    <Image src={xcircle} alt="failed" className="place-self-center" />
+                    <p>
+                        Sorry! We could not activate your account. Plese try again later.
+                    </p>
+                </div>
+
+            </CustomDialog>
         )
     }
 
     if (activated) {
         return (
-            <div className="flex flex-col items-center bg-green-50 p-7 rounded-lg">
-                <h1 className="font-semibold text-xl text-green-500">
-                    Account Activated!
-                </h1>
-                <p className="text-center text-lg pt-3">
-                    Your account has been activated. You can now login
+            <CustomDialog
+                isOpen={isDialogOpen}
+                onDismiss={handleClose}
+                title="Account Activated!"
+            >
+            <div className="grid">
+
+                <Image src={circle} alt="activated!!" className="place-self-center" />
+               <p className="text-center text-lg pt-3">
+                    Your account has been activated.
                 </p>
-                <p className="text-center text-lg pt-3">
-                    Click this button to login if you are not automatically
-                    redirected.
+                <p className="text-center text-[14px] pt-3">
+                    If you are not automatically
+                    redirected <Link 
+                    href="/account/login" 
+                    className="text-stealth-orange border-b border-dotted border-stealth-orange"
+                    >click here</Link>
                 </p>
-                <button className="bg-green-500 text-white px-5 py-2 rounded-lg mt-5">
-                    <Link href="/account/login">Login</Link>
-                </button>
+            
             </div>
+            </CustomDialog>
         )
     }
 
     return (
-        <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <button
-                    onClick={activateAccount}
-                    className="bg-stealth-orange text-xl font-semibold p-3"
-                >
-                    Activate your account
-                </button>
-            </Dialog.Trigger>
-        </Dialog.Root>
+        <main className="grid place-content-center w-screen h-screen">
+            <button
+                onClick={activateAccount}
+                className="bg-stealth-orange text-stealth-black text-xl font-semibold p-3"
+            >
+                Activate your account
+            </button>
+        </main>
     )
 }
