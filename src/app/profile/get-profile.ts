@@ -7,6 +7,7 @@ export const getProfile = async () => {
         return null
     }
     const { accessToken } = session
+
     const url = endpoints().user.profile
     const res = await fetch(url, {
         headers: {
@@ -17,5 +18,6 @@ export const getProfile = async () => {
         throw new Error("Failed to fetch user profile")
     }
     const profile = await res.json()
+
     return profile
 }

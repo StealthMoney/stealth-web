@@ -37,11 +37,24 @@ const endpoints = (params?: string | number) => {
         delete: `${baseUrl}/dca-plans/${params}`
     }
 
+    const price = {
+        btc: `${baseUrl}/btc/price`
+    }
+
+    const payment = {
+        "get-details": `${baseUrl}/payment/details`,
+        "get-by-id": `${baseUrl}/payment/${params}`,
+        list: `${baseUrl}/payment`,
+        "get-status": `${baseUrl}/payment/paid`
+    }
+
     return {
         user,
         auth,
         wallet,
-        dca
+        dca,
+        price,
+        payment
     }
 }
 

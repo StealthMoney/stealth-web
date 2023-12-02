@@ -1,10 +1,17 @@
-import { Profile } from "@/types/profile"
-import { getProfile } from "./get-profile"
 import { redirect } from "next/navigation"
 
+import { Profile as ProfileType } from "@/types/profile"
+
+import { getProfile } from "./get-profile"
+import { getExchangeRate } from "./get-price"
+import { Profile } from "."
+
 export default async function Page() {
-    const profileData: Profile = await getProfile()
-    if (!profileData) {
+    const profileData: ProfileType = await getProfile()
+    const exchangeRate = await getExchangeRate()
+    if (exchangeRate.error) console.log(exchangeRate)
+
+    if (!profileData || profileData instanceof Error) {
         return (
             <main className="flex min-h-screen flex-col items-center justify-between p-24">
                 <div>
@@ -31,44 +38,15 @@ export default async function Page() {
         )
     }
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <div>
-                <h1 className="text-4xl font-bold text-center">Your data</h1>
-                <table className="table-auto">
-                    <thead>
-                        <tr>
-                            <th className="px-4 py-2">FirstName</th>
-                            <th className="px-4 py-2">LastName</th>
-                            <th className="px-4 py-2">Email</th>
-                            <th className="px-4 py-2">Profile Type</th>
-                            <th className="px-4 py-2">Username</th>
-                            <th className="px-4 py-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td className="border px-4 py-2">
-                                {profileData.firstName}
-                            </td>
-                            <td className="border px-4 py-2">
-                                {profileData.lastName}
-                            </td>
-                            <td className="border px-4 py-2">
-                                {profileData.email}
-                            </td>
-                            <td className="border px-4 py-2">
-                                {profileData.profileType}
-                            </td>
-                            <td className="border px-4 py-2">
-                                {profileData.login}
-                            </td>
-                            <td className="border px-4 py-2">
-                                {profileData.status}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <main className="flex flex-col gap-y-6 bg-black-100 h-full px-6 py-8">
+            <p
+                className={`text-white-100 font-medium text-[24px] ${
+                    profileData.firstName && "capitalize"
+                }`}
+            >
+                Hello {profileData.firstName ?? profileData.email},
+            </p>
+            <Profile exchangeRate={exchangeRate} />
         </main>
     )
 }
