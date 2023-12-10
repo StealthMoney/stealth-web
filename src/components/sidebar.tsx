@@ -74,7 +74,10 @@ export const Sidebar = () => {
                 </Link>
             </div>
             <div className="flex flex-col items-center text-white-100">
-                <Link href={"#"} className="flex justify-start items-center gap-3 w-full">
+                <Link
+                    href={"#"}
+                    className="flex justify-start items-center gap-3 w-full"
+                >
                     <Image
                         src="/signout.svg"
                         alt="logo"

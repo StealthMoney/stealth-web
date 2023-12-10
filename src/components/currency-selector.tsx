@@ -15,7 +15,7 @@ const CurrencySelector = ({
         { code: "USD", name: "United States Dollar" },
         { code: "EUR", name: "Euro" },
         { code: "NGN", name: "Nigerian Naira" },
-        { code: "SAT", name: "Bitcoin Satoshi's" },
+        { code: "SAT", name: "Bitcoin Satoshi's" }
     ]
 
     return (

@@ -29,7 +29,7 @@ const transactions = [
         value: "0.048950 BTC",
         wallet: "1Lbcf7s****4ZnX71",
         status: "FAILED"
-    },
+    }
 ]
 
 const getStatusColor = (status: string) => {

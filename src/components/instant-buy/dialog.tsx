@@ -298,7 +298,9 @@ export const InstantBuyDialog = ({
                     </div>
                 </div>
                 {error.fetchError && (
-                    <p className="text-red-100 text-center text-[20px] font-semibold mt-8">{error.fetchError}!!!</p>
+                    <p className="text-red-100 text-center text-[20px] font-semibold mt-8">
+                        {error.fetchError}!!!
+                    </p>
                 )}
                 <div className="flex justify-between items-center w-full mt-20">
                     <button

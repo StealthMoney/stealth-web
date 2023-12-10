@@ -11,7 +11,6 @@ export type Price = {
     }
 }
 
-
 export type PaymentDetail = {
     message: string
     status: string

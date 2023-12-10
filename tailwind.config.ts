@@ -39,7 +39,7 @@ const config: Config = {
                     900: "#803905",
                     1000: "#552603",
                     1100: "#F7931A",
-                    1200: "#FCDAB0",
+                    1200: "#FCDAB0"
                 },
                 white: {
                     100: "#FFFFFF",
