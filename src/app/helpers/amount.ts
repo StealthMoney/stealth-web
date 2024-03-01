@@ -1,5 +1,3 @@
-import { SATS_PER_BTC } from "@/config/constants"
-
 export const formatCurrency = (amount: number) => {
 	const intl = new Intl.NumberFormat("en-NG", {
 		style: "currency",

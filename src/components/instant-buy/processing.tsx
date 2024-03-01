@@ -20,6 +20,7 @@ interface Props {
 
 const Processing = (props: Props) => {
 	const [timer, setTimer] = useState(WAIT_PERIOD_IN_SECONDS)
+	const [paymentState, setPaymentState] = useState("PENDING")
 
 	const handleConfirmPayment = async () => {
 		try {
@@ -33,6 +34,7 @@ const Processing = (props: Props) => {
 				data.paymentState === "PAID" ||
 				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
 			) {
+				setPaymentState(data.paymentState)
 				props.next()
 			}
 		} catch (error) {
@@ -92,8 +94,12 @@ const Processing = (props: Props) => {
 						</div>
 					)}
 					<p
-						className={`text-xs ${timer > 0 ? "text-black-300" : "text-green-100"}`}>
-						Received
+						className={`text-xs ${
+							timer > 0 && paymentState !== "PAID"
+								? "text-orange-300"
+								: "text-green-100"
+						}`}>
+						{paymentState !== "PAID" ? "Processing" : "Received"}
 					</p>
 				</div>
 			</div>

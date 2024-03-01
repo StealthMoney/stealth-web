@@ -16,8 +16,8 @@ const Success = (props: Props) => {
 			</div>
 			<p className="font-satoshi text-4xl font-bold">Processing!</p>
 			<p className="my-4 text-center text-xl text-black-300">
-				Your Bitcoin purchase is being processed. You can track the progress by
-				clicking the link below or pasting the Hash on any blockchain explorer.
+				Your Bitcoin purchase is being processed. You will receive an email
+				notification once it has been processed.
 			</p>
 			{/* // TODO: uncomment when mempool.space is implemented */}
 			{/* <p className="mb-44 max-w-[90%] break-words text-center text-alt-orange-100">

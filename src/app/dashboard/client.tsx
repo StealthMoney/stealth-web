@@ -4,10 +4,9 @@ import { useEffect, useState } from "react"
 
 import { TableBody, TableHead } from "@/components/transactions-table"
 import { CurrencyInput } from "@/components/shared/input"
-import { TransactionProps } from "@/types/transactions"
 import { formatCurrency } from "../helpers/amount"
 import InstantBuy from "@/components/instant-buy"
-import { ExchangeRateProps } from "@/types/price"
+import { ExchangeRateProps, PaymentDetail } from "@/types/price"
 import { INT_REGEX } from "@/config/constants"
 import { Button, Dialog } from "@/components"
 import { UserProps } from "@/types/profile"
@@ -18,7 +17,7 @@ const CurrencyList = ["NGN", "USD"]
 interface Props {
 	exchangeRate: ExchangeRateProps
 	profile: UserProps
-	transactions: TransactionProps[]
+	transactions: PaymentDetail[]
 }
 
 const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {

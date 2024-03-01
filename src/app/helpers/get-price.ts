@@ -4,8 +4,10 @@ import endpoints from "@/config/endpoints"
 import { auth } from "@/auth"
 import {
 	ExchangeRateProps,
+	PaymentDetail,
 	PaymentDetailsProps,
 	PaymentStatusProps,
+	fetchMeta,
 } from "@/types/price"
 
 export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
@@ -58,7 +60,31 @@ export const getPaymentDetails = async (
 		throw new Error("Failed to fetch payment details!")
 	}
 	const data = await response.json()
-	return data as PaymentDetailsProps
+	return data
+}
+
+export const getAllPaymentDetails = async (): Promise<
+	fetchMeta & { data: PaymentDetail[] }
+> => {
+	const session = await auth()
+	if (!session) {
+		throw new Error("No session found!")
+	}
+	const { accessToken } = session
+	const url = endpoints().payment.list
+	const response = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+			"Content-Type": "application/json",
+		},
+		next: { revalidate: 10, tags: ["paid", "approved"] },
+	})
+	if (!response.ok) {
+		throw new Error("Failed to fetch payment details!")
+	}
+	const data = await response.json()
+	return data as fetchMeta & { data: PaymentDetail[] }
 }
 
 export const confirmPayment = async (

@@ -16,7 +16,7 @@ export const formatDate = (date: Date) => {
 		hour: "numeric",
 		minute: "numeric",
 		hour12: true,
-	}).format(date)
+	}).format(date ?? new Date())
 }
 
 export const formatLongDate = (date: Date) => {
@@ -24,13 +24,13 @@ export const formatLongDate = (date: Date) => {
 		day: "numeric",
 		month: "short",
 		year: "numeric",
-	}).format(date)
+	}).format(date ?? new Date())
 
 	const timeString = new Intl.DateTimeFormat("en-US", {
 		hour: "numeric",
 		minute: "numeric",
 		hour12: true,
-	}).format(date)
+	}).format(date ?? new Date())
 
 	return `${dateString} • ${timeString}`
 }
