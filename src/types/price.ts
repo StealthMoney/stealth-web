@@ -22,32 +22,32 @@ export type PaymentDetailsProps = {
 	}
 }
 
-export type PaymentStatusProps = {
+export type fetchMeta = {
 	status: string
 	message: string
 	_meta: string
 	_links: string[]
-	data: {
-		id: number
-		userId: number
-		accountNumber: "9623352424"
-		amount: number
-		amountDue: number
-		amountInSats: string
-		walletAddress: string
-		narration: string
-		paymentState:
-			| "INITIATED"
-			| "PENDING"
-			| "ALREADY_PROCESSED"
-			| "PAID"
-			| "FAILED"
-		responseCode: string
-		responseMessage: string
-		paymentReference: string
-		processorId: string
-		processorPaymentReference: string
-		createdDate: string
-		paymentDate: Date | string
-	}
+}
+
+export type PaymentDetail = {
+	id: number
+	userId: number
+	accountNumber: number
+	amount: number
+	amountDue: number
+	amountInSats: string
+	walletAddress: string
+	narration: string
+	paymentState: "INITIATED" | "PENDING" | "ALREADY_PROCESSED" | "PAID" | "FAILED"
+	responseCode: string
+	responseMessage: string
+	paymentReference: string
+	processorId: string
+	processorPaymentReference: string
+	createdDate: string
+	paymentDate: Date | string
+}
+
+export type PaymentStatusProps = fetchMeta & {
+	data: PaymentDetail
 }

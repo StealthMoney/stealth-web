@@ -2,21 +2,24 @@
 
 import { useState } from "react"
 
-import { TransactionProps } from "@/types/transactions"
 import { formatBtcAddress } from "@/app/helpers/string"
 import { formatCurrency } from "@/app/helpers/amount"
 import TransactionItem from "./transaction-item"
 import { formatDate } from "@/app/helpers/time"
 import { Dialog } from "."
+import { PaymentDetail, PaymentStatusProps, fetchMeta } from "@/types/price"
+import { SATS_PER_BTC } from "@/config/constants"
 
 interface Props {
-	transactions: TransactionProps[]
+	transactions: PaymentDetail[]
 }
 
 const StatusColor = {
-	SUCCESSFUL: "bg-green-1200 text-green-100",
+	PAID: "bg-green-1200 text-green-100",
+	ALREADY_PROCESSED: "bg-green-1200 text-green-100",
 	IN_PROGRESS: "bg-orange-1200 text-orange-100",
 	PENDING: "bg-orange-1200 text-orange-100",
+	INITIATED: "bg-orange-1200 text-orange-100",
 	FAILED: "bg-red-1200 text-red-100",
 }
 
@@ -38,7 +41,7 @@ export const TableHead = () => (
 		<p className="w-[100px]">No.</p>
 		<p className="flex flex-1">Date</p>
 		<p className="flex flex-1">Amount</p>
-		<p className="flex flex-1">Value</p>
+		<p className="flex flex-1">Value (BTC)</p>
 		<p className="flex flex-1">Wallet Address</p>
 		<p className="flex flex-1">Status</p>
 	</div>
@@ -47,9 +50,9 @@ export const TableHead = () => (
 export const TableBody = ({
 	transactions,
 }: {
-	transactions: TransactionProps[]
+	transactions: PaymentDetail[]
 }) => {
-	const [selected, setSelected] = useState<TransactionProps | null>(null)
+	const [selected, setSelected] = useState<PaymentDetail | null>(null)
 
 	return (
 		<>
@@ -66,32 +69,32 @@ export const TableBody = ({
 						{transactions
 							.sort(
 								(a, b) =>
-									Number(new Date(b.createdDate)) - Number(new Date(a.createdDate))
+									Number(new Date(b?.createdDate)) - Number(new Date(a?.createdDate))
 							)
 							.map((transaction, index) => (
 								<div
-									key={transaction.id}
+									key={transaction?.id}
 									onClick={() => setSelected(transaction)}
 									className="hover flex w-full cursor-pointer items-center gap-1 px-2 py-4 transition-all hover:bg-black-600">
 									<div className="w-[100px]">{index + 1}</div>
 									<div className="flex flex-1">
-										{formatDate(new Date(transaction.createdDate))}
+										{formatDate(new Date(transaction?.createdDate))}
 									</div>
 									<div className="flex flex-1">
-										{formatCurrency(+transaction.amount || 0)}
+										{formatCurrency(+transaction?.amountDue || 0)}
 									</div>
 									<div className="flex flex-1">
-										{formatCurrency(+transaction.value || 0)}
+										{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}
 									</div>
 									<div className="flex flex-1">
-										{formatBtcAddress(transaction.walletAddress)}
+										{formatBtcAddress(transaction.walletAddress ?? "")}
 									</div>
 									<div className="flex flex-1">
 										<p
 											className={`w-fit rounded p-1 text-[10px] capitalize ${
-												StatusColor[transaction.transactionStatus]
+												StatusColor[transaction?.paymentState]
 											}`}>
-											{transaction.transactionStatus.split("_").join(" ")}
+											{transaction?.paymentState?.split("_").join(" ")}
 										</p>
 									</div>
 								</div>

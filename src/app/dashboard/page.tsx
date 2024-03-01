@@ -1,15 +1,12 @@
-import { getTransactions } from "../helpers/get-transactions"
-import { getExchangeRate } from "../helpers/get-price"
+import { PaymentDetail } from "@/types/price"
+import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"
 import { ExpiredSessionError } from "@/shared/error"
 import { redirect } from "next/navigation"
 
 const Page = async () => {
-	let transactions = await getTransactions()
-	if (transactions instanceof Error) {
-		transactions = []
-	}
+	const transactionsRes = await getAllPaymentDetails()
 
 	const rate = await getExchangeRate()
 	const profile = await getProfile()
@@ -43,7 +40,7 @@ const Page = async () => {
 		<Client
 			exchangeRate={rate}
 			profile={profile}
-			transactions={transactions ?? []}
+			transactions={transactionsRes.data ?? []}
 		/>
 	)
 }
