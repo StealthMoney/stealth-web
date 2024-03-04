@@ -8,8 +8,8 @@ export default function AuthLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<main className="flex h-[100dvh] w-screen items-center overflow-hidden text-white-100">
-			<div className="h-full w-full bg-black-800 p-12 lg:w-[45%]">
+		<main className="flex h-screen w-screen items-center overflow-hidden text-white-100">
+			<div className="lg:h-auto h-full w-full bg-black-800 p-12 lg:w-[45%]">
 				<div className="flex items-center">
 					<Image src={logo} alt="stealth money logo" />
 				</div>
@@ -23,7 +23,7 @@ export default function AuthLayout({
 					priority
 				/>
 			</div>
-			<div className="h-full w-full flex-1 bg-black-100 py-20 pl-[72px] pr-[162px] lg:w-[55%]">
+			<div className="h-full w-full flex-1 bg-black-100 py-20 pl-[72px] pr-[162px] lg:w-[55%] overflow-y-auto">
 				{children}
 			</div>
 		</main>

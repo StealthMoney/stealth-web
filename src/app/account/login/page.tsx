@@ -59,12 +59,12 @@ const Page = () => {
 					<div></div>
 				</Dialog>
 			)}
-			<div className="h-full w-full">
+			<div className="w-full relative">
 				<p className="font-satoshi text-[28px] font-bold">Welcome Back!</p>
 				<p className="text-lg">
 					Please enter your login credentials to access your account
 				</p>
-				<form onSubmit={formAction} className="mt-10 flex w-full flex-col">
+				<form onSubmit={formAction} className="mt-10 flex w-full h-screen flex-col gap-28">
 					<div className="flex w-full flex-col gap-6">
 						<Input
 							typed="email"
@@ -88,7 +88,7 @@ const Page = () => {
 							</Link>
 						</div>
 					</div>
-					<div className="mt-[350px] flex w-full flex-col gap-5">
+					<div className="flex w-full flex-col gap-5 absolute lg:bottom-56 bottom-80">
 						<Button type="submit" width="w-full" disabled={loading}>
 							{loading ? <Spinner /> : "Log In"}
 						</Button>

@@ -99,7 +99,7 @@ const Page = () => {
 				</p>
 				<form
 					onSubmit={(e) => formAction(e)}
-					className="mt-10 flex h-full w-full flex-col">
+					className="mt-10 flex h-full w-full flex-col gap-2">
 					<div className="flex w-full flex-col gap-6">
 						<Input
 							typed="email"
