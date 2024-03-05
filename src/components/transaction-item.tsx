@@ -77,10 +77,10 @@ const TransactionItem = ({ transaction }: Props) => {
 					<p>{Number(transaction.amountInSats) / SATS_PER_BTC || 0} BTC</p>
 				</div>
 			</div>
-			<div className="flex w-full flex-col justify-start">
+			{/* <div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Network Fee</p>
 				<p className="text-xl font-medium text-white-100">{formatCurrency(0)}</p>
-			</div>
+			</div> */}
 			<hr className="my-4 w-full" />
 			<div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Wallet Address</p>

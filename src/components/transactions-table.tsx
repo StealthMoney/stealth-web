@@ -26,7 +26,7 @@ const StatusColor = {
 const TransactionsTable = ({ transactions }: Props) => {
 	return (
 		<>
-			<div className="h-[77vh] w-full overflow-hidden rounded-md border border-white-700 bg-black-700 p-6 text-white-300">
+			<div className="h-[73vh] w-full overflow-auto rounded-md border border-white-700 bg-black-700 p-6 text-white-300">
 				<TableHead />
 				<TableBody transactions={transactions} />
 			</div>
@@ -59,13 +59,13 @@ export const TableBody = ({
 			<Dialog isOpen={!!selected} onDismiss={() => setSelected(null)}>
 				{selected && <TransactionItem transaction={selected} />}
 			</Dialog>
-			<div className="w-full">
+			<div className="w-full overflow-y-auto">
 				{!transactions.length ? (
 					<div className="grid w-full place-items-center py-20">
 						<p className="font-satoshi text-xl font-medium">No transactions yet.</p>
 					</div>
 				) : (
-					<div className="w-full">
+					<div className="w-full overflow-y-auto">
 						{transactions
 							.sort(
 								(a, b) =>

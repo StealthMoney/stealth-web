@@ -16,7 +16,7 @@ const Page = async () => {
 		)
 	}
 	return (
-		<div className="w-full">
+		<div className="h-4/5 w-full">
 			<div className="mb-6 flex w-full items-center justify-between">
 				<p className="font-satoshi text-2xl font-bold capitalize">Transactions</p>
 				<Form />

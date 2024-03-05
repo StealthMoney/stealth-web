@@ -1,6 +1,6 @@
 "use client"
 import { Check } from "@phosphor-icons/react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 import { confirmPayment } from "@/app/helpers/get-price"
 import { formatCurrency } from "@/app/helpers/amount"
@@ -15,12 +15,17 @@ interface Props {
 	amountPayable: string
 	paymentReference: string
 	setTxnHash: (txnHash: string) => void
+	paymentState: string
+	setPaymentState: (state: string) => void
 	next: () => void
 }
 
 const Processing = (props: Props) => {
 	const [timer, setTimer] = useState(WAIT_PERIOD_IN_SECONDS)
-	const [paymentState, setPaymentState] = useState("PENDING")
+
+	const paymentReceived = useRef(
+		props.paymentState === "PAID" || props.paymentState === "ALREADY_PROCESSED"
+	)
 
 	const handleConfirmPayment = async () => {
 		try {
@@ -34,7 +39,8 @@ const Processing = (props: Props) => {
 				data.paymentState === "PAID" ||
 				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
 			) {
-				setPaymentState(data.paymentState)
+				props.setPaymentState(data.paymentState)
+				paymentReceived.current = true
 				props.next()
 			}
 		} catch (error) {
@@ -57,6 +63,16 @@ const Processing = (props: Props) => {
 		}, 1000)
 		return () => clearInterval(interval)
 	}, [])
+
+	useEffect(() => {
+		if (
+			props.paymentState === "PAID" ||
+			props.paymentState === "ALREADY_PROCESSED"
+		) {
+			setTimer(0)
+			paymentReceived.current = true
+		}
+	}, [props.paymentState])
 
 	return (
 		<div className="h-full w-full">
@@ -95,11 +111,11 @@ const Processing = (props: Props) => {
 					)}
 					<p
 						className={`text-xs ${
-							timer > 0 && paymentState !== "PAID"
+							timer > 0 && !paymentReceived.current
 								? "text-orange-300"
 								: "text-green-100"
 						}`}>
-						{paymentState !== "PAID" ? "Processing" : "Received"}
+						{!paymentReceived.current ? "Processing" : "Received"}
 					</p>
 				</div>
 			</div>
@@ -110,7 +126,9 @@ const Processing = (props: Props) => {
 					timer > 0 ? "bg-black-600 " : "bg-alt-orange-100"
 				}`}
 				disabled={timer > 0}>
-				{timer > 0 ? `Please wait for ${formatTime(timer)} minutes` : "Proceed"}
+				{timer > 0 || !paymentReceived.current
+					? `Please wait for ${formatTime(timer)} minutes`
+					: "Proceed"}
 			</Button>
 		</div>
 	)

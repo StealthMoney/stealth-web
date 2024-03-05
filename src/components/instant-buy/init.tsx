@@ -151,7 +151,7 @@ const Init = (props: Props) => {
 				/>
 				<p className="text-xs">Please paste in your wallet address here</p>
 			</div>
-			<div className="mb-28 mt-6">
+			<div className="mb-10 mt-6">
 				<Input
 					typed="text"
 					name="narration"
@@ -160,13 +160,15 @@ const Init = (props: Props) => {
 					label="Narration"
 				/>
 			</div>
-			<Button
-				type="button"
-				onClick={handleSubmit}
-				disabled={loading}
-				width="w-full">
-				{loading ? <Spinner /> : "Buy Now"}
-			</Button>
+			<div className="pb-10">
+				<Button
+					type="button"
+					onClick={handleSubmit}
+					disabled={loading}
+					width="w-full">
+					{loading ? <Spinner /> : "Buy Now"}
+				</Button>
+			</div>
 		</div>
 	)
 }

@@ -66,7 +66,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 					exchangeRate={data}
 				/>
 			</Dialog>
-			<div className="flex h-full w-full flex-col gap-6">
+			<div className="flex w-full flex-col gap-6">
 				<p className="font-satoshi text-2xl font-bold capitalize">
 					Hello {displayName},
 				</p>
@@ -112,12 +112,12 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 						<Image src="/trezor.png" alt="Market Summary" width={300} height={120} />
 					</div>
 				</div>
-				<div className="flex h-[372px] w-full flex-col rounded-lg border border-black-500 bg-black-700 p-6">
+				<div className="flex h-auto w-full flex-col rounded-lg border border-black-500 bg-black-700 p-6">
 					<div className="flex items-center">
 						<p className="font-satoshi text-xl font-medium">Recent Transactions</p>
 					</div>
 					<hr className="my-4 w-full" />
-					<div className="w-full">
+					<div>
 						<TableHead />
 						<TableBody transactions={transactions} />
 					</div>

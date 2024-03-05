@@ -66,7 +66,7 @@ const Page = () => {
 				</p>
 				<form
 					onSubmit={formAction}
-					className="mt-10 flex h-screen w-full flex-col gap-28">
+					className="mt-10 flex h-[70vh] w-full flex-col gap-28">
 					<div className="flex w-full flex-col gap-6">
 						<Input
 							typed="email"
@@ -90,7 +90,7 @@ const Page = () => {
 							</Link>
 						</div>
 					</div>
-					<div className="absolute bottom-80 flex w-full flex-col gap-5 lg:bottom-56">
+					<div className="absolute bottom-0 flex w-full flex-col gap-5">
 						<Button type="submit" width="w-full" disabled={loading}>
 							{loading ? <Spinner /> : "Log In"}
 						</Button>

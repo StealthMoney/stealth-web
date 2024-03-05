@@ -8,12 +8,12 @@ export default function AuthLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<main className="flex h-screen w-screen items-center overflow-hidden text-white-100">
-			<div className="h-full w-full bg-black-800 p-12 lg:h-auto lg:w-[45%]">
-				<div className="mt-60 flex items-center">
+		<main className="m-auto flex h-screen w-screen max-w-[1440px] items-center justify-center overflow-hidden text-white-100">
+			<div className="h-full w-full bg-black-800 p-12 lg:w-[45%]">
+				<div className="mb-11 flex items-center">
 					<Image src={logo} alt="stealth money logo" />
 				</div>
-				<p className="my-11 w-[390px] font-satoshi text-[32px] font-bold">
+				<p className="w-[390px] font-satoshi text-[32px] font-bold">
 					Fully control and build your Bitcoin wealth with Stealth Money
 				</p>
 				<Image
