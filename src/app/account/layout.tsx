@@ -10,7 +10,7 @@ export default function AuthLayout({
 	return (
 		<main className="flex h-screen w-screen items-center overflow-hidden text-white-100">
 			<div className="h-full w-full bg-black-800 p-12 lg:h-auto lg:w-[45%]">
-				<div className="flex items-center">
+				<div className="mt-60 flex items-center">
 					<Image src={logo} alt="stealth money logo" />
 				</div>
 				<p className="my-11 w-[390px] font-satoshi text-[32px] font-bold">

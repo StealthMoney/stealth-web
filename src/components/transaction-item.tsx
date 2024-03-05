@@ -41,7 +41,9 @@ const TransactionItem = ({ transaction }: Props) => {
 		<div className="flex w-full flex-col items-center gap-5">
 			{StatusIcon[transaction.paymentState]}
 			<p className="text-xl text-white-300">You purchased</p>
-			<p className="text-[28px] text-white-100">{transaction.amountInSats} BTC</p>
+			<p className="text-[28px] text-white-100">
+				{(Number(transaction.amountInSats) / SATS_PER_BTC).toString()} BTC
+			</p>
 			{transaction.paymentState === "PAID" && (
 				<p className="text-center text-xl text-white-100">
 					Payment received! You will receive your Bitcoin shortly.
