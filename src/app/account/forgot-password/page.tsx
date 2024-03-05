@@ -58,7 +58,7 @@ const Page = () => {
 					large
 					description="Instructions to reset your password has been sent to your mail."></Dialog>
 			)}
-			<div className="h-full w-full">
+			<div className="relative h-full w-full">
 				<p className="font-satoshi text-[28px] font-bold">Forgot your Password?</p>
 				<p className="font-satoshi text-lg">
 					If you forgot your password, please enter the email address associated with
@@ -73,7 +73,7 @@ const Page = () => {
 							label="Email Address"
 						/>
 					</div>
-					<div className="mt-[450px] flex w-full flex-col gap-5">
+					<div className="absolute bottom-0 mt-[450px] flex w-full flex-col gap-5 lg:bottom-0">
 						<div className="grid w-full grid-cols-2 gap-6">
 							<Button
 								type="button"

@@ -16,7 +16,7 @@ export async function POST(request: Request, response: NextResponse) {
 			body: JSON.stringify(payload),
 			headers: { "Content-Type": "application/json" },
 		})
-		if (res.status === 201 || res.ok) {
+		if (res.status === 200 || res.ok) {
 			return NextResponse.json(
 				{
 					success: true,

@@ -6,6 +6,8 @@ import { formatCurrency } from "@/app/helpers/amount"
 import { formatTime } from "@/app/helpers/time"
 import { Button } from ".."
 import { TXN_CHARGE } from "@/config/constants"
+import { confirmPayment } from "@/app/helpers/get-price"
+import { PaymentStatusProps } from "@/types/price"
 
 interface Props {
 	amount: string
@@ -15,6 +17,8 @@ interface Props {
 		bankName: string
 		paymentReference: string
 	}
+	paymentState: string
+	setPaymentState: (state: string) => void
 	next: () => void
 	previous: () => void
 }
@@ -35,12 +39,45 @@ const Payment = (props: Props) => {
 		props.next()
 	}
 
+	const handleConfirmPayment = async () => {
+		try {
+			const res = await confirmPayment(depositInfo.paymentReference)
+			if (res instanceof Error) {
+				alert("An error occurred while confirming payment")
+				return
+			}
+			const { data } = res as PaymentStatusProps
+			if (
+				data.paymentState === "PAID" ||
+				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
+			) {
+				props.setPaymentState(data.paymentState)
+				console.log("payment-state can proceed")
+				console.log("payment-state", data.paymentState)
+				props.next()
+			}
+		} catch (error) {
+			alert("An error occurred while confirming payment")
+		}
+	}
+
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setTimer((prev) => (prev > 0 ? prev - 1 : 0))
 		}, 1000)
 		return () => clearInterval(interval)
 	})
+
+	// poll for payment confirmation every 10 seconds
+	useEffect(() => {
+		if (!depositInfo.paymentReference) return
+		const interval = setInterval(() => {
+			handleConfirmPayment()
+		}, 10000)
+		return () => clearInterval(interval)
+		// we only want to run this effect once when the component mounts
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return (
 		<div className="h-full w-full">
@@ -82,7 +119,7 @@ const Payment = (props: Props) => {
 				</div>
 			</div>
 			<hr className="w-full" />
-			<div className="mb-40 mt-12 w-full">
+			<div className="mb-20 mt-12 w-full">
 				<div className="flex w-full items-center justify-between text-sm text-white-300">
 					<p>Total Amount To Be Paid</p>
 					<p>Expires In</p>
@@ -94,7 +131,7 @@ const Payment = (props: Props) => {
 					</p>
 				</div>
 			</div>
-			<div className="grid w-full grid-cols-2 gap-3">
+			<div className="grid w-full grid-cols-2 gap-3 pb-10">
 				<Button type="button" onClick={props.previous} width="w-full bg-black-600">
 					Go Back
 				</Button>

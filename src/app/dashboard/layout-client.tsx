@@ -83,7 +83,7 @@ const DashboardLayoutClient = ({
 							<NavButton user={user} />
 						</div>
 					</div>
-					<div className="w-full p-6">{children}</div>
+					<div className="w-full overflow-y-auto p-6">{children}</div>
 				</div>
 			</main>
 		</>

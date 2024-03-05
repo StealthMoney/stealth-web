@@ -41,7 +41,9 @@ const TransactionItem = ({ transaction }: Props) => {
 		<div className="flex w-full flex-col items-center gap-5">
 			{StatusIcon[transaction.paymentState]}
 			<p className="text-xl text-white-300">You purchased</p>
-			<p className="text-[28px] text-white-100">{transaction.amountInSats} BTC</p>
+			<p className="text-[28px] text-white-100">
+				{(Number(transaction.amountInSats) / SATS_PER_BTC).toString()} BTC
+			</p>
 			{transaction.paymentState === "PAID" && (
 				<p className="text-center text-xl text-white-100">
 					Payment received! You will receive your Bitcoin shortly.
@@ -75,10 +77,10 @@ const TransactionItem = ({ transaction }: Props) => {
 					<p>{Number(transaction.amountInSats) / SATS_PER_BTC || 0} BTC</p>
 				</div>
 			</div>
-			<div className="flex w-full flex-col justify-start">
+			{/* <div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Network Fee</p>
 				<p className="text-xl font-medium text-white-100">{formatCurrency(0)}</p>
-			</div>
+			</div> */}
 			<hr className="my-4 w-full" />
 			<div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Wallet Address</p>

@@ -17,6 +17,7 @@ interface Props {
 const InstantBuy = (props: Props) => {
 	const [screen, setScreen] = useState<BuyState>("init")
 	const [txnHash, setTxnHash] = useState("")
+	const [paymentState, setPaymentState] = useState("PENDING")
 
 	const [depositInfo, setDepositInfo] = useState({
 		accountNumber: "",
@@ -65,6 +66,8 @@ const InstantBuy = (props: Props) => {
 					depositInfo={depositInfo}
 					next={() => setScreen("processing")}
 					previous={() => setScreen("init")}
+					paymentState={paymentState}
+					setPaymentState={setPaymentState}
 				/>
 			)}
 			{screen === "processing" && (
@@ -72,6 +75,8 @@ const InstantBuy = (props: Props) => {
 					amountPayable={fields.amount}
 					paymentReference={depositInfo.paymentReference}
 					setTxnHash={(value) => setTxnHash(value)}
+					paymentState={paymentState}
+					setPaymentState={setPaymentState}
 					next={() => setScreen("success")}
 				/>
 			)}

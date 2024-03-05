@@ -91,7 +91,7 @@ const Page = () => {
 				description={"Please check your e-mail to activate your account"}>
 				<div></div>
 			</Dialog>
-			<div className="h-full w-full">
+			<div className="relative h-full w-full overflow-hidden">
 				<p className="font-satoshi text-[28px] font-bold">Come On Board</p>
 				<p className="text-lg">
 					It&apos;s not your Bitcoin until you self-custody it. Start your journey to
@@ -121,11 +121,11 @@ const Page = () => {
 							error={passwordsMatch ? "" : "Passwords do not match"}
 						/>
 					</div>
-					<div className="mt-[270px] flex w-full flex-col gap-5">
+					<div className="absolute bottom-0 flex w-full flex-col">
 						<Button type="submit" width="w-full" disabled={isPending}>
 							{isPending ? <Spinner /> : "Create Account"}
 						</Button>
-						<p className="flex items-center justify-center text-center">
+						<p className="mt-4 flex items-center justify-center text-center">
 							Already have an account?
 							<Link href="/account/login" className="link ml-1 text-alt-orange-100">
 								Log In
