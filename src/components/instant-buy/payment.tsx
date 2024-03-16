@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { formatCurrency } from "@/app/helpers/amount"
 import { formatTime } from "@/app/helpers/time"
 import { Button } from ".."
-import { TXN_CHARGE } from "@/config/constants"
 import { confirmPayment } from "@/app/helpers/get-price"
 import { PaymentStatusProps } from "@/types/price"
 
@@ -16,6 +15,9 @@ interface Props {
 		accountName: string
 		bankName: string
 		paymentReference: string
+		feeAmount: string
+		amountDue: string
+		amountInSats: string
 	}
 	paymentState: string
 	setPaymentState: (state: string) => void
@@ -23,7 +25,7 @@ interface Props {
 	previous: () => void
 }
 
-const Payment = (props: Props) => {
+export const Payment = (props: Props) => {
 	const [timer, setTimer] = useState(1800)
 	const { amount, depositInfo } = props
 
@@ -89,7 +91,7 @@ const Payment = (props: Props) => {
 				<p className="text-white-300">You are to pay</p>
 				<div className="flex w-full items-center justify-between">
 					<p className="font-satoshi text-[28px] font-medium">
-						{formatCurrency(Number(amount) + TXN_CHARGE)}
+						{formatCurrency(Number(depositInfo.amountDue))}
 					</p>
 					<button
 						onClick={copyPaymentDetails}
@@ -115,7 +117,7 @@ const Payment = (props: Props) => {
 				</div>
 				<div className="flex w-full items-center justify-between text-xl font-medium">
 					<p>{formatCurrency(+amount)}</p>
-					<p>{formatCurrency(TXN_CHARGE)}</p>
+					<p>{formatCurrency(Number(depositInfo.feeAmount))}</p>
 				</div>
 			</div>
 			<hr className="w-full" />
@@ -125,7 +127,7 @@ const Payment = (props: Props) => {
 					<p>Expires In</p>
 				</div>
 				<div className="flex w-full items-center justify-between text-xl font-medium">
-					<p>{formatCurrency(+amount + TXN_CHARGE)}</p>
+					<p>{formatCurrency(Number(depositInfo.amountDue))}</p>
 					<p className={`${timer > 0 ? "text-green-500" : "text-red-500"}`}>
 						{formatTime(timer)}
 					</p>

@@ -43,7 +43,7 @@ const Input = (props: Props) => {
 					{props.label}
 				</label>
 				<textarea className="min-h-[150px] w-full resize-none rounded border bg-transparent transition-all duration-300 focus:bg-alt-orange-100"></textarea>
-				<p className="text-xs text-red-600">
+				<p className="text-sm text-red-600">
 					{props.error ? props.error : props.note}
 				</p>
 			</div>
@@ -137,7 +137,7 @@ export const CurrencyInput = (props: CurrencyInputProps) => {
 					{props.children}
 				</select>
 			</div>
-			<p className="text-xs text-red-600">
+			<p className="pt-2 text-xs text-red-600">
 				{props.error ? props.error : props.note}
 			</p>
 		</div>

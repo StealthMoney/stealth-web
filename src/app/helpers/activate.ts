@@ -8,7 +8,6 @@ export const activate = async (key: string) => {
 			method: "GET",
 			headers: { "Content-Type": "application/json" },
 		})
-		// console.log({ res })
 		if (!res.ok) {
 			throw new Error("Activation failed!")
 		}

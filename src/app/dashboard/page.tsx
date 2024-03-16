@@ -1,13 +1,10 @@
-import { PaymentDetail } from "@/types/price"
 import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"
 import { ExpiredSessionError } from "@/shared/error"
 import { redirect } from "next/navigation"
-import { useState } from "react"
 
 const Page = async () => {
-	// const [generatePayLink, setGeneratePayLink] = useState<boolean | null>(null)
 	const transactionsRes = await getAllPaymentDetails()
 
 	const rate = await getExchangeRate()
@@ -43,7 +40,6 @@ const Page = async () => {
 			exchangeRate={rate}
 			profile={profile}
 			transactions={transactionsRes.data ?? []}
-			// generatePaymentLink={generatePayLink}
 		/>
 	)
 }

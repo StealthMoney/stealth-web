@@ -19,7 +19,6 @@ interface Props {
 	exchangeRate: ExchangeRateProps
 	profile: UserProps
 	transactions: PaymentDetail[]
-	// generatePaymentLink: boolean | null
 }
 
 const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
@@ -119,7 +118,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</CurrencyInput>
 							<p className="flex items-center gap-1 text-xs text-black-400">
 								<WarningCircle className="text-alt-orange-100" />
-								Exchange rate: 1BTC = {formatCurrency(data.pricePerBtc)}
+								Exchange rate: 1 BTC = {formatCurrency(data.pricePerBtc)}
 							</p>
 						</div>
 						<div className="grid w-full grid-cols-2 gap-6">

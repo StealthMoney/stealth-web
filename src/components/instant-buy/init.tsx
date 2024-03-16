@@ -7,8 +7,9 @@ import { formatCurrency, getCurrencyValue } from "@/app/helpers/amount"
 import { getPaymentDetails } from "@/app/helpers/get-price"
 import { CurrencyInput } from "@/components/shared/input"
 import { Button, Input, Spinner } from "@/components"
-import { ExchangeRateProps } from "@/types/price"
-import { TXN_CHARGE } from "@/config/constants"
+import { ExchangeRateProps, PaymentDetailsProps } from "@/types/price"
+import { validateWalletAddress } from "@/app/helpers/address"
+import { PaymentDetails } from "."
 
 interface Props {
 	exchangeRate: ExchangeRateProps["data"]
@@ -24,14 +25,7 @@ interface Props {
 	) => void
 	pasteWalletAddress: () => void
 	setAmountInSats: (value: string) => void
-	setDepositInfo: Dispatch<
-		SetStateAction<{
-			accountNumber: string
-			accountName: string
-			bankName: string
-			paymentReference: string
-		}>
-	>
+	setDepositInfo: Dispatch<SetStateAction<PaymentDetails>>
 	next: () => void
 }
 
@@ -53,9 +47,14 @@ const Init = (props: Props) => {
 		}
 		setLoading(true)
 		try {
-			const amountToPay = Number(amount) + TXN_CHARGE
+			const isValidAddress = validateWalletAddress(walletAddress)
+			if (!isValidAddress) {
+				setError("Invalid wallet address!")
+				setLoading(false)
+				return
+			}
 			const res = await getPaymentDetails({
-				amount: amountToPay,
+				amount: Number(amount),
 				amountInSats,
 				walletAddress,
 				narration,

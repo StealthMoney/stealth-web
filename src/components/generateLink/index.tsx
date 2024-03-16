@@ -12,12 +12,19 @@ interface Props {
 	exchangeRate: ExchangeRateProps["data"]
 }
 
+export interface Fields {
+	amount: string
+	currency: string
+	amountInSats: string
+	narration: string
+	walletAddress: string
+}
+
 const GeneratePayLink = (props: Props) => {
 	const [screen, setScreen] = useState<BuyState>("init")
 	const [generatedLink, setGeneratedLink] = useState("")
-	const [success, setSuccess] = useState(false)
 
-	const [fields, setFields] = useState({
+	const [fields, setFields] = useState<Fields>({
 		amount: props.amount,
 		currency: props.currency,
 		amountInSats: "",
@@ -48,6 +55,7 @@ const GeneratePayLink = (props: Props) => {
 					setAmountInSats={(value: string) =>
 						setFields({ ...fields, amountInSats: value })
 					}
+					setGeneratedLink={setGeneratedLink}
 					next={() => setScreen("success")}
 				/>
 			)}

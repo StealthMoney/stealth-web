@@ -8,15 +8,12 @@ interface Props {
 }
 
 const Success = (props: Props) => {
-	const generatedLinkRef = useRef<HTMLParagraphElement | null>(null)
-
 	const handleClick = () => {
-		const paragraphText = generatedLinkRef.current?.textContent
-		if (paragraphText) {
+		if (props.generatedLink) {
 			navigator.clipboard
-				.writeText(paragraphText)
-				.then(() => window.alert("Text copied to clipboard"))
-				.catch(() => window.alert("Could not copy text: "))
+				.writeText(props.generatedLink)
+				.then()
+				.catch(() => window.alert("Failed to copy link"))
 		} else {
 			window.alert("No Link generated")
 		}
@@ -33,14 +30,12 @@ const Success = (props: Props) => {
 				to purchase Bitcoin into your wallet.
 			</p>
 
-			<p ref={generatedLinkRef}>{props.generatedLink}</p>
-
 			<div className="mt-20 w-full">
 				<Button
 					type="button"
 					onClick={handleClick}
-					width={`mx-auto w-full bg-alt-orange-100
-				}`}>
+					width={`mx-auto w-full bg-alt-orange-100}`}
+					textSize="text-base">
 					<Copy size={14} /> Copy Generated Link
 				</Button>
 			</div>
