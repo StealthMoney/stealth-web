@@ -11,6 +11,7 @@ import { INT_REGEX } from "@/config/constants"
 import { Button, Dialog } from "@/components"
 import { UserProps } from "@/types/profile"
 import Image from "next/image"
+import GeneratePayLink from "@/components/generateLink"
 
 const CurrencyList = ["NGN", "USD"]
 
@@ -18,11 +19,13 @@ interface Props {
 	exchangeRate: ExchangeRateProps
 	profile: UserProps
 	transactions: PaymentDetail[]
+	// generatePaymentLink: boolean | null
 }
 
 const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [fields, setFields] = useState({ amount: "", currency: "NGN" })
 	const [openModal, setOpenModal] = useState(false)
+	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
 
 	const displayName = profile.firstName
@@ -32,8 +35,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => setFields({ ...fields, [e.target.name]: e.target.value })
-
-	const handleSubmit = async () => {
+	
+	const handleSubmit1 = async () => {
 		const { amount } = fields
 		if (Number(amount) <= 0) {
 			return setError("Please enter an amount greater than 0!")
@@ -45,8 +48,21 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		setOpenModal(true)
 	}
 
+	const handleSubmit2 = async () => {
+		const { amount } = fields
+		if (Number(amount) <= 0) {
+			return setError("Please enter an amount greater than 0!")
+		}
+		//checks if the amount includes only integers to avoid exponential notation e.g 3.9e10
+		if (!INT_REGEX.test(amount)) {
+			return setError("Please enter a valid amount!")
+		}
+		setOpenGenerateModal(true)
+	}
+
 	const closeModal = () => {
 		setOpenModal(false)
+		setOpenGenerateModal(false)
 		setFields({ ...fields, amount: "" })
 	}
 
@@ -61,6 +77,14 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		<>
 			<Dialog isOpen={openModal} onDismiss={closeModal}>
 				<InstantBuy
+					amount={fields.amount}
+					currency={fields.currency}
+					exchangeRate={data}
+				/>
+			</Dialog>
+
+			<Dialog isOpen={openGenerateModal} onDismiss={closeModal}>
+				<GeneratePayLink
 					amount={fields.amount}
 					currency={fields.currency}
 					exchangeRate={data}
@@ -99,10 +123,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</p>
 						</div>
 						<div className="grid w-full grid-cols-2 gap-6">
-							<Button type="button" width="w-full bg-black-600">
+							<Button type="button" onClick={handleSubmit2} width="w-full bg-black-600">
 								Generate Payment Link
 							</Button>
-							<Button type="button" onClick={handleSubmit} width="w-full">
+							<Button type="button" onClick={handleSubmit1} width="w-full">
 								Buy Now
 							</Button>
 						</div>

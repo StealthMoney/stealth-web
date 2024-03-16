@@ -6,6 +6,7 @@ type Props =
 	| (Omit<ComponentProps<"input">, "type" | "className"> & {
 			as?: "input"
 			label?: React.ReactNode
+			message?: React.ReactNode
 			error?: string
 			note?: string
 			width?: string
@@ -71,7 +72,7 @@ const Input = (props: Props) => {
 	return (
 		<div className={`flex flex-col ${props.width ? props.width : "w-full"}`}>
 			<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
-				{props.label}
+				{props.label} <span className="text-orange-100">{props.message}</span>
 			</label>
 			<div className="flex h-[60px] w-full items-center gap-1 rounded border p-2 transition-all duration-300 focus-within:border-alt-orange-100">
 				{props.icon}
