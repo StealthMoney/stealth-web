@@ -1,18 +1,9 @@
-import React from "react"
+import Create from "@/components/plan/create-plan/create"
+import { getExchangeRate } from "@/app/helpers/get-price"
 
-import ComingSoon from "@/components/coming-soon"
-
-const Page = () => {
-	return (
-		<div className="w-full">
-			<div className="mb-6 flex w-full items-center">
-				<p className="font-satoshi text-2xl font-bold capitalize">
-					Dollar Cost Averaging (Automated Purchase)
-				</p>
-			</div>
-			<ComingSoon />
-		</div>
-	)
+const Page = async () => {
+	const rate = await getExchangeRate()
+	return <Create exchangeRate={rate} />
 }
 
 export default Page

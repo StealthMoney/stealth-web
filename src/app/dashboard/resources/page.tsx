@@ -1,6 +1,5 @@
 import React from "react"
-
-import ComingSoon from "@/components/coming-soon"
+import AllResources from "@/components/resources/all-resources"
 
 const Page = () => {
 	return (
@@ -8,7 +7,7 @@ const Page = () => {
 			<div className="mb-6 flex w-full items-center">
 				<p className="font-satoshi text-2xl font-bold capitalize">Resources</p>
 			</div>
-			<ComingSoon />
+			<AllResources />
 		</div>
 	)
 }

@@ -1,0 +1,17 @@
+[
+	{
+		"amount": "100,000.00",
+		"interval": "weekly",
+		"duration": "3 Three months"
+	},
+	{
+		"amount": "500,000.00",
+		"interval": "weekly",
+		"duration": "3 Three months"
+	},
+	{
+		"amount": "200,000.00",
+		"interval": "monthly",
+		"duration": "3 Three months"
+	}
+]

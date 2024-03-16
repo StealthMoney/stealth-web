@@ -19,6 +19,11 @@ export type PaymentDetailsProps = {
 		accountName: string
 		bankName: string
 		paymentReference: string
+		amount: string
+		feeAmount: string
+		amountDue: string
+		amountInSats: string
+		paymentLink?: string
 	}
 }
 

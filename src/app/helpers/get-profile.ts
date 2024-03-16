@@ -3,13 +3,7 @@
 import { UserProps } from "@/types/profile"
 import endpoints from "@/config/endpoints"
 import { auth } from "@/auth"
-import jwtDecode from "jwt-decode"
-import { DecodedJwt } from "@/types/jwt"
-import {
-	ExpiredSessionError,
-	InvalidAuthenticatorError,
-	InvalidProfileError,
-} from "@/shared/error"
+import { InvalidAuthenticatorError, InvalidProfileError } from "@/shared/error"
 
 export const getProfile = async (): Promise<UserProps | Error> => {
 	const session = await auth()
@@ -20,14 +14,7 @@ export const getProfile = async (): Promise<UserProps | Error> => {
 	if (!accessToken) {
 		return new InvalidAuthenticatorError("No access token found")
 	}
-	const decoded: DecodedJwt = jwtDecode(accessToken)
-	if (!decoded) {
-		return new InvalidAuthenticatorError("Failed to decode access token")
-	}
-	const tokenExpiryTime = new Date(decoded?.exp * 1000)
-	if (tokenExpiryTime < new Date()) {
-		return new ExpiredSessionError("Session expired")
-	}
+
 	const url = endpoints().user.profile
 	const res = await fetch(url, {
 		headers: {

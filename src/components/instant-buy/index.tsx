@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { ExchangeRateProps } from "@/types/price"
+import { ExchangeRateProps, PaymentDetailsProps } from "@/types/price"
 import Processing from "./processing"
 import Success from "./success"
 import Payment from "./payment"
@@ -14,16 +14,32 @@ interface Props {
 	exchangeRate: ExchangeRateProps["data"]
 }
 
+export type PaymentDetails = Pick<
+	PaymentDetailsProps["data"],
+	| "accountNumber"
+	| "accountName"
+	| "bankName"
+	| "paymentReference"
+	| "feeAmount"
+	| "amountDue"
+	| "amountInSats"
+	| "amount"
+>
+
 const InstantBuy = (props: Props) => {
 	const [screen, setScreen] = useState<BuyState>("init")
 	const [txnHash, setTxnHash] = useState("")
 	const [paymentState, setPaymentState] = useState("PENDING")
 
-	const [depositInfo, setDepositInfo] = useState({
+	const [depositInfo, setDepositInfo] = useState<PaymentDetails>({
 		accountNumber: "",
 		accountName: "",
 		bankName: "",
 		paymentReference: "",
+		feeAmount: "",
+		amountDue: "",
+		amountInSats: "",
+		amount: "",
 	})
 	const [fields, setFields] = useState({
 		amount: props.amount,
@@ -72,7 +88,7 @@ const InstantBuy = (props: Props) => {
 			)}
 			{screen === "processing" && (
 				<Processing
-					amountPayable={fields.amount}
+					amountPayable={depositInfo.amountDue}
 					paymentReference={depositInfo.paymentReference}
 					setTxnHash={(value) => setTxnHash(value)}
 					paymentState={paymentState}

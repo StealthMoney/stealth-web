@@ -50,6 +50,7 @@ const endpoints = (params?: string | number) => {
 		"get-by-id": `${baseUrl}/payment/${params}`,
 		list: `${baseUrl}/payment`,
 		"get-status": `${baseUrl}/payment/paid`,
+		"get-payment-by-token": `${baseUrl}/payment-token/${params}`,
 	}
 
 	const account = {
