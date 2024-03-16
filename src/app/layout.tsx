@@ -27,13 +27,13 @@ const satoshi = LocalFont({
 export const metadata: Metadata = {
 	title: "Stealth Money",
 	description:
-		"Stealth Money is a plaform where you secure your financial future with Bitcoin savings and self custody.",
+		"Stealth Money is a platform where you secure your financial future with Bitcoin savings and self custody.",
 	openGraph: {
 		type: "website",
 		url: "https://app.stealth.money",
 		title: "Stealth Money",
 		description:
-			"Stealth Money is a plaform where you secure your financial future with Bitcoin savings and self custody.",
+			"Stealth Money is a platform where you secure your financial future with Bitcoin savings and self custody.",
 		images: [
 			{
 				url: "https://app.stealth.money/assets/logo.png",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
 		creator: "@stealthmoney_",
 		title: "Stealth Money",
 		description:
-			"Stealth Money is a plaform where you secure your financial future with Bitcoin savings and self custody.",
+			"Stealth Money is a platform where you secure your financial future with Bitcoin savings and self custody.",
 		images: ["https://app.stealth.money/assets/logo.png"],
 	},
 }
