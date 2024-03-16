@@ -62,7 +62,8 @@ const LinkGenerateInit = (props: Props) => {
 		<div className="h-full w-full">
 			<p className="font-satoshi text-[28px] font-medium">Generate Payment Link</p>
 			<p className="text-lg text-black-400">
-				Generate a payment Link for a third party to buy Bitcoin sent directly to your wallet on your behalf
+				Generate a payment Link for a third party to buy Bitcoin sent directly to
+				your wallet on your behalf
 			</p>
 			<div className="my-8 flex w-full flex-col">
 				<div

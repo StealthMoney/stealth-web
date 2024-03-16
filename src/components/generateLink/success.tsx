@@ -17,13 +17,13 @@ const Success = (props: Props) => {
 				.writeText(paragraphText)
 				.then(() => window.alert("Text copied to clipboard"))
 				.catch(() => window.alert("Could not copy text: "))
-		}else{
+		} else {
 			window.alert("No Link generated")
 		}
 	}
 
 	return (
-		<div className="flex h-full w-full flex-col justify-center items-center text-white-100">
+		<div className="flex h-full w-full flex-col items-center justify-center text-white-100">
 			<div className="my-8">
 				<CheckCircle weight="fill" className="text-9xl text-green-100" />
 			</div>
@@ -35,7 +35,7 @@ const Success = (props: Props) => {
 
 			<p ref={generatedLinkRef}>{props.generatedLink}</p>
 
-			<div className="w-full mt-20">
+			<div className="mt-20 w-full">
 				<Button
 					type="button"
 					onClick={handleClick}

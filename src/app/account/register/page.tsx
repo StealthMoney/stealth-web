@@ -56,7 +56,6 @@ const Page = () => {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setFormFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-		
 
 	const formAction = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()

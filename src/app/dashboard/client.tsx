@@ -35,7 +35,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => setFields({ ...fields, [e.target.name]: e.target.value })
-	
+
 	const handleSubmit1 = async () => {
 		const { amount } = fields
 		if (Number(amount) <= 0) {
@@ -123,7 +123,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</p>
 						</div>
 						<div className="grid w-full grid-cols-2 gap-6">
-							<Button type="button" onClick={handleSubmit2} width="w-full bg-black-600">
+							<Button
+								type="button"
+								onClick={handleSubmit2}
+								width="w-full bg-black-600">
 								Generate Payment Link
 							</Button>
 							<Button type="button" onClick={handleSubmit1} width="w-full">
