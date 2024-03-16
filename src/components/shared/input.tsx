@@ -6,6 +6,7 @@ type Props =
 	| (Omit<ComponentProps<"input">, "type" | "className"> & {
 			as?: "input"
 			label?: React.ReactNode
+			message?: React.ReactNode
 			error?: string
 			note?: string
 			width?: string
@@ -42,7 +43,7 @@ const Input = (props: Props) => {
 					{props.label}
 				</label>
 				<textarea className="min-h-[150px] w-full resize-none rounded border bg-transparent transition-all duration-300 focus:bg-alt-orange-100"></textarea>
-				<p className="text-xs text-red-600">
+				<p className="text-sm text-red-600">
 					{props.error ? props.error : props.note}
 				</p>
 			</div>
@@ -71,7 +72,7 @@ const Input = (props: Props) => {
 	return (
 		<div className={`flex flex-col ${props.width ? props.width : "w-full"}`}>
 			<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
-				{props.label}
+				{props.label} <span className="text-orange-100">{props.message}</span>
 			</label>
 			<div className="flex h-[60px] w-full items-center gap-1 rounded border p-2 transition-all duration-300 focus-within:border-alt-orange-100">
 				{props.icon}
@@ -136,7 +137,7 @@ export const CurrencyInput = (props: CurrencyInputProps) => {
 					{props.children}
 				</select>
 			</div>
-			<p className="text-xs text-red-600">
+			<p className="pt-2 text-xs text-red-600">
 				{props.error ? props.error : props.note}
 			</p>
 		</div>

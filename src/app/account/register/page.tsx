@@ -7,6 +7,8 @@ import { Button, Dialog, Input, Spinner } from "@/components"
 import { PASSWORD_REGEX } from "@/config/constants"
 const Page = () => {
 	const [formFields, setFormFields] = useState({
+		firstName: "",
+		lastName: "",
 		email: "",
 		password: "",
 		confirm_password: "",
@@ -16,10 +18,17 @@ const Page = () => {
 	const [error, setError] = useState<Error | null>(null)
 
 	const { isPending, mutateAsync } = useMutation({
-		mutationFn: (payload: { email: string; password: string }) =>
+		mutationFn: (payload: {
+			firstName: string
+			lastName: string
+			email: string
+			password: string
+		}) =>
 			fetch("/api/register", {
 				method: "POST",
 				body: JSON.stringify({
+					firstName: payload.firstName,
+					lastName: payload.lastName,
 					email: payload.email,
 					password: payload.password,
 				}),
@@ -46,7 +55,7 @@ const Page = () => {
 	})
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setFormFields({ ...formFields, [e.target.name]: e.target.value })
+		setFormFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
 	const formAction = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -59,7 +68,13 @@ const Page = () => {
 			alert("Passwords do not match!")
 			return
 		}
-		mutateAsync({ email: formFields.email, password: formFields.password })
+
+		mutateAsync({
+			firstName: formFields.firstName,
+			lastName: formFields.lastName,
+			email: formFields.email,
+			password: formFields.password,
+		})
 	}
 
 	useEffect(() => {
@@ -82,7 +97,13 @@ const Page = () => {
 				onDismiss={() => {
 					setData({ message: "", success: false })
 					if (data.success) {
-						setFormFields({ email: "", password: "", confirm_password: "" })
+						setFormFields({
+							firstName: "",
+							lastName: "",
+							email: "",
+							password: "",
+							confirm_password: "",
+						})
 					}
 				}}
 				title="Account Created Successfully!"
@@ -91,7 +112,7 @@ const Page = () => {
 				description={"Please check your e-mail to activate your account"}>
 				<div></div>
 			</Dialog>
-			<div className="relative h-full w-full overflow-hidden">
+			<div className="relative h-full w-full overflow-auto">
 				<p className="font-satoshi text-[28px] font-bold">Come On Board</p>
 				<p className="text-lg">
 					It&apos;s not your Bitcoin until you self-custody it. Start your journey to
@@ -101,6 +122,26 @@ const Page = () => {
 					onSubmit={(e) => formAction(e)}
 					className="mt-10 flex h-full w-full flex-col">
 					<div className="flex w-full flex-col gap-6">
+						<div className="flex w-full">
+							<div className="md:2/4 mr-2 w-full md:w-2/4">
+								<Input
+									typed="text"
+									name="firstName"
+									onChange={handleChange}
+									label="First Name"
+								/>
+							</div>
+
+							<div className="mx-2 w-full md:w-2/4">
+								<Input
+									typed="text"
+									name="lastName"
+									onChange={handleChange}
+									label="Last Name"
+								/>
+							</div>
+						</div>
+
 						<Input
 							typed="email"
 							name="email"
@@ -112,6 +153,7 @@ const Page = () => {
 							name="password"
 							onChange={handleChange}
 							label="Password"
+							message="(Minimum of 8 characters with a symbol)"
 						/>
 						<Input
 							typed="password"
@@ -121,7 +163,7 @@ const Page = () => {
 							error={passwordsMatch ? "" : "Passwords do not match"}
 						/>
 					</div>
-					<div className="absolute bottom-0 flex w-full flex-col">
+					<div className="mt-20 flex w-full flex-col">
 						<Button type="submit" width="w-full" disabled={isPending}>
 							{isPending ? <Spinner /> : "Create Account"}
 						</Button>

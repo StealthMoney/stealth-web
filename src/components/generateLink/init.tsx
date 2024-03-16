@@ -7,69 +7,71 @@ import { formatCurrency, getCurrencyValue } from "@/app/helpers/amount"
 import { getPaymentDetails } from "@/app/helpers/get-price"
 import { CurrencyInput } from "@/components/shared/input"
 import { Button, Input, Spinner } from "@/components"
-import { ExchangeRateProps, PaymentDetailsProps } from "@/types/price"
+import { ExchangeRateProps } from "@/types/price"
+import { TXN_CHARGE } from "@/config/constants"
 import { validateWalletAddress } from "@/app/helpers/address"
-import { PaymentDetails } from "."
+import { Fields } from "."
+import { getBaseUrl } from "@/app/helpers/string"
 
 interface Props {
 	exchangeRate: ExchangeRateProps["data"]
-	fields: {
-		amount: string
-		currency: string
-		amountInSats: string
-		narration?: string
-		walletAddress: string
-	}
+	fields: Fields
 	handleChange: (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void
 	pasteWalletAddress: () => void
 	setAmountInSats: (value: string) => void
-	setDepositInfo: Dispatch<SetStateAction<PaymentDetails>>
 	next: () => void
+	setGeneratedLink: Dispatch<SetStateAction<string>>
 }
 
 const CurrencyList = ["NGN", "USD", "SATS"]
 
-const Init = (props: Props) => {
+const LinkGenerateInit = (props: Props) => {
 	const [reversed, setReversed] = useState(false)
 	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState("")
+	const [error, setError] = useState({
+		amount: "",
+		walletAddress: "",
+	})
 	const { fields, handleChange } = props
 
+	// api call here
 	const handleSubmit = async () => {
-		const { amount, amountInSats, narration, walletAddress } = fields
+		const { amount, narration, walletAddress } = fields
+		setError(() => ({ ...error, amount: "", walletAddress: "" }))
 		if (!amount) {
-			return alert("Please enter amount!")
+			setError(() => ({ ...error, amount: "Please enter amount!" }))
+			return
 		}
 		if (!walletAddress) {
-			return alert("Please enter wallet address!")
+			setError(() => ({ ...error, walletAddress: "Please enter wallet address!" }))
+			return
+		}
+		const isValidAddress = validateWalletAddress(walletAddress)
+		if (!isValidAddress) {
+			setError(() => ({ ...error, walletAddress: "Invalid wallet address!" }))
+			return
 		}
 		setLoading(true)
-		try {
-			const isValidAddress = validateWalletAddress(walletAddress)
-			if (!isValidAddress) {
-				setError("Invalid wallet address!")
-				setLoading(false)
-				return
-			}
-			const res = await getPaymentDetails({
-				amount: Number(amount),
-				amountInSats,
-				walletAddress,
-				narration,
-			})
-			if (res instanceof Error) {
-				setError(res.message)
-				setLoading(false)
-			}
-			props.setDepositInfo(res.data)
+		const res = await getPaymentDetails({
+			amount: Number(amount),
+			narration,
+			walletAddress,
+			generatePaymentLink: true,
+		})
+		setLoading(false)
+		if (res instanceof Error) {
+			alert("An error occurred while generating payment link! Please try again")
+			return
+		}
+		if (res.status == "00" && res.data.paymentLink) {
+			const code = res.data.paymentLink.split("code=")[1]
+			const url = `${getBaseUrl()}/gift?code=${code}`
+			props.setGeneratedLink(url)
 			props.next()
-		} catch (error) {
-			if (error instanceof Error) {
-				setError(error.message)
-				setLoading(false)
-			}
+		} else {
+			alert("An error occurred while generating payment link! Please try again")
 		}
 	}
 
@@ -85,9 +87,10 @@ const Init = (props: Props) => {
 
 	return (
 		<div className="h-full w-full">
-			<p className="font-satoshi text-[28px] font-medium">Instant Buy</p>
+			<p className="font-satoshi text-[28px] font-medium">Generate Payment Link</p>
 			<p className="text-lg text-black-400">
-				Please enter narration and your wallet address correctly
+				Generate a payment Link for a third party to buy Bitcoin sent directly to
+				your wallet on your behalf
 			</p>
 			<div className="my-8 flex w-full flex-col">
 				<div
@@ -116,6 +119,7 @@ const Init = (props: Props) => {
 						amount={fields.amountInSats}
 						currency="SATS"
 						inputName="amountInSats"
+						error={error.amount}
 						disableInput={!reversed}
 						disableSelect
 						handleAmountChange={handleChange}
@@ -127,18 +131,20 @@ const Init = (props: Props) => {
 						))}
 					</CurrencyInput>
 				</div>
-				<p className="flex items-center gap-1 text-xs text-black-400">
+				<p className="flex items-center gap-1 text-[14px] text-black-400">
 					<WarningCircle className="text-alt-orange-100" />
-					Exchange rate: 1BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
+					Exchange rate: 1 BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
 				</p>
 			</div>
-			<div className="my-6">
+			<div className="relative my-6">
+				{/* <p className="text-[14px] absolute right-2">Please paste in your wallet address here</p> */}
 				<Input
 					typed="text"
 					name="walletAddress"
 					value={fields.walletAddress}
 					onChange={handleChange}
 					label="Wallet Address"
+					error={error.walletAddress}
 					pasteBtn={
 						<button
 							type="button"
@@ -148,7 +154,6 @@ const Init = (props: Props) => {
 						</button>
 					}
 				/>
-				<p className="text-xs">Please paste in your wallet address here</p>
 			</div>
 			<div className="mb-10 mt-6">
 				<Input
@@ -165,11 +170,11 @@ const Init = (props: Props) => {
 					onClick={handleSubmit}
 					disabled={loading}
 					width="w-full">
-					{loading ? <Spinner /> : "Buy Now"}
+					{loading ? <Spinner /> : "Generate Link"}
 				</Button>
 			</div>
 		</div>
 	)
 }
 
-export default Init
+export default LinkGenerateInit

@@ -33,9 +33,10 @@ export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
 
 interface PaymentPayload {
 	amount: string | number
-	amountInSats: string | number
 	walletAddress: string
+	amountInSats?: string | number
 	narration?: string
+	generatePaymentLink?: boolean
 }
 
 export const getPaymentDetails = async (

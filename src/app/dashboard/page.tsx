@@ -1,4 +1,3 @@
-import { PaymentDetail } from "@/types/price"
 import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"

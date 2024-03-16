@@ -7,7 +7,6 @@ import { formatCurrency } from "@/app/helpers/amount"
 import { PaymentStatusProps } from "@/types/price"
 import { formatTime } from "@/app/helpers/time"
 import { Button } from ".."
-import { TXN_CHARGE } from "@/config/constants"
 
 const WAIT_PERIOD_IN_SECONDS = 180
 
@@ -81,7 +80,7 @@ const Processing = (props: Props) => {
 			<div className="mb-16 mt-8 w-full">
 				<p className="text-white-300">You are to pay</p>
 				<p className="font-satoshi text-[28px] font-medium">
-					{formatCurrency(Number(props.amountPayable) + TXN_CHARGE)}
+					{formatCurrency(Number(props.amountPayable))}
 				</p>
 			</div>
 			<p className="text-center text-xl font-medium">
