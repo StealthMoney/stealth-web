@@ -1,0 +1,44 @@
+[
+	{
+		"id": 1,
+		"url": "https://www.youtube.com/watch?v=mYIzFR--5tw",
+		"title": "Why you need a hardware wallet",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 2,
+		"url": "https://www.youtube.com/watch?v=aZi9ZwfFHiA",
+		"title": "Get peace of mind with Trezor",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 3,
+		"url": "https://www.youtube.com/watch?v=HuVH_9hnUu8",
+		"title": "How to setup a Trezor hardware wallet",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 4,
+		"url": "https://www.youtube.com/watch?v=n7hjt1Tlvlk",
+		"title": "How to setup your new Trezor safe 3 hardware wallet",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 5,
+		"url": "https://www.youtube.com/watch?v=qSwQCfTUGVo",
+		"title": "What is a recovery seed?",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 6,
+		"url": "https://www.youtube.com/watch?v=iiz4R-kQgFU",
+		"title": "3 must know Tips to safe-guard your crypto against phishing",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	}
+]
