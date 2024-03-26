@@ -1,5 +1,5 @@
 import React from "react"
-import All from "@/components/resources/all-resources"
+import AllResources from "@/components/resources/all-resources"
 
 const Page = () => {
 	return (
@@ -7,7 +7,7 @@ const Page = () => {
 			<div className="mb-6 flex w-full items-center">
 				<p className="font-satoshi text-2xl font-bold capitalize">Resources</p>
 			</div>
-			<All />
+			<AllResources />
 		</div>
 	)
 }
