@@ -7,7 +7,6 @@ import { INT_REGEX } from "@/config/constants"
 import { formatCurrency } from "@/app/helpers/amount"
 import InstantBuy from "@/components/instant-buy"
 import { Dialog } from "@/components"
-import { getExchangeRate } from "@/app/helpers/get-price"
 import { ExchangeRateProps } from "@/types/price"
 import { WarningCircle } from "@phosphor-icons/react"
 
@@ -15,10 +14,7 @@ const CurrencyList = ["NGN", "USD"]
 const weeklyintervalOptions = ["weekly", "daily", "monthly"]
 const monthlyintervalOptions = ["3months", "6months", "1year"]
 export default function Create({ exchangeRate }: any) {
-	const [createPlan, setCreatePlan] = useState(true)
-	const [rateValue, setRateValue] = useState<
-		ExchangeRateProps | Error | undefined
-	>()
+	const [createPlan, setCreatePlan] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [formData, setFormData] = useState({
 		amount: "",
@@ -38,10 +34,20 @@ export default function Create({ exchangeRate }: any) {
 		setFormData((prev) => ({ ...prev, [name]: value }))
 	}
 
+	const openCreatePlan = () => {
+		setCreatePlan(true)
+	}
+
 	const addPlan: MouseEventHandler<HTMLButtonElement> = (e) => {
 		e.preventDefault()
-		if (!INT_REGEX.test(formData.amount) || formData.amount === "")
+		if (!INT_REGEX.test(formData.amount) || formData.amount === "") {
 			return setError("Please enter a valid number")
+		}
+
+		if (Number(formData.amount) <= 0) {
+			return setError("Value must be greater than 0")
+		}
+
 		console.log(formData)
 	}
 
@@ -54,6 +60,8 @@ export default function Create({ exchangeRate }: any) {
 			interval_monthly: "3months",
 			interval_weekly: "weekly",
 		}))
+
+		setError("")
 		console.log(formData)
 	}
 
@@ -73,11 +81,15 @@ export default function Create({ exchangeRate }: any) {
 
 	const handleInstantBuySubmit: MouseEventHandler<HTMLButtonElement> = (e) => {
 		if (!INT_REGEX.test(buyPrice) || buyPrice === "") {
-			setErrorInstant("Please Enter a valid Number")
-		} else {
-			console.log(buyPrice)
-			openModalFunc()
+			return setErrorInstant("Please Enter a valid Number")
 		}
+
+		if (Number(buyPrice) <= 0) {
+			return setErrorInstant("Value must be greater than 0")
+		}
+
+		console.log(buyPrice)
+		openModalFunc()
 	}
 
 	useEffect(() => {
@@ -87,32 +99,36 @@ export default function Create({ exchangeRate }: any) {
 	return (
 		<section className="flex min-h-screen px-4 py-6">
 			{!createPlan ? (
-				<div className="flex h-full w-2/4 flex-col items-center justify-center gap-8">
-					<div className="h-1/4 w-2/4">
-						<Image
-							src="/empty.svg"
-							alt="no-items"
-							width={100}
-							height={100}
-							className="h-full w-full"
-						/>
-					</div>
-					<h1 className="font-bold">Create a DCA plan</h1>
-					<p>
-						To implement Dollar-Cost Averaging (DCA) for Bitcoin purchases into your
-						self-custody, please click the &quot;Create Plan&quot; button below.
-					</p>
+				<div className="flex h-full w-full flex-col items-center justify-center">
+					<div className="flex w-2/4 flex-col items-center justify-center gap-8">
+						<div className="h-1/4 w-2/4">
+							<Image
+								src="/empty.svg"
+								alt="no-items"
+								width={100}
+								height={100}
+								className="h-full w-full"
+							/>
+						</div>
+						<h1 className="font-bold">Create a DCA plan</h1>
+						<p>
+							To implement Dollar-Cost Averaging (DCA) for Bitcoin purchases into your
+							self-custody, please click the &quot;Create Plan&quot; button below.
+						</p>
 
-					<div className="flex items-center justify-center">
-						<button className="mx-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
-							Learn more
-						</button>
-						<button className="mx-2 flex items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] px-4 py-2">
-							<span className="mx-1">
-								<PlusIcon width={20} height={20} />
-							</span>
-							Create Plan
-						</button>
+						<div className="flex items-center justify-center">
+							<button className="mx-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
+								Learn more
+							</button>
+							<button
+								onClick={openCreatePlan}
+								className="mx-2 flex items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] px-4 py-2">
+								<span className="mx-1">
+									<PlusIcon width={20} height={20} />
+								</span>
+								Create Plan
+							</button>
+						</div>
 					</div>
 				</div>
 			) : (
@@ -132,7 +148,7 @@ export default function Create({ exchangeRate }: any) {
 							<Dialog isOpen={openModal} onDismiss={closeModal}>
 								{exchangeRate && exchangeRate.data ? (
 									<InstantBuy
-										amount={formData.amount}
+										amount={buyPrice}
 										currency={formData.currency}
 										exchangeRate={exchangeRate.data}
 									/>
@@ -216,14 +232,14 @@ export default function Create({ exchangeRate }: any) {
 									<div className="mx-2 w-2/4">
 										<button
 											onClick={clearPlan}
-											className="mx-2 w-full rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
+											className="mx-2 w-full rounded-md border border-[#494949] bg-[#2B2B2B] py-2">
 											Clear Details
 										</button>
 									</div>
 									<div className="mx-2 w-2/4">
 										<button
 											onClick={addPlan}
-											className="mx-2 flex w-full items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] px-4 py-2">
+											className="mx-2 flex w-full items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] py-2">
 											Create Plan
 										</button>
 									</div>
