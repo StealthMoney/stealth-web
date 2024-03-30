@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import data from "@/components/plan/ongoing-plan/dummydata.json"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname()
@@ -34,8 +35,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						}`}>
 						<Link href="/dashboard/plans/ongoing_plans">
 							Ongoing Plans{" "}
-							<small className="mx-1 inline-block rounded-full bg-[#555555] px-2 text-white-100">
-								0
+							<small className="mx-1 inline-block rounded-full bg-[#F7931A] px-2 text-white-100">
+								{data.length}
 							</small>
 						</Link>
 					</li>
