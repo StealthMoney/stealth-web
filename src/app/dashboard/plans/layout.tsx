@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					</li>
 
 					<li
-						className={`mx-2 list-none py-8 cursor-not-allowed hover:border-b hover:border-b-[#F7931A] hover:text-[#F7931A] ${
+						className={`mx-2 cursor-not-allowed list-none py-8 hover:border-b hover:border-b-[#F7931A] hover:text-[#F7931A] ${
 							pathname === "/dashboard/plans/ongoing_plans"
 								? "border-b border-b-[#F7931A] text-[#F7931A]"
 								: ""
