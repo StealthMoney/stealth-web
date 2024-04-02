@@ -33,12 +33,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								? "border-b border-b-[#F7931A] text-[#F7931A]"
 								: ""
 						}`}>
-						<Link href="#" className="cursor-not-allowed">
+						{/* <Link href="#" className="cursor-not-allowed">
 							Ongoing Plans{" "}
 							<small className="mx-1 inline-block rounded-full bg-[#F7931A] px-2 text-white-100">
 								{0}
 							</small>
-						</Link>
+						</Link> */}
 					</li>
 				</ul>
 			</nav>

@@ -9,12 +9,14 @@ import InstantBuy from "@/components/instant-buy"
 import { Dialog } from "@/components"
 import { ExchangeRateProps } from "@/types/price"
 import { WarningCircle } from "@phosphor-icons/react"
-import ComingSoon from "@/components/coming-soon"
+import CustomDialog from "@/components/dialog"
+import { useRouter } from "next/navigation"
 
 const CurrencyList = ["NGN", "USD"]
 const weeklyintervalOptions = ["weekly", "daily", "monthly"]
 const monthlyintervalOptions = ["3months", "6months", "1year"]
 export default function Create({ exchangeRate }: any) {
+	const router = useRouter()
 	const [createPlan, setCreatePlan] = useState(false)
 	const [noFeat, setNoFeat] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
@@ -95,9 +97,6 @@ export default function Create({ exchangeRate }: any) {
 	}
 
 	const noFeatRef = useRef<HTMLDivElement>(null)
-	const closeNoFEATModal: MouseEventHandler<HTMLButtonElement> = () => {
-		setNoFeat(false)
-	}
 
 	useEffect(() => {
 		const clickOutside = (e: MouseEvent) => {
@@ -127,15 +126,13 @@ export default function Create({ exchangeRate }: any) {
 						</div>
 						<h1 className="font-bold">Create a DCA plan</h1>
 						<p>
-							To implement Dollar-Cost Averaging (DCA) for Bitcoin purchases into your
+							To start Dollar-Cost Averaging (DCA) for Bitcoin purchases into your
 							self-custody, please click the &quot;Create Plan&quot; button below.
 						</p>
 
 						<div className="flex items-center justify-center">
 							<button
-								onClick={() =>
-									window.open("https://www.stealth.money/resources", "_blank")
-								}
+								onClick={() => router.push("/dashboard/resources/")}
 								className="mx-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
 								Learn more
 							</button>
@@ -315,19 +312,10 @@ export default function Create({ exchangeRate }: any) {
 					</div>
 				</div>
 			)}
-
-			{noFeat && (
-				<div
-					className="right-18 fixed top-12 flex h-3/4 w-2/4 items-center justify-center rounded-md bg-black-600"
-					ref={noFeatRef}>
-					<p className="text-3xl font-bold">DCA Feature is coming soon</p>
-					<span
-						className="absolute right-0 top-0 cursor-pointer"
-						onClick={closeNoFEATModal}>
-						<Cross2Icon width={50} height={50} color="orange" />
-					</span>
-				</div>
-			)}
+			<CustomDialog
+				isOpen={noFeat}
+				onDismiss={() => setNoFeat(false)}
+				title="DCA feature coming soon"></CustomDialog>
 		</section>
 	)
 }

@@ -12,29 +12,32 @@ export function SessionCheckComponent({
 	children: React.ReactNode
 }) {
 	const { data: session, status } = useSession()
+	const isLoggedOut = status === "unauthenticated"
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			if (!session?.accessToken) {
+			if (!session?.accessToken && !isLoggedOut) {
 				signOut({ redirect: false })
 				return
 			}
 
-			const decodedToken = jwt_decode(session?.accessToken ?? "") as DecodedJwt
-			if (!decodedToken) {
-				signOut({ redirect: false })
-				return
-			}
-			const expires = new Date((decodedToken.exp ?? 0) * 1000)
-			if (expires < new Date()) {
-				signOut({
-					redirect: false,
-				})
+			if (status === "authenticated") {
+				const decodedToken = jwt_decode(session?.accessToken ?? "") as DecodedJwt
+				if (!decodedToken) {
+					signOut({ redirect: false })
+					return
+				}
+				const expires = new Date((decodedToken.exp ?? 0) * 1000)
+				if (expires < new Date()) {
+					signOut({
+						redirect: false,
+					})
+				}
 			}
 		}, 30000) // check every 30 seconds
 
 		return () => clearInterval(intervalId)
-	}, [session, status])
+	}, [session, status, isLoggedOut])
 
 	return <>{children}</>
 }
