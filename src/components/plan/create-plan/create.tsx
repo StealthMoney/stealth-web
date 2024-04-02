@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
-import { PlusIcon } from "@radix-ui/react-icons"
-import { useState, MouseEventHandler, useEffect } from "react"
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons"
+import { useState, MouseEventHandler, useEffect, useRef } from "react"
 import { CurrencyInput } from "@/components/shared/input"
 import { INT_REGEX } from "@/config/constants"
 import { formatCurrency } from "@/app/helpers/amount"
@@ -9,12 +9,14 @@ import InstantBuy from "@/components/instant-buy"
 import { Dialog } from "@/components"
 import { ExchangeRateProps } from "@/types/price"
 import { WarningCircle } from "@phosphor-icons/react"
+import ComingSoon from "@/components/coming-soon"
 
 const CurrencyList = ["NGN", "USD"]
 const weeklyintervalOptions = ["weekly", "daily", "monthly"]
 const monthlyintervalOptions = ["3months", "6months", "1year"]
 export default function Create({ exchangeRate }: any) {
 	const [createPlan, setCreatePlan] = useState(false)
+	const [noFeat, setNoFeat] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [formData, setFormData] = useState({
 		amount: "",
@@ -35,7 +37,7 @@ export default function Create({ exchangeRate }: any) {
 	}
 
 	const openCreatePlan = () => {
-		setCreatePlan(true)
+		setNoFeat(true)
 	}
 
 	const addPlan: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -92,9 +94,22 @@ export default function Create({ exchangeRate }: any) {
 		openModalFunc()
 	}
 
+	const noFeatRef = useRef<HTMLDivElement>(null)
+	const closeNoFEATModal: MouseEventHandler<HTMLButtonElement> = () => {
+		setNoFeat(false)
+	}
+
 	useEffect(() => {
-		console.log(exchangeRate.data)
-	}, [exchangeRate])
+		const clickOutside = (e: MouseEvent) => {
+			if (noFeatRef.current && !noFeatRef.current.contains(e.target as Node)) {
+				setNoFeat(false)
+			}
+		}
+
+		document.addEventListener("mousedown", clickOutside)
+
+		return () => document.removeEventListener("mousedown", clickOutside)
+	}, [])
 
 	return (
 		<section className="flex min-h-screen px-4 py-6">
@@ -117,7 +132,11 @@ export default function Create({ exchangeRate }: any) {
 						</p>
 
 						<div className="flex items-center justify-center">
-							<button className="mx-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
+							<button
+								onClick={() =>
+									window.open("https://www.stealth.money/resources", "_blank")
+								}
+								className="mx-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-4 py-2">
 								Learn more
 							</button>
 							<button
@@ -231,6 +250,7 @@ export default function Create({ exchangeRate }: any) {
 								<div className="flex w-full items-center px-4 py-2">
 									<div className="mx-2 w-2/4">
 										<button
+											disabled
 											onClick={clearPlan}
 											className="mx-2 w-full rounded-md border border-[#494949] bg-[#2B2B2B] py-2">
 											Clear Details
@@ -238,6 +258,7 @@ export default function Create({ exchangeRate }: any) {
 									</div>
 									<div className="mx-2 w-2/4">
 										<button
+											disabled
 											onClick={addPlan}
 											className="mx-2 flex w-full items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] py-2">
 											Create Plan
@@ -283,6 +304,7 @@ export default function Create({ exchangeRate }: any) {
 
 								<div className="my-4 px-4 py-2">
 									<button
+										disabled
 										onClick={handleInstantBuySubmit}
 										className="mx-2 flex w-full items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] px-4 py-6">
 										Buy Now
@@ -291,6 +313,19 @@ export default function Create({ exchangeRate }: any) {
 							</div>
 						</div>
 					</div>
+				</div>
+			)}
+
+			{noFeat && (
+				<div
+					className="right-18 fixed top-12 flex h-3/4 w-2/4 items-center justify-center rounded-md bg-black-600"
+					ref={noFeatRef}>
+					<p className="text-3xl font-bold">DCA Feature is coming soon</p>
+					<span
+						className="absolute right-0 top-0 cursor-pointer"
+						onClick={closeNoFEATModal}>
+						<Cross2Icon width={50} height={50} color="orange" />
+					</span>
 				</div>
 			)}
 		</section>

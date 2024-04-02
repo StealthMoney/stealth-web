@@ -28,15 +28,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					</li>
 
 					<li
-						className={`mx-2 list-none py-8 hover:cursor-pointer hover:border-b hover:border-b-[#F7931A] hover:text-[#F7931A] ${
+						className={`mx-2 list-none py-8 cursor-not-allowed hover:border-b hover:border-b-[#F7931A] hover:text-[#F7931A] ${
 							pathname === "/dashboard/plans/ongoing_plans"
 								? "border-b border-b-[#F7931A] text-[#F7931A]"
 								: ""
 						}`}>
-						<Link href="/dashboard/plans/ongoing_plans">
+						<Link href="#" className="cursor-not-allowed">
 							Ongoing Plans{" "}
 							<small className="mx-1 inline-block rounded-full bg-[#F7931A] px-2 text-white-100">
-								{data.length}
+								{0}
 							</small>
 						</Link>
 					</li>
