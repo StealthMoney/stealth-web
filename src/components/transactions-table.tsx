@@ -37,7 +37,7 @@ const TransactionsTable = ({ transactions }: Props) => {
 export default TransactionsTable
 
 export const TableHead = () => (
-	<div className="flex w-full items-center gap-1 border-b px-2 py-5">
+	<div className="hidden w-full items-center gap-1 border-b px-2 py-5 lg:flex">
 		<p className="w-[100px]">No.</p>
 		<p className="flex flex-1">Date</p>
 		<p className="flex flex-1">Amount</p>
@@ -75,27 +75,33 @@ export const TableBody = ({
 								<div
 									key={transaction?.id}
 									onClick={() => setSelected(transaction)}
-									className="hover flex w-full cursor-pointer items-center gap-1 px-2 py-4 transition-all hover:bg-black-600">
-									<div className="w-[100px]">{index + 1}</div>
-									<div className="flex flex-1">
-										{formatDate(new Date(transaction?.createdDate))}
-									</div>
-									<div className="flex flex-1">
-										{formatCurrency(+transaction?.amountDue || 0)}
-									</div>
-									<div className="flex flex-1">
-										{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}
-									</div>
-									<div className="flex flex-1">
-										{formatBtcAddress(transaction.walletAddress ?? "")}
-									</div>
-									<div className="flex flex-1">
-										<p
-											className={`w-fit rounded p-1 text-[10px] capitalize ${
-												StatusColor[transaction?.paymentState]
-											}`}>
-											{transaction?.paymentState?.split("_").join(" ")}
-										</p>
+									className="hover my-5 flex w-full cursor-pointer flex-col gap-1 rounded-md bg-[#191919] px-2 py-4 transition-all hover:bg-black-600 lg:my-auto lg:flex-row lg:items-center lg:rounded-none lg:bg-[transparent]">
+									<div className="flex w-full">
+										<div className="flex w-2/4 flex-col lg:w-full lg:flex-row">
+											<div className="hidden lg:flex lg:w-[100px]">{index + 1}</div>
+											<div className="flex flex-1">
+												{formatDate(new Date(transaction?.createdDate))}
+											</div>
+											<div className="flex flex-1">
+												{formatCurrency(+transaction?.amountDue || 0)}
+											</div>
+											<div className="flex flex-1">
+												{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}
+											</div>
+											<div className="flex flex-1">
+												{formatBtcAddress(transaction.walletAddress ?? "")}
+											</div>
+										</div>
+										<div className="w-2/4 lg:flex lg:w-1/4 lg:flex-1">
+											<div className="flex items-baseline justify-end">
+												<p
+													className={`w-fit rounded p-1 text-[10px] capitalize ${
+														StatusColor[transaction?.paymentState]
+													}`}>
+													{transaction?.paymentState?.split("_").join(" ")}
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
 							))}
