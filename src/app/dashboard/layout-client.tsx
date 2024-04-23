@@ -92,7 +92,7 @@ const DashboardLayoutClient = ({
 						!showMobileNav ? "hidden" : "flex"
 					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
 					<div className="flex w-full flex-col gap-12">
-						<div className="w-full flex md:justify-start justify-end">
+						<div className="flex w-full justify-end md:justify-start">
 							<Image src={logo} alt="" className="w-[100px]" />
 						</div>
 						<div className="flex w-full flex-col gap-6">
@@ -100,6 +100,7 @@ const DashboardLayoutClient = ({
 								<Link
 									key={index}
 									href={item.path}
+									onClick={toggleMobileNav}
 									className={`flex items-center gap-2 rounded-lg p-3 font-satoshi font-medium capitalize transition-all duration-300 hover:bg-black-800 ${
 										pathname === item.path
 											? "border border-black-500 bg-black-800 text-alt-orange-100"
