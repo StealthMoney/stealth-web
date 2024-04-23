@@ -82,7 +82,7 @@ const Page = () => {
 							label="Password"
 							required
 						/>
-						<div className="flex w-full justify-end">
+						<div className="flex w-full md:justify-end justify-center">
 							<Link
 								href="/account/forgot-password"
 								className="link text-alt-orange-100">
