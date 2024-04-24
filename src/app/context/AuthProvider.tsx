@@ -52,9 +52,4 @@ export default function AuthProvider({
 			<SessionCheckComponent>{children}</SessionCheckComponent>
 		</SessionProvider>
 	)
-	return (
-		<SessionProvider>
-			<SessionCheckComponent>{children}</SessionCheckComponent>
-		</SessionProvider>
-	)
 }
