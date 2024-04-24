@@ -94,7 +94,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 					Hello {displayName},
 				</p>
 				<div className="grid h-[350px] w-full grid-cols-5 gap-6">
-					<div className="lg:col-span-2 md:col-span-3 col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6">
+					<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-3 lg:col-span-2">
 						<div>
 							<p className="font-satoshi text-xl font-medium">Instant Buy</p>
 							<p className="mb-4 text-xs text-black-400">
@@ -133,7 +133,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</Button>
 						</div>
 					</div>
-					<div className="lg:col-span-3 md:col-span-2 hidden md:flex h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6">
+					<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 md:flex lg:col-span-3">
 						<Image src="/trezor.png" alt="Market Summary" width={300} height={120} />
 					</div>
 				</div>

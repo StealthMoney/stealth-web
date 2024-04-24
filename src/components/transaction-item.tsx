@@ -84,7 +84,7 @@ const TransactionItem = ({ transaction }: Props) => {
 			<hr className="my-4 w-full" />
 			<div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Wallet Address</p>
-				<p className="text-xl font-medium text-white-100 break-words">
+				<p className="break-words text-xl font-medium text-white-100">
 					{transaction.walletAddress}
 				</p>
 			</div>

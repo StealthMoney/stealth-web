@@ -49,7 +49,7 @@ const CustomDialog = ({
 					className={`${overlayStyle} data-[state=open]:animate-overlayShow fixed inset-0 bg-white-100/40`}
 				/>
 				<Dialog.Content
-					className={`data-[state=open]:animate-contentShow fixed left-[50%] top-[55%] lg:top-[50%] md:left-[60%] lg:left-[50%] flex max-h-[90%] w-[90vw] translate-x-[-50%] translate-y-[-50%] flex-col items-center overflow-y-auto rounded-[6px] bg-black-100 p-[30px] text-white-100 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${
+					className={`data-[state=open]:animate-contentShow fixed left-[50%] top-[55%] flex max-h-[90%] w-[90vw] translate-x-[-50%] translate-y-[-50%] flex-col items-center overflow-y-auto rounded-[6px] bg-black-100 p-[30px] text-white-100 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none md:left-[60%] lg:left-[50%] lg:top-[50%] ${
 						large ? "max-w-[750px]" : "max-w-[528px]"
 					}`}>
 					{type && DialogIcon[type]}

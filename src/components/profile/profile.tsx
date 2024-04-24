@@ -16,14 +16,14 @@ const Profile = (props: UserProps) => {
 	return (
 		<>
 			<Dialog isOpen={openModal} onDismiss={() => setOpenModal(false)} large>
-				<div className="min-h-[50dvh] w-full md:w-3/4 bg-black-100">
+				<div className="min-h-[50dvh] w-full bg-black-100 md:w-3/4">
 					<EditProfile user={props} onDismiss={() => setOpenModal(false)} />
 				</div>
 			</Dialog>
 			<div className="h-auto w-full rounded-lg border border-black-500 bg-black-700 p-10">
-				<div className="flex w-full items-center justify-between lg:flex-row flex-col">
-					<div className="flex items-center gap-5 md:flex-nowrap flex-wrap md:mb-auto mb-2">
-						<div className="aspect-square w-[120px] rounded-full bg-alt-orange-100 lg:my-auto my-2">
+				<div className="flex w-full flex-col items-center justify-between lg:flex-row">
+					<div className="mb-2 flex flex-wrap items-center gap-5 md:mb-auto md:flex-nowrap">
+						<div className="my-2 aspect-square w-[120px] rounded-full bg-alt-orange-100 lg:my-auto">
 							<Avatar
 								imageUrl={props.imageUrl}
 								name={displayName}
@@ -42,15 +42,15 @@ const Profile = (props: UserProps) => {
 					</Button>
 				</div>
 				<hr className="my-6 w-full" />
-				<div className="grid w-full lg:grid-cols-3 grid-cols-1 gap-5">
+				<div className="grid w-full grid-cols-1 gap-5 lg:grid-cols-3">
 					<div className="w-full">
 						<p className="font-bold">Person Information</p>
 						<p className="text-sm text-white-300">
 							Update your personal details here.
 						</p>
 					</div>
-					<div className="lg:col-span-2 col-span-1 flex lg:w-2/3 w-full flex-col gap-5">
-						<div className="grid w-full md:grid-cols-2 grid-cols-1 gap-5">
+					<div className="col-span-1 flex w-full flex-col gap-5 lg:col-span-2 lg:w-2/3">
+						<div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
 							<Input
 								typed="text"
 								defaultValue={props.firstName}

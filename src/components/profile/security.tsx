@@ -60,7 +60,7 @@ const Security = (props: UserProps) => {
 				titleClassName={"text-green-500"}></Dialog>
 			<div className="h-auto w-full rounded-lg border border-black-500 bg-black-700 p-10">
 				<div className="flex w-full items-center justify-between">
-					<div className="flex items-center gap-5 md:flex-nowrap flex-wrap">
+					<div className="flex flex-wrap items-center gap-5 md:flex-nowrap">
 						<div className="aspect-square w-[120px] rounded-full bg-alt-orange-100">
 							<Avatar
 								imageUrl={props.imageUrl}
@@ -77,14 +77,14 @@ const Security = (props: UserProps) => {
 					</div>
 				</div>
 				<hr className="my-6 w-full" />
-				<div className="grid w-full lg:grid-cols-3 grid-cols-1 gap-5">
+				<div className="grid w-full grid-cols-1 gap-5 lg:grid-cols-3">
 					<div className="w-full">
 						<p className="font-bold">Password</p>
 						<p className="text-sm text-white-300">Reset your password here</p>
 					</div>
 					<form
 						onSubmit={handleSubmit}
-						className="lg:col-span-2 col-span-1 flex md:w-2/3 w-full flex-col gap-5">
+						className="col-span-1 flex w-full flex-col gap-5 md:w-2/3 lg:col-span-2">
 						<Input
 							typed="password"
 							name="currentPassword"
