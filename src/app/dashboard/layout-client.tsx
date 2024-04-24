@@ -78,17 +78,17 @@ const DashboardLayoutClient = ({
 					<Button
 						type="button"
 						onClick={() => setIsOpen(false)}
-						width="bg-black-600 w-[160px]">
+						width="bg-black-600 w-[160px] mx-2">
 						Cancel
 					</Button>
-					<Button type="button" onClick={signOutFn} width="w-[160px]">
+					<Button type="button" onClick={signOutFn} width="w-[160px] mx-2">
 						Log Out
 					</Button>
 				</div>
 			</Dialog>
 			<main className="flex h-screen w-screen items-start overflow-hidden bg-black-100 text-white-100">
 				<div
-					className={`fixed left-0 top-0 z-20 ${
+					className={`fixed left-0 top-0 ${
 						!showMobileNav ? "hidden" : "flex"
 					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
 					<div className="flex w-full flex-col gap-12">

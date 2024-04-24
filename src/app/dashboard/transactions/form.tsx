@@ -16,7 +16,7 @@ const Form = () => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="flex items-center gap-5">
+		<form onSubmit={handleSubmit} className="flex items-center gap-5 md:flex-row flex-col">
 			<Input
 				typed="text"
 				value={query}

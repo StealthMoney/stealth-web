@@ -36,7 +36,7 @@ const EditProfile = (props: Props) => {
 		<form onSubmit={handleSubmit} className="w-full">
 			<p className="font-satoshi text-[28px] font-bold">Edit Profile</p>
 			<div className="mt-9 flex w-full flex-col gap-6">
-				<div className="grid w-full grid-cols-2 gap-6">
+				<div className="grid w-full md:grid-cols-2 grid-cols-1 gap-6">
 					<Input
 						typed="text"
 						name="firstName"
@@ -52,7 +52,7 @@ const EditProfile = (props: Props) => {
 						defaultValue={props.user.lastName}
 					/>
 				</div>
-				<div className="grid w-full grid-cols-2 gap-6">
+				<div className="grid w-full md:grid-cols-2 grid-cols-1 gap-6">
 					<Input
 						typed="text"
 						name="email"
