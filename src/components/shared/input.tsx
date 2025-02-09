@@ -36,11 +36,24 @@ type Props =
 const Input = (props: Props) => {
 	const [showPassword, setshowPassword] = useState(false)
 
+	const formatLabel = (label?: React.ReactNode) => {
+		if (typeof label === "string" && label.includes("*")) {
+			return (
+				<>
+					{label.split("*")[0]}
+					<span className="text-[#B31919]">*</span>
+					{label.split("*")[1]}
+				</>
+			)
+		}
+		return label
+	}
+
 	if (props.as === "textarea") {
 		return (
 			<div className={`flex flex-col ${props.width ? props.width : "w-full"}`}>
 				<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
-					{props.label}
+					{formatLabel(props.label)}
 				</label>
 				<textarea className="min-h-[150px] w-full resize-none rounded border bg-transparent transition-all duration-300 focus:bg-alt-orange-100"></textarea>
 				<p className="text-sm text-red-600">
@@ -54,7 +67,7 @@ const Input = (props: Props) => {
 		return (
 			<div className={`flex flex-col ${props.width ? props.width : "w-full"}`}>
 				<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
-					{props.label}
+				{formatLabel(props.label)}
 				</label>
 				<div className="h-[60px] w-full rounded border bg-transparent p-2 transition-all duration-300 focus-within:bg-alt-orange-100">
 					{props.icon}
@@ -72,7 +85,7 @@ const Input = (props: Props) => {
 	return (
 		<div className={`flex flex-col ${props.width ? props.width : "w-full"}`}>
 			<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
-				{props.label} <span className="text-orange-100">{props.message}</span>
+			{formatLabel(props.label)} <span className="text-orange-100">{props.message}</span>
 			</label>
 			<div className="flex h-[60px] w-full items-center gap-1 rounded border p-2 transition-all duration-300 focus-within:border-alt-orange-100">
 				{props.icon}

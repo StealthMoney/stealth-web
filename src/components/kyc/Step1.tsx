@@ -72,7 +72,7 @@ export default function Step1({
 				<div className="my-6">
 					<Input
 						typed="text"
-						label="Bank Name"
+						label="Bank Name *"
 						name="bankName"
 						value={formValues.bankName}
 						onChange={updateKycForm}
@@ -83,7 +83,7 @@ export default function Step1({
 				<div className="my-6">
 					<Input
 						typed="text"
-						label="Account Number"
+						label="Account Number *"
 						value={formValues.AccountNumber}
 						name={"AccountNumber"}
 						onChange={updateKycForm}
@@ -94,7 +94,7 @@ export default function Step1({
 				<div className="my-6">
 					<Input
 						typed="text"
-						label="Bank Verification Number"
+						label="Bank Verification Number *"
 						value={formValues.Bvn}
 						name={"Bvn"}
 						onChange={updateKycForm}
@@ -105,7 +105,7 @@ export default function Step1({
 				<div className="my-6">
 					<Input
 						typed="text"
-						label="Gender"
+						label="Gender *"
 						value={formValues.gender}
 						name={"gender"}
 						onChange={updateKycForm}

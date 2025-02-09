@@ -27,7 +27,7 @@ export interface Step1ErrorTypes {
 }
 
 export interface Step2ErrorTypes {
-	facecard: string
+	faceCard: string
 }
 
 export interface Step1Props extends BaseStepProps {
