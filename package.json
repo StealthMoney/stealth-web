@@ -27,6 +27,8 @@
 		"bitcoin-address-validation": "^2.2.3",
 		"eslint": "8.50.0",
 		"eslint-config-next": "14.0.1",
+		"face-api.js": "^0.22.2",
+		"framer-motion": "^12.4.1",
 		"jwt-decode": "^3.1.2",
 		"next": "13.5.1",
 		"next-auth": "^4.23.1",

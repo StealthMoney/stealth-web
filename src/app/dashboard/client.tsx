@@ -27,7 +27,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [openModal, setOpenModal] = useState(false)
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
-	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(2)
+	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
 
 	const displayName = profile.firstName
 		? profile.firstName

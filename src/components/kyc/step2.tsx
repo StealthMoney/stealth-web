@@ -4,6 +4,8 @@ import { useRef, useState, useEffect } from "react"
 import Button from "../shared/button"
 import Image from "next/image"
 import type { Step2Props } from "@/types/kyc"
+import * as faceapi from "face-api.js"
+import { motion } from "framer-motion"
 
 export default function Step2({
 	submitInfo,
@@ -17,8 +19,30 @@ export default function Step2({
 	const [isCameraActive, setIsCameraActive] = useState(false)
 	const [buttonText, setButtonText] = useState("Start Camera")
 	const [errorMessage, setErrorMessage] = useState("")
+	const [isFaceDetected, setIsFaceDetected] = useState(false)
+	const [isModelLoaded, setIsModelLoaded] = useState(false)
 
 	useEffect(() => {
+		const loadModels = async () => {
+			try {
+				await faceapi.nets.tinyFaceDetector.loadFromUri("/models")
+				console.log("Tiny Face Detector Model loaded successfully")
+
+				await faceapi.nets.faceLandmark68TinyNet.loadFromUri("/models")
+				console.log("Face Landmark Tiny Model loaded successfully")
+				await faceapi.nets.faceRecognitionNet.loadFromUri("/models")
+				console.log("Face Recognition Model loaded successfully")
+
+				setIsModelLoaded(true)
+			} catch (error) {
+				console.error("Error loading face detection models:", error)
+				setErrorMessage(
+					"Failed to load face detection models. Please refresh the page."
+				)
+			}
+		}
+		loadModels()
+
 		// Cleanup function for camera stream
 		return () => {
 			if (stream) {
@@ -56,9 +80,9 @@ export default function Step2({
 					setIsCameraActive(true)
 					setStream(mediaStream)
 					setErrorMessage("")
+					startFaceDetection()
 				}
 			} else {
-				// console.error("Video ref is null")
 				setErrorMessage("Failed to initialize camera. Please try again.")
 			}
 		} catch (err) {
@@ -70,8 +94,36 @@ export default function Step2({
 		}
 	}
 
+	const startFaceDetection = () => {
+		if (!videoRef.current || !isModelLoaded) return
+
+		const detectFace = async () => {
+			if (videoRef.current) {
+				const detections = await faceapi
+					.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+					.withFaceLandmarks(true)
+
+				if (detections) {
+					setIsFaceDetected(true)
+					setErrorMessage("")
+				} else {
+					setIsFaceDetected(false)
+					setErrorMessage(
+						"No face detected or face not clear. Please adjust your position."
+					)
+				}
+			}
+
+			if (isCameraActive) {
+				requestAnimationFrame(detectFace)
+			}
+		}
+
+		detectFace()
+	}
+
 	const takePhoto = () => {
-		if (!videoRef.current) return
+		if (!videoRef.current || !isFaceDetected) return
 
 		try {
 			const canvas = document.createElement("canvas")
@@ -121,7 +173,13 @@ export default function Step2({
 
 	const handleCameraAction = () => {
 		if (isCameraActive) {
-			takePhoto()
+			if (isFaceDetected) {
+				takePhoto()
+			} else {
+				setErrorMessage(
+					"No face detected or face not clear. Please adjust your position."
+				)
+			}
 		} else {
 			startCamera()
 		}
@@ -154,10 +212,25 @@ export default function Step2({
 								ref={videoRef}
 								autoPlay
 								playsInline
-								className="absolute z-10 h-[48%] w-[52%] rounded-3xl object-cover max-sm:w-[65%] md:w-[68%] lg:w-[36.5%]"
+								className="absolute z-10 h-[48%] w-[52%] rounded-3xl object-cover max-sm:w-[65%] md:w-[68%] lg:w-[38%]"
 							/>
 						)}
 					</div>
+
+					{!isFaceDetected && (
+						<motion.span
+							className={`absolute z-20 inline-block h-[0.2%] w-[50%] ${
+								isCameraActive ? "bg-[#494949]" : "bg-[#F7931A]"
+							} max-sm:w-[65%] md:w-[65%] lg:w-[40%]`}
+							animate={{
+								y: ["500%", "10000%", "-10000%"],
+							}}
+							transition={{
+								duration: 2,
+								ease: "easeInOut",
+								repeat: Number.POSITIVE_INFINITY,
+							}}></motion.span>
+					)}
 
 					{/* Vertical Bar */}
 					<div className="absolute inset-0 m-auto h-[60%] w-[30%] bg-[#010101]" />
