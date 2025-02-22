@@ -6,6 +6,7 @@ import Image from "next/image"
 import type { Step2Props } from "@/types/kyc"
 import * as faceapi from "face-api.js"
 import { motion } from "framer-motion"
+import * as tf from "@tensorflow/tfjs-core"
 
 export default function Step2({
 	submitInfo,
@@ -25,13 +26,14 @@ export default function Step2({
 	useEffect(() => {
 		const loadModels = async () => {
 			try {
+				await tf.setBackend("webgl")
+				await tf.ready()
+
 				await faceapi.nets.tinyFaceDetector.loadFromUri("/models")
-				console.log("Tiny Face Detector Model loaded successfully")
 
 				await faceapi.nets.faceLandmark68TinyNet.loadFromUri("/models")
-				console.log("Face Landmark Tiny Model loaded successfully")
+
 				await faceapi.nets.faceRecognitionNet.loadFromUri("/models")
-				console.log("Face Recognition Model loaded successfully")
 
 				setIsModelLoaded(true)
 			} catch (error) {
@@ -41,9 +43,9 @@ export default function Step2({
 				)
 			}
 		}
+
 		loadModels()
 
-		// Cleanup function for camera stream
 		return () => {
 			if (stream) {
 				stream.getTracks().forEach((track) => track.stop())
@@ -80,7 +82,11 @@ export default function Step2({
 					setIsCameraActive(true)
 					setStream(mediaStream)
 					setErrorMessage("")
-					startFaceDetection()
+
+					// small delay to ensure the video is fully playing
+					setTimeout(() => {
+						startFaceDetection()
+					}, 500)
 				}
 			} else {
 				setErrorMessage("Failed to initialize camera. Please try again.")
@@ -94,35 +100,57 @@ export default function Step2({
 		}
 	}
 
+	const detectfaceLogic = async () => {
+		if (!videoRef.current) return
+
+		const detections = await faceapi
+			.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+			.withFaceLandmarks(true)
+
+		if (detections) {
+			setIsFaceDetected(true)
+			setErrorMessage("")
+		} else {
+			setIsFaceDetected(false)
+			setErrorMessage(
+				"No face detected or face not clear. Please adjust your position."
+			)
+		}
+	}
+
 	const startFaceDetection = () => {
 		if (!videoRef.current || !isModelLoaded) return
 
 		const detectFace = async () => {
 			if (videoRef.current) {
-				const detections = await faceapi
-					.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-					.withFaceLandmarks(true)
-
-				if (detections) {
-					setIsFaceDetected(true)
-					setErrorMessage("")
-				} else {
+				try {
+					detectfaceLogic()
+				} catch (error) {
+					console.error("Error during face detection:", error)
 					setIsFaceDetected(false)
-					setErrorMessage(
-						"No face detected or face not clear. Please adjust your position."
-					)
+					setErrorMessage("Face detection failed. Please try again.")
 				}
 			}
 
+			// Continue the loop only if the camera is still active
 			if (isCameraActive) {
-				requestAnimationFrame(detectFace)
+				requestAnimationFrame(detectfaceLogic)
 			}
 		}
 
+		// Start the face detection loop
 		detectFace()
 	}
 
-	const takePhoto = () => {
+	useEffect(() => {
+		setInterval(() => {
+			if (isCameraActive) {
+				requestAnimationFrame(detectfaceLogic)
+			}
+		}, 100)
+	})
+
+	const takePhoto = async () => {
 		if (!videoRef.current || !isFaceDetected) return
 
 		try {
@@ -171,17 +199,17 @@ export default function Step2({
 		}
 	}
 
-	const handleCameraAction = () => {
+	const handleCameraAction = async () => {
 		if (isCameraActive) {
 			if (isFaceDetected) {
-				takePhoto()
+				await takePhoto()
 			} else {
 				setErrorMessage(
 					"No face detected or face not clear. Please adjust your position."
 				)
 			}
 		} else {
-			startCamera()
+			await startCamera()
 		}
 	}
 
