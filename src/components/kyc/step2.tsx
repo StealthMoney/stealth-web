@@ -14,6 +14,7 @@ export default function Step2({
 	updateKycForm,
 	formError,
 	updateFormErrors,
+	formValues,
 }: Step2Props) {
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
@@ -212,6 +213,10 @@ export default function Step2({
 			await startCamera()
 		}
 	}
+
+	useEffect(() => {
+		console.log(formValues, "is form values")
+	}, [formValues])
 
 	return (
 		<section className="flex min-h-screen w-full items-center justify-center">
