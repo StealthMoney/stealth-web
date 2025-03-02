@@ -7,6 +7,9 @@ import type { Step2Props } from "@/types/kyc"
 import * as faceapi from "face-api.js"
 import { motion } from "framer-motion"
 import * as tf from "@tensorflow/tfjs-core"
+import { useQuery } from "@tanstack/react-query"
+import { verifyface } from "@/config/preambly"
+import Spinner from "../spinner"
 
 export default function Step2({
 	submitInfo,
@@ -15,6 +18,10 @@ export default function Step2({
 	formError,
 	updateFormErrors,
 	formValues,
+	accountName,
+	bvnVerified,
+	genderVerified,
+	bvnFailed,
 }: Step2Props) {
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
@@ -23,6 +30,7 @@ export default function Step2({
 	const [errorMessage, setErrorMessage] = useState("")
 	const [isFaceDetected, setIsFaceDetected] = useState(false)
 	const [isModelLoaded, setIsModelLoaded] = useState(false)
+	const [image, setImage] = useState<File | null>(null)
 
 	useEffect(() => {
 		const loadModels = async () => {
@@ -215,8 +223,26 @@ export default function Step2({
 	}
 
 	useEffect(() => {
-		console.log(formValues, "is form values")
-	}, [formValues])
+		if (formValues.faceCard !== null) {
+			setImage(formValues.faceCard)
+		}
+	}, [formValues.faceCard])
+
+	const { isLoading, data, isError } = useQuery({
+		queryKey: ["face_liveness_verification", formValues.faceCard],
+		queryFn: () => verifyface({ faceCard: image }),
+		enabled:
+			!!genderVerified &&
+			!!bvnVerified &&
+			accountName !== "" &&
+			!accountName.includes("Account") &&
+			formValues.faceCard !== null &&
+			image !== null,
+	})
+
+	useEffect(() => {
+		console.log(data, "is face liveness data")
+	}, [data])
 
 	return (
 		<section className="flex min-h-screen w-full items-center justify-center">
@@ -230,68 +256,78 @@ export default function Step2({
 					</p>
 				</div>
 
-				<div className="relative flex min-h-[400px] items-center justify-center">
-					<div className="flex min-h-[200px] min-w-[200px] items-center justify-center overflow-hidden rounded-3xl border border-[#494949] px-8 py-12">
-						{!isCameraActive ? (
-							<Image
-								src="/cameraface.svg"
-								alt="face camera"
-								width={100}
-								height={100}
-								className="z-10 lg:w-2/4"
-							/>
-						) : (
-							<video
-								ref={videoRef}
-								autoPlay
-								playsInline
-								className="absolute z-10 h-[48%] w-[52%] rounded-3xl object-cover max-sm:w-[65%] md:w-[68%] lg:w-[38%]"
-							/>
+				{!isLoading && (
+					<>
+						<div className="relative flex min-h-[400px] items-center justify-center">
+							<div className="flex min-h-[200px] min-w-[200px] items-center justify-center overflow-hidden rounded-3xl border border-[#494949] px-8 py-12">
+								{!isCameraActive ? (
+									<Image
+										src="/cameraface.svg"
+										alt="face camera"
+										width={100}
+										height={100}
+										className="z-10 lg:w-2/4"
+									/>
+								) : (
+									<video
+										ref={videoRef}
+										autoPlay
+										playsInline
+										className="absolute z-10 h-[48%] w-[52%] rounded-3xl object-cover max-sm:w-[65%] md:w-[68%] lg:w-[38%]"
+									/>
+								)}
+							</div>
+
+							{!isFaceDetected && (
+								<motion.span
+									className={`absolute z-20 inline-block h-[0.2%] w-[50%] ${
+										isCameraActive ? "bg-[#494949]" : "bg-[#F7931A]"
+									} max-sm:w-[65%] md:w-[65%] lg:w-[40%]`}
+									animate={{
+										y: ["500%", "10000%", "-10000%"],
+									}}
+									transition={{
+										duration: 2,
+										ease: "easeInOut",
+										repeat: Number.POSITIVE_INFINITY,
+									}}></motion.span>
+							)}
+
+							{/* Vertical Bar */}
+							<div className="absolute inset-0 m-auto h-[60%] w-[30%] bg-[#010101]" />
+
+							{/* Horizontal Bar */}
+							<div className="absolute inset-0 m-auto h-[30%] w-[80%] bg-[#010101]" />
+						</div>
+
+						{errorMessage && (
+							<p className="mt-2 text-center text-red-500">{errorMessage}</p>
 						)}
-					</div>
 
-					{!isFaceDetected && (
-						<motion.span
-							className={`absolute z-20 inline-block h-[0.2%] w-[50%] ${
-								isCameraActive ? "bg-[#494949]" : "bg-[#F7931A]"
-							} max-sm:w-[65%] md:w-[65%] lg:w-[40%]`}
-							animate={{
-								y: ["500%", "10000%", "-10000%"],
-							}}
-							transition={{
-								duration: 2,
-								ease: "easeInOut",
-								repeat: Number.POSITIVE_INFINITY,
-							}}></motion.span>
-					)}
-
-					{/* Vertical Bar */}
-					<div className="absolute inset-0 m-auto h-[60%] w-[30%] bg-[#010101]" />
-
-					{/* Horizontal Bar */}
-					<div className="absolute inset-0 m-auto h-[30%] w-[80%] bg-[#010101]" />
-				</div>
-
-				{errorMessage && (
-					<p className="mt-2 text-center text-red-500">{errorMessage}</p>
+						<div className="mt-6">
+							<Button width="w-full" type="button" onClick={handleCameraAction}>
+								<div className="flex items-center justify-center">
+									<span className="text-[15px] font-bold lg:text-[20px]">
+										{buttonText}
+									</span>
+									<Image
+										src="/arrow-right-icon.svg"
+										alt="continue"
+										width={50}
+										height={10}
+										className="my-auto ml-4"
+									/>
+								</div>
+							</Button>
+						</div>
+					</>
 				)}
 
-				<div className="mt-6">
-					<Button width="w-full" type="button" onClick={handleCameraAction}>
-						<div className="flex items-center justify-center">
-							<span className="text-[15px] font-bold lg:text-[20px]">
-								{buttonText}
-							</span>
-							<Image
-								src="/arrow-right-icon.svg"
-								alt="continue"
-								width={50}
-								height={10}
-								className="my-auto ml-4"
-							/>
-						</div>
-					</Button>
-				</div>
+				{isLoading && (
+					<div className="flex h-[100px] w-full items-center justify-center">
+						<Spinner />
+					</div>
+				)}
 			</div>
 		</section>
 	)

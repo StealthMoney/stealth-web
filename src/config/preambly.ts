@@ -27,6 +27,9 @@ interface qwuery {
 interface bvnQuery {
 	bvn: string
 }
+interface faceQuery {
+	faceCard: File | null
+}
 
 export const fetchAccountDetails = async ({
 	bankName,
@@ -48,6 +51,17 @@ export const verifyBvn = async ({ bvn }: bvnQuery) => {
 		"/api/verify_bvn",
 		{
 			bvn,
+		},
+		{ headers: { "Content-Type": "application/json" } }
+	)
+	return data
+}
+
+export const verifyface = async ({ faceCard }: faceQuery) => {
+	const { data } = await axios.post(
+		"/api/face_liveness",
+		{
+			faceCard,
 		},
 		{ headers: { "Content-Type": "application/json" } }
 	)
