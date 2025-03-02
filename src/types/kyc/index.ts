@@ -5,6 +5,16 @@ interface BaseStepProps {
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void
 	formError: FormErrorTypes
+	accountName: string
+	setAccountName: (name: string) => void
+	bvnFailed: boolean
+	setBvnfailed: (failed: boolean) => void
+	bvnVerified: boolean
+	setBvnVerified: (verified: boolean) => void
+	genderVerified: boolean
+	setGenderVerified: (verified: boolean) => void
+	buttonDisabled: boolean
+	setButtonDisabled: (disabled: boolean) => void
 }
 
 export interface KycFieldTypes {

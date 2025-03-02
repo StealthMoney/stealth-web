@@ -25,6 +25,12 @@ export default function Start({
 	kycProgress,
 	reverseKycProgress,
 }: StartPropsTypes) {
+	const [accountName, setAccountName] = useState<string>("")
+	const [bvnVerified, setBvnVerified] = useState<boolean>(false)
+	const [bvnFailed, setBvnfailed] = useState<boolean>(false)
+	const [genderVerified, setGenderverified] = useState<boolean>(false)
+	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true)
+
 	const [kycForm, setKycForm] = useState<KycFieldTypes>({
 		bankName: "",
 		AccountNumber: "",
@@ -41,7 +47,9 @@ export default function Start({
 		faceCard: "",
 	})
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	) => {
 		const { name, value } = e.target
 		setKycForm((prev) => ({
 			...prev,
@@ -158,6 +166,16 @@ items-center justify-center gap-x-2 bg-transparent text-[#CCCCCC]">
 					updateKycForm={handleChange}
 					formError={formErrors}
 					updateFormErrors={handleStep1Errors}
+					accountName={accountName}
+					setAccountName={setAccountName}
+					genderVerified={genderVerified}
+					setGenderVerified={setGenderverified}
+					bvnVerified={bvnVerified}
+					setBvnVerified={setBvnVerified}
+					bvnFailed={bvnFailed}
+					setBvnfailed={setBvnfailed}
+					buttonDisabled={buttonDisabled}
+					setButtonDisabled={setButtonDisabled}
 				/>
 			) : kycProgress === 2 ? (
 				<Step2
@@ -167,6 +185,16 @@ items-center justify-center gap-x-2 bg-transparent text-[#CCCCCC]">
 					updateKycForm={handleChange}
 					formError={formErrors}
 					updateFormErrors={handleStep2Errors}
+					accountName={accountName}
+					setAccountName={setAccountName}
+					genderVerified={genderVerified}
+					setGenderVerified={setGenderverified}
+					bvnVerified={bvnVerified}
+					setBvnVerified={setBvnVerified}
+					bvnFailed={bvnFailed}
+					setBvnfailed={setBvnfailed}
+					buttonDisabled={buttonDisabled}
+					setButtonDisabled={setButtonDisabled}
 				/>
 			) : (
 				""

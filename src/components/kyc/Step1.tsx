@@ -19,13 +19,17 @@ export default function Step1({
 	updateKycForm,
 	formError,
 	updateFormErrors,
+	accountName,
+	setAccountName,
+	bvnFailed,
+	setBvnfailed,
+	bvnVerified,
+	setBvnVerified,
+	genderVerified,
+	setGenderVerified,
+	buttonDisabled,
+	setButtonDisabled,
 }: Step1Props) {
-	const [accountName, setAccountName] = useState<string>("")
-	const [bvnVerified, setBvnVerified] = useState<boolean>(false)
-	const [bvnFailed, setBvnfailed] = useState<boolean>(false)
-	const [genderVerified, setGenderverified] = useState<boolean>(false)
-	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true)
-
 	const validateStepFields = (formValues: KycFieldTypes) => {
 		const errors: Step1ErrorTypes = {
 			bankName: "",
@@ -138,6 +142,7 @@ export default function Step1({
 		} else [null]
 	})
 
+	// problem with this useEffect hook
 	useEffect(() => {
 		if (
 			formValues.gender !== "" &&
@@ -148,12 +153,12 @@ export default function Step1({
 			if (
 				isBvnData.data.data.gender.toLowerCase() === formValues.gender.toLowerCase()
 			) {
-				setGenderverified(true)
+				setGenderVerified(true)
 			}
 		} else {
-			setGenderverified(false)
+			setGenderVerified(false)
 		}
-	}, [formValues.gender, isBvnData.data.data.gender])
+	}, [formValues.gender, isBvnData?.data.data.gender])
 
 	useEffect(() => {
 		if (
@@ -169,10 +174,6 @@ export default function Step1({
 			setButtonDisabled(false)
 		}
 	}, [data, isBvnData, accountName, bvnVerified, genderVerified])
-
-	useEffect(() => {
-		console.log(formValues)
-	}, [formValues])
 
 	return (
 		<section className="flex min-h-screen w-full items-center justify-center">
