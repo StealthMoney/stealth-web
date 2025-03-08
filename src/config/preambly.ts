@@ -5,7 +5,6 @@ export const identityPassApi = axios.create({
 	headers: {
 		"x-api-key": process.env.PREMBLY_API_KEY,
 		app_id: process.env.PREMBLY_APP_ID,
-		"Content-Type": "application/json",
 		accept: "application/json",
 	},
 })
@@ -58,12 +57,35 @@ export const verifyBvn = async ({ bvn }: bvnQuery) => {
 }
 
 export const verifyface = async ({ faceCard }: faceQuery) => {
-	const { data } = await axios.post(
-		"/api/face_liveness",
-		{
-			faceCard,
-		},
-		{ headers: { "Content-Type": "application/json" } }
-	)
-	return data
+	if (faceCard instanceof File) {
+		const base64Image = await fileToBase64(faceCard)
+
+		const { data } = await axios.post(
+			"/api/face_liveness",
+			{
+				faceCard: base64Image,
+			},
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		)
+		return data
+	} else {
+		throw new Error("Invalid file object")
+	}
+}
+
+const fileToBase64 = (file: File): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.readAsDataURL(file)
+		reader.onload = () => {
+			const base64String = reader.result as string
+			const base64Content = base64String.split(",")[1]
+			resolve(base64Content)
+		}
+		reader.onerror = (error) => reject(error)
+	})
 }

@@ -10,6 +10,7 @@ import * as tf from "@tensorflow/tfjs-core"
 import { useQuery } from "@tanstack/react-query"
 import { verifyface } from "@/config/preambly"
 import Spinner from "../spinner"
+import CustomDialog from "../dialog"
 
 export default function Step2({
 	submitInfo,
@@ -31,6 +32,7 @@ export default function Step2({
 	const [isFaceDetected, setIsFaceDetected] = useState(false)
 	const [isModelLoaded, setIsModelLoaded] = useState(false)
 	const [image, setImage] = useState<File | null>(null)
+	const [open, setOpen] = useState<boolean>(false)
 
 	useEffect(() => {
 		const loadModels = async () => {
@@ -175,11 +177,12 @@ export default function Step2({
 
 			// Convert to blob and create file
 			canvas.toBlob(
-				(blob) => {
+				async (blob) => {
 					if (blob) {
 						const file = new File([blob], "selfie.jpg", { type: "image/jpeg" })
 
-						// Update form
+						setImage(file)
+
 						updateKycForm({
 							target: {
 								name: "faceCard",
@@ -193,8 +196,6 @@ export default function Step2({
 						}
 						setIsCameraActive(false)
 						setErrorMessage("")
-
-						// setKycprogress()
 					}
 				},
 				"image/jpeg",
@@ -241,20 +242,37 @@ export default function Step2({
 	})
 
 	useEffect(() => {
-		console.log(data, "is face liveness data")
+		if (
+			data?.data?.response_code === "01" ||
+			data?.data?.response_code === "00"
+		) {
+			setOpen(true)
+		}
 	}, [data])
+
+	const handleModal = (value: boolean) => {
+		setOpen(value)
+		if (
+			data?.data?.response_code === "01" ||
+			data?.data?.response_code === "00"
+		) {
+			setTimeout(() => window.location.reload(), 2000)
+		}
+	}
 
 	return (
 		<section className="flex min-h-screen w-full items-center justify-center">
 			<div className="my-8 mt-24 flex w-full flex-col md:w-2/4">
-				<div className="w-full">
-					<h1 className="text-[20px] font-bold lg:text-[28px]">
-						Complete your KYC (2/2)
-					</h1>
-					<p className="text-[12px] lg:text-[16px]">
-						Take your liveness test to complete the KYC registration.
-					</p>
-				</div>
+				{!open && (
+					<div className="w-full">
+						<h1 className="text-[20px] font-bold lg:text-[28px]">
+							Complete your KYC (2/2)
+						</h1>
+						<p className="text-[12px] lg:text-[16px]">
+							Take your liveness test to complete the KYC registration.
+						</p>
+					</div>
+				)}
 
 				{!isLoading && (
 					<>
@@ -329,6 +347,19 @@ export default function Step2({
 					</div>
 				)}
 			</div>
+
+			{!isLoading && open && (
+				<div className="z-50">
+					<CustomDialog
+						isOpen={open}
+						onDismiss={() => handleModal(false)}
+						title={`${
+							data?.data?.response_code === "01" || data?.data?.response_code === "00"
+								? "Kyc verification Successful"
+								: "Kyc Verification Failed"
+						}`}></CustomDialog>
+				</div>
+			)}
 		</section>
 	)
 }

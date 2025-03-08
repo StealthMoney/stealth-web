@@ -95,7 +95,7 @@ export default function Step1({
 		} else {
 			setAccountName("Account verification failed")
 		}
-	}, [data])
+	}, [data, setAccountName])
 
 	const {
 		data: isBvnData,
@@ -119,8 +119,6 @@ export default function Step1({
 			const firstName = isBvnData.data.data.firstName
 			const lastName = isBvnData.data.data.lastName
 			const middleName = isBvnData.data.data.middleName
-			console.log(middleName, "is middle")
-
 			setBvnVerified(false)
 			setBvnfailed(false)
 
@@ -158,7 +156,13 @@ export default function Step1({
 		} else {
 			setGenderVerified(false)
 		}
-	}, [formValues.gender, isBvnData?.data.data.gender])
+	}, [
+		formValues?.gender,
+		isBvnData?.data?.data?.gender,
+		setGenderVerified,
+		isBvnData,
+		bvnVerified,
+	])
 
 	useEffect(() => {
 		if (
@@ -173,7 +177,14 @@ export default function Step1({
 		} else {
 			setButtonDisabled(false)
 		}
-	}, [data, isBvnData, accountName, bvnVerified, genderVerified])
+	}, [
+		data,
+		isBvnData,
+		accountName,
+		bvnVerified,
+		genderVerified,
+		setButtonDisabled,
+	])
 
 	return (
 		<section className="flex min-h-screen w-full items-center justify-center">

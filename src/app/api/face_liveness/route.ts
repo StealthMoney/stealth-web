@@ -20,7 +20,6 @@ export async function POST(req: Request) {
 
 	try {
 		const { faceCard } = payload
-		console.log(faceCard, "is faceCard")
 
 		if (!faceCard)
 			return NextResponse.json(
@@ -33,10 +32,15 @@ export async function POST(req: Request) {
 
 		const faceLivenessVerification = await identityPassApi.post(
 			"/identitypass/verification/biometrics/face/liveliness_check",
-			{ image: faceCard }
+			new URLSearchParams({
+				image: faceCard,
+			}).toString(),
+			{
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+			}
 		)
-        console.log(faceLivenessVerification, "is faceliveness verification");
-        
 
 		return NextResponse.json({
 			success: true,
