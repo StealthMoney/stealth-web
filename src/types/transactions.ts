@@ -10,3 +10,10 @@ export type TransactionProps = {
 	amount: string
 	value: string
 }
+
+export interface PaymentQuery {
+	assetCurrency?: "USDT" | "SATS"
+	page?: number
+	size?: number
+	sort?: string
+}

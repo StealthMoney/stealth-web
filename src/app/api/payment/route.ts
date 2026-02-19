@@ -4,6 +4,8 @@ import endpoints from "@/config/endpoints"
 export async function POST(request: Request) {
 	const url = endpoints().payment["get-details"]
 	const payload = await request.json()
+	console.log(payload, "ispayloas")
+
 	try {
 		const res = await fetch(url, {
 			method: "POST",
@@ -11,10 +13,13 @@ export async function POST(request: Request) {
 			body: JSON.stringify({
 				narration: payload.narration,
 				walletAddress: payload.walletAddress,
-				amountInSats: payload.amountInSats,
+				assetCurrency: payload.assetCurrency,
+				network: payload.network,
 				amount: payload.amount,
 			}),
 		})
+		console.log(res, "is res")
+
 		if (!res.ok) {
 			return NextResponse.json(
 				{

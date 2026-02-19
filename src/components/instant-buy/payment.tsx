@@ -10,6 +10,7 @@ import { PaymentStatusProps } from "@/types/price"
 import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	amount: string
 	depositInfo: {
 		accountNumber: string
@@ -18,7 +19,7 @@ interface Props {
 		paymentReference: string
 		feeAmount: string
 		amountDue: string
-		amountInSats: string
+		assetValue: string
 		narration: string
 	}
 	paymentState: string
@@ -69,6 +70,7 @@ export const Payment = (props: Props) => {
 				return
 			}
 			const { data } = res as PaymentStatusProps
+			console.log(data, "isss")
 
 			if (
 				data.paymentState === "PROCESSING" ||
@@ -150,7 +152,7 @@ export const Payment = (props: Props) => {
 
 			<div className="my-4 w-full">
 				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-					<p>Amount of Bitcoin Purchase</p>
+					<p>Amount of {props.chosenCurrency ? "Bitcoin" : "USDT"} Purchase</p>
 					<p>Fees</p>
 				</div>
 				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">
@@ -159,9 +161,15 @@ export const Payment = (props: Props) => {
 				</div>
 			</div>
 
-			<small className="text-alt-orange-100">
-				The fees we charge are used to pay miners
+			<small
+				className={`${
+					props.chosenCurrency === "BTC" ? "text-alt-orange-100" : "text-green-500"
+				}`}>
+				{props.chosenCurrency === "BTC"
+					? "The fees we charge are used to pay miners"
+					: "The fees we charge are to settle our payment partners"}
 			</small>
+
 			<hr className="w-full" />
 
 			<div className="mb-10 mt-8 w-full">

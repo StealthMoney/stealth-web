@@ -8,7 +8,7 @@ import { useState } from "react"
 
 interface Props {
 	amount: string | number
-	amountInSats: string | number
+	assetAmount: string | number
 	feeAmount: string | number
 	amountDue: string | number
 	accountNumber: string | number
@@ -24,8 +24,8 @@ export const PaymentDetail = (props: Props) => {
 	const [copied, setCopied] = useState(false)
 	const [next, setNext] = useState(false)
 
-	const handleCopy = () => {
-		navigator.clipboard.writeText(accountNumber.toString())
+	const handleCopy = async () => {
+		await navigator.clipboard.writeText(accountNumber.toString())
 		setCopied(true)
 		setTimeout(() => {
 			setCopied(false)

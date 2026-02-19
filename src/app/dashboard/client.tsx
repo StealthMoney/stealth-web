@@ -1,6 +1,6 @@
 "use client"
 import { WarningCircle } from "@phosphor-icons/react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 
 import TransactionsTable from "@/components/transactions-table"
 import { CurrencyInput } from "@/components/shared/input"
@@ -12,9 +12,20 @@ import { Button, Dialog } from "@/components"
 import { UserProps } from "@/types/profile"
 import GeneratePayLink from "@/components/generateLink"
 import Start from "@/components/kyc/start"
-import { formatAmountForDisplay } from "@/shared/functions"
+import { formatAmountForDisplay, toAssetCurrency } from "@/shared/functions"
 import BtcPriceChart from "@/components/btcPriceChart"
 import { UpdateIcon } from "@radix-ui/react-icons"
+import { CurrencyToggle } from "@/components/shared/CurrencyBuyTabOption"
+import { useRouter, useSearchParams } from "next/navigation"
+import {
+	handleCurrencyChange,
+	getPaginationRange,
+	handlePageChange,
+} from "@/shared/functions"
+import { triggerRefresh, REFRESH_EVENT } from "@/lib/refresh_bus"
+import { useRefresh } from "../context/refreshProvider"
+import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
+import Loading from "@/components/shared/loading"
 
 const CurrencyList = ["NGN"] // just ngn for now
 
@@ -22,19 +33,82 @@ interface Props {
 	exchangeRate: ExchangeRateProps
 	profile: UserProps
 	transactions: PaymentDetail[]
+	totalPages: number
+	currentPage: number
 }
 
-const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
+const Client = ({
+	exchangeRate: { data },
+	profile,
+	transactions,
+	totalPages,
+	currentPage,
+}: Props) => {
+	const router = useRouter()
+	const searchParams = useSearchParams()
+	const assetParam = searchParams.get("assetCurrency") // "SATS" | "USDT" | null
+
 	const [fields, setFields] = useState({ amount: "", currency: "NGN" })
 	const [openModal, setOpenModal] = useState(false)
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
-	const [selectedCurrency, setSelectedCurrency] = useState("BTC")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
 	const displayAmount = formatAmountForDisplay(fields.amount)
 	const paymentConfig = profile.physicalWallets
+	const selectedCurrency: "BTC" | "USDT" = assetParam === "USDT" ? "USDT" : "BTC"
+	const [transactionsData, setTransactions] = useState(transactions)
+	const [exchangeRateData, setExchangeRateData] = useState(data)
+	const [totalPagesData, setTotalPagesData] = useState(totalPages)
+
+	const { refreshingSections, setSectionRefreshing, refreshData } = useRefresh()
+
+	const handleRefresh = useCallback(async () => {
+		setSectionRefreshing("transactions", true)
+		setSectionRefreshing("chart", true)
+
+		try {
+			const [transactionsRes, rateRes] = await Promise.all([
+				getAllPaymentDetails({
+					assetCurrency: selectedCurrency === "USDT" ? "USDT" : "SATS",
+					page: currentPage,
+					size: 10,
+					sort: "createdDate,desc",
+				}),
+				getExchangeRate(),
+			])
+
+			setTransactions(transactionsRes.data.content ?? [])
+			setTotalPagesData(transactionsRes.data.totalPages)
+
+			if (!(rateRes instanceof Error)) {
+				setExchangeRateData(rateRes.data)
+			}
+		} catch (error) {
+			console.error("Refresh failed:", error)
+		} finally {
+			setSectionRefreshing("transactions", false)
+		}
+	}, [selectedCurrency, currentPage, setSectionRefreshing])
+
+	useEffect(() => {
+		window.addEventListener(REFRESH_EVENT, handleRefresh)
+		return () => window.removeEventListener(REFRESH_EVENT, handleRefresh)
+	}, [handleRefresh])
+
+	useEffect(() => {
+		setTransactions(transactions)
+	}, [transactions])
+
+	useEffect(() => {
+		setExchangeRateData(data)
+	}, [data])
+
+	useEffect(() => {
+		setTotalPagesData(totalPages)
+	}, [totalPages])
 
 	console.log(data)
+	// console.log(generateTestnetBitcoinAddress());
 
 	const displayName = profile.firstName
 		? profile.firstName
@@ -132,19 +206,21 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 				<>
 					<Dialog isOpen={openModal} onDismiss={closeModal}>
 						<InstantBuy
+							chosenCurrency={selectedCurrency === "USDT" ? "USDT" : "BTC"}
 							paymentConfig={paymentConfig}
 							amount={fields.amount}
 							currency={fields.currency}
-							exchangeRate={data}
+							exchangeRate={exchangeRateData}
 							dismiss={closeModal}
 						/>
 					</Dialog>
 
 					<Dialog isOpen={openGenerateModal} onDismiss={closeModal}>
 						<GeneratePayLink
+							chosenCurrency={selectedCurrency === "USDT" ? "USDT" : "BTC"}
 							amount={fields.amount}
 							currency={fields.currency}
-							exchangeRate={data}
+							exchangeRate={exchangeRateData}
 							dismiss={closeModal}
 						/>
 					</Dialog>
@@ -154,34 +230,13 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 						</p>
 
 						{/* Currency Tabs */}
-						<div className="mb-6 flex justify-between gap-4">
-							<div className="flex gap-x-2 rounded-md bg-[#0E0E0E] px-5 py-2">
-								<button
-									onClick={() => setSelectedCurrency("BTC")}
-									className={`rounded-md px-4 py-2 text-sm font-medium outline-none transition-colors ${
-										selectedCurrency === "BTC"
-											? "rounded-md border border-[#494949] bg-[#010101] font-medium text-[#F7931A] shadow-sm shadow-[#4949490D]"
-											: ""
-									}`}>
-									Buy BTC
-								</button>
-								<button
-									onClick={() => setSelectedCurrency("USDT")}
-									className={`px-4 py-2 font-satoshi text-[16px] outline-none transition-colors ${
-										selectedCurrency === "USDT"
-											? "rounded-md border border-[#494949] bg-[#010101] font-medium text-[#F7931A] shadow-sm shadow-[#4949490D]"
-											: ""
-									}`}>
-									Buy USDT
-								</button>
-							</div>
-
-							<button
-								onClick={() => window.location.reload()}
-								className={`hidden items-center justify-center gap-x-4 rounded-md border border-[#494949] px-4 py-2 text-sm font-medium shadow-sm shadow-[#494949] outline-none transition-colors md:flex`}>
-								Refresh <UpdateIcon color="#D4D4D4" />
-							</button>
-						</div>
+						<CurrencyToggle
+							selectedCurrency={selectedCurrency}
+							onChange={(value) => {
+								handleCurrencyChange(value, router, searchParams)
+							}}
+							onRefresh={refreshData}
+						/>
 
 						<div className="grid h-[350px] w-full grid-cols-5 gap-6 md:mb-12">
 							<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 lg:col-span-2">
@@ -226,7 +281,9 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 
 									<p className="flex items-center gap-1 text-xs text-black-400">
 										<WarningCircle className="text-alt-orange-100" />
-										Exchange rate: 1 BTC = {formatCurrency(data.pricePerBtc)}
+										{selectedCurrency === "BTC"
+											? `Exchange rate: 1 BTC = ${formatCurrency(data.pricePerBtc)}`
+											: `Exchange rate: 1 USDT = ${formatCurrency(data.pricePerUsd)}`}
 									</p>
 								</div>
 								<div className="grid w-full gap-6">
@@ -259,10 +316,40 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 						</div>
 
 						<div>
-							<TransactionsTable
-								transactions={transactions}
-								pricePerUsd={data.pricePerUsd}
-							/>
+							{refreshingSections["transactions"] ? (
+								<Loading />
+							) : (
+								<>
+									<TransactionsTable
+										transactions={transactionsData}
+										pricePerUsd={exchangeRateData.pricePerUsd}
+										chosenCurrency={selectedCurrency}
+									/>
+
+									<div className="mt-4 flex items-center justify-center gap-2">
+										{getPaginationRange(currentPage, totalPagesData).map((page, i) =>
+											page === "..." ? (
+												<span key={`ellipsis-${i}`} className="px-2 text-[#494949]">
+													...
+												</span>
+											) : (
+												<button
+													key={page}
+													onClick={() =>
+														handlePageChange(page as number, searchParams, router)
+													}
+													className={`rounded border px-3 py-1 text-sm ${
+														currentPage === page
+															? "text-black border-[#F7931A] bg-[#F7931A]"
+															: "text-white border-[#494949] bg-transparent hover:border-[#F7931A]"
+													}`}>
+													{(page as number) + 1}
+												</button>
+											)
+										)}
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 				</>

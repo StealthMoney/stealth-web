@@ -7,19 +7,29 @@ export const formatCurrency = (amount: number) => {
 }
 
 export const getCurrencyValue = ({
+	currency,
 	amount,
 	pricePerSat,
 	pricePerUsd,
 }: {
+	currency: "BTC" | "USDT"
 	amount: string
 	pricePerSat: number
 	pricePerUsd: number
 }) => {
 	const amountInSats = Math.round(Number(amount) / pricePerSat)
 	const amountInNaira = Number(amount) / pricePerUsd
-	return {
-		amount: amountInNaira,
-		amountInSats,
+
+	if (currency === "BTC") {
+		return {
+			amount: amountInNaira,
+			assetValue: amountInSats,
+		}
+	} else {
+		return {
+			amount,
+			assetValue: amountInNaira,
+		}
 	}
 }
 

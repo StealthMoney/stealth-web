@@ -15,6 +15,7 @@ import { SATS_PER_BTC } from "@/config/constants"
 interface Props {
 	transactions: PaymentDetail[]
 	pricePerUsd?: number
+	chosenCurrency: "USDT" | "BTC"
 }
 
 const StatusColor = {
@@ -24,9 +25,15 @@ const StatusColor = {
 	FAILED: "text-[#B31919]",
 }
 
-const TransactionsTable = ({ transactions, pricePerUsd = 1 }: Props) => {
+const TransactionsTable = ({
+	transactions,
+	pricePerUsd = 1,
+	chosenCurrency,
+}: Props) => {
 	const [currency, setCurrency] = useState("NGN")
 	const [showAll, setShowAll] = useState(false)
+
+	console.log(transactions, "is tra")
 
 	const displayedTransactions = showAll ? transactions : transactions.slice(0, 4)
 
@@ -56,6 +63,7 @@ const TransactionsTable = ({ transactions, pricePerUsd = 1 }: Props) => {
 							transactions={displayedTransactions}
 							currency={currency}
 							pricePerUsd={pricePerUsd}
+							chosenCurrency={chosenCurrency}
 						/>
 					</div>
 
@@ -65,6 +73,7 @@ const TransactionsTable = ({ transactions, pricePerUsd = 1 }: Props) => {
 							transactions={displayedTransactions}
 							currency={currency}
 							pricePerUsd={pricePerUsd}
+							chosenCurrency={chosenCurrency}
 						/>
 					</div>
 				</div>
@@ -126,10 +135,12 @@ export const TableBody = ({
 	transactions,
 	currency,
 	pricePerUsd,
+	chosenCurrency,
 }: {
 	transactions: PaymentDetail[]
 	currency: string
 	pricePerUsd: number
+	chosenCurrency: "USDT" | "BTC"
 }) => {
 	const [selected, setSelected] = useState<PaymentDetail | null>(null)
 
@@ -151,7 +162,11 @@ export const TableBody = ({
 		<>
 			<Dialog isOpen={!!selected} onDismiss={() => setSelected(null)}>
 				{selected && (
-					<TransactionItem transaction={selected} close={() => setSelected(null)} />
+					<TransactionItem
+						chosenCurrency={chosenCurrency}
+						transaction={selected}
+						close={() => setSelected(null)}
+					/>
 				)}
 			</Dialog>
 			<div className="w-full">
@@ -179,8 +194,9 @@ export const TableBody = ({
 										{formatAmount(+transaction?.amountDue || 0, currency)}
 									</div>
 									<div className="w-[20%] text-sm text-gray-300">
-										{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}{" "}
-										USDT
+										{chosenCurrency === "BTC"
+											? (Number(transaction?.assetAmount) / SATS_PER_BTC || 0).toFixed(8)
+											: Number(transaction.assetAmount).toFixed(8)}{" "}
 									</div>
 									<div className="w-[25%] text-sm text-gray-300">
 										{formatBtcAddress(transaction.walletAddress ?? "")}
@@ -206,10 +222,12 @@ export const MobileTableBody = ({
 	transactions,
 	currency,
 	pricePerUsd,
+	chosenCurrency,
 }: {
 	transactions: PaymentDetail[]
 	currency: string
 	pricePerUsd: number
+	chosenCurrency: "USDT" | "BTC"
 }) => {
 	const [selected, setSelected] = useState<PaymentDetail | null>(null)
 
@@ -231,7 +249,11 @@ export const MobileTableBody = ({
 		<>
 			<Dialog isOpen={!!selected} onDismiss={() => setSelected(null)}>
 				{selected && (
-					<TransactionItem transaction={selected} close={() => setSelected(null)} />
+					<TransactionItem
+						chosenCurrency={chosenCurrency}
+						transaction={selected}
+						close={() => setSelected(null)}
+					/>
 				)}
 			</Dialog>
 			<div className="w-full space-y-4">
@@ -266,8 +288,9 @@ export const MobileTableBody = ({
 									<div className="flex justify-between">
 										<span className="text-[#AAAAAA]">Value</span>
 										<span className="text-white">
-											{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}{" "}
-											USDT
+											{chosenCurrency === "BTC"
+												? (Number(transaction?.assetAmount) / SATS_PER_BTC || 0).toFixed(8)
+												: Number(transaction.assetAmount).toFixed(8)}{" "}
 										</span>
 									</div>
 									<div className="flex justify-between">

@@ -66,7 +66,7 @@ export default async function Page(props: {
 				}>
 				<PaymentDetail
 					amount={paymentDetail.amount}
-					amountInSats={paymentDetail.amountInSats}
+					assetAmount={paymentDetail.assetAmount}
 					feeAmount={paymentDetail.feeAmount}
 					amountDue={paymentDetail.amountDue}
 					accountNumber={paymentDetail.accountNumber}

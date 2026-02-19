@@ -88,7 +88,7 @@ const DashboardLayoutClient = ({
 			</Dialog>
 			<main className="flex h-screen w-screen items-start overflow-hidden bg-black-100 text-white-100">
 				<div
-					className={`fixed left-0 top-0 z-50 ${
+					className={`fixed left-0 top-0 ${
 						!showMobileNav ? "hidden" : "flex"
 					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
 					<div className="flex w-full flex-col gap-12">

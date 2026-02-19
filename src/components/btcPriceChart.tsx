@@ -7,13 +7,15 @@ import {
 	YAxis,
 	Tooltip,
 } from "recharts"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import * as Select from "@radix-ui/react-select"
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
 	ChevronDownIcon,
 } from "@radix-ui/react-icons"
+import { useRefresh } from "@/app/context/refreshProvider"
+import { REFRESH_EVENT } from "@/lib/refresh_bus"
 
 type Range =
 	| "ONE_DAY"
@@ -65,35 +67,42 @@ export default function BtcPriceChart() {
 	const [currency, setCurrency] = useState<Currency>("NGN")
 	const [loading, setLoading] = useState(true)
 	const [isChangingRange, setIsChangingRange] = useState(false)
+	const { setSectionRefreshing, refreshingSections } = useRefresh()
 
-	useEffect(() => {
-		const fetchPrices = async () => {
-			const isInitialLoad = data.length === 0
-			if (!isInitialLoad) {
-				setIsChangingRange(true)
+	const fetchPrices = useCallback(
+		async (isRefresh = false) => {
+			if (isRefresh) {
+				setSectionRefreshing("chart", true)
 			} else {
-				setLoading(true)
+				const isInitialLoad = data.length === 0
+				if (!isInitialLoad) {
+					setIsChangingRange(true)
+				} else {
+					setLoading(true)
+				}
 			}
 
-			const response = await fetch(
-				"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json"
-			)
-			const responseData = await response.json()
-			const ngnRate = responseData.usd.ngn
-
 			try {
+				// Fetch exchange rate
+				const response = await fetch(
+					"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json"
+				)
+				const responseData = await response.json()
+				const ngnRate = responseData.usd.ngn
+
+				// Fetch BTC prices
 				const res = await fetch(GRAPHQL_ENDPOINT, {
 					method: "POST",
 					headers: { "content-type": "application/json" },
 					body: JSON.stringify({
 						query: `
-              query ($range: PriceGraphRange!) {
-                btcPriceList(range: $range) {
-                  price { formattedAmount }
-                  timestamp
-                }
+            query ($range: PriceGraphRange!) {
+              btcPriceList(range: $range) {
+                price { formattedAmount }
+                timestamp
               }
-            `,
+            }
+          `,
 						variables: { range },
 					}),
 				})
@@ -103,7 +112,6 @@ export default function BtcPriceChart() {
 				const formatted: PricePoint[] = json.data.btcPriceList.map((item: any) => {
 					const priceUsd = Number(item.price.formattedAmount) / 100
 					const priceNgn = priceUsd * ngnRate
-
 					return {
 						timestamp: item.timestamp * 1000,
 						priceUsd,
@@ -115,16 +123,32 @@ export default function BtcPriceChart() {
 			} catch (err) {
 				console.error("BTC chart fetch failed", err)
 			} finally {
-				if (isInitialLoad) {
-					setLoading(false)
+				if (isRefresh) {
+					setSectionRefreshing("chart", false)
 				} else {
-					setIsChangingRange(false)
+					if (data.length === 0) {
+						setLoading(false)
+					} else {
+						setIsChangingRange(false)
+					}
 				}
 			}
+		},
+		[range, data.length, setSectionRefreshing]
+	)
+
+	useEffect(() => {
+		fetchPrices()
+	}, [range, fetchPrices])
+
+	useEffect(() => {
+		const handleRefresh = () => {
+			fetchPrices(true)
 		}
 
-		fetchPrices()
-	}, [range, data.length])
+		window.addEventListener(REFRESH_EVENT, handleRefresh)
+		return () => window.removeEventListener(REFRESH_EVENT, handleRefresh)
+	}, [fetchPrices])
 
 	const delta = useMemo(() => {
 		if (data.length < 2) return null
@@ -170,7 +194,7 @@ export default function BtcPriceChart() {
 		return currency === "NGN" ? formatNaira(value) : formatUsd(value)
 	}
 
-	if (loading) {
+	if (loading || refreshingSections["chart"]) {
 		return (
 			<div className="flex h-full items-center justify-center text-sm text-gray-400">
 				Loading market data…
