@@ -3,13 +3,33 @@ import { useState, useMemo } from "react"
 import TransactionsTable from "@/components/transactions-table"
 import Form from "./form"
 import { PaymentDetail } from "@/types/price"
+import { CurrencyToggle } from "@/components/shared/CurrencyBuyTabOption"
+import {
+	handleCurrencyChange,
+	getPaginationRange,
+	handlePageChange,
+} from "@/shared/functions"
+import { useSearchParams, useRouter } from "next/navigation"
 
 export default function FilteredTransactions({
 	initialTransactions,
+	totalPages,
+	currentPage,
 }: {
 	initialTransactions: PaymentDetail[]
+	totalPages: number
+	currentPage: number
 }) {
 	const [query, setQuery] = useState("")
+
+	const router = useRouter()
+	const searchParams = useSearchParams()
+
+	const assetParam = searchParams.get("assetCurrency")
+	const selectedCurrency: "BTC" | "USDT" = assetParam === "USDT" ? "USDT" : "BTC"
+
+	console.log(selectedCurrency, "tat")
+
 	const filteredTransactions = useMemo(() => {
 		if (!query) return initialTransactions
 
@@ -59,7 +79,35 @@ export default function FilteredTransactions({
 				<p className="font-satoshi text-2xl font-bold capitalize">Transactions</p>
 				<Form query={query} setQuery={setQuery} />
 			</div>
-			<TransactionsTable transactions={filteredTransactions} />
+
+			<CurrencyToggle
+				selectedCurrency={selectedCurrency}
+				onChange={(value) => handleCurrencyChange(value, router, searchParams)}
+			/>
+			<TransactionsTable
+				chosenCurrency={selectedCurrency}
+				transactions={filteredTransactions}
+			/>
+			<div className="mt-4 flex items-center justify-center gap-2 pb-4">
+				{getPaginationRange(currentPage, totalPages).map((page, i) =>
+					page === "..." ? (
+						<span key={`ellipsis-${i}`} className="px-2 text-[#494949]">
+							...
+						</span>
+					) : (
+						<button
+							key={page}
+							onClick={() => handlePageChange(page as number, searchParams, router)}
+							className={`rounded border px-3 py-1 text-sm ${
+								currentPage === page
+									? "text-black border-[#F7931A] bg-[#F7931A]"
+									: "text-white border-[#494949] bg-transparent hover:border-[#F7931A]"
+							}`}>
+							{(page as number) + 1}
+						</button>
+					)
+				)}
+			</div>
 		</div>
 	)
 }

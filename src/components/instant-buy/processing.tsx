@@ -11,6 +11,7 @@ import { Button } from ".."
 const WAIT_PERIOD_IN_SECONDS = 180
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	amountPayable: string
 	paymentReference: string
 	setTxnHash: (txnHash: string) => void

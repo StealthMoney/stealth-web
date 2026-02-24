@@ -13,6 +13,7 @@ import { SATS_PER_BTC } from "@/config/constants"
 import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	transaction: PaymentDetail
 	close: () => void
 }
@@ -35,7 +36,7 @@ const StatusIcon = {
 	FAILED: <WarningCircle className="text-9xl text-red-100" weight="fill" />,
 }
 
-const TransactionItem = ({ transaction, close }: Props) => {
+const TransactionItem = ({ transaction, close, chosenCurrency }: Props) => {
 	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 	return (
@@ -50,7 +51,10 @@ const TransactionItem = ({ transaction, close }: Props) => {
 			{StatusIcon[transaction.paymentState]}
 			<p className="text-xl text-white-300">You purchased</p>
 			<p className="text-[28px] text-white-100">
-				{(Number(transaction.amountInSats) / SATS_PER_BTC).toString()} BTC
+				{chosenCurrency === "BTC"
+					? Number(transaction.assetAmount) / SATS_PER_BTC
+					: Number(transaction.assetAmount)}{" "}
+				{chosenCurrency}
 			</p>
 			{transaction.paymentState === "PROCESSING" && (
 				<p className="text-center text-xl text-white-100">
@@ -82,7 +86,12 @@ const TransactionItem = ({ transaction, close }: Props) => {
 				</div>
 				<div className="flex w-full items-center justify-between text-xl font-medium">
 					<p>{formatCurrency(+transaction.amountDue || 0)}</p>
-					<p>{Number(transaction.amountInSats) / SATS_PER_BTC || 0} BTC</p>
+					<p>
+						{chosenCurrency === "BTC"
+							? Number(transaction.assetAmount) / SATS_PER_BTC
+							: Number(transaction.assetAmount)}{" "}
+						{chosenCurrency}
+					</p>
 				</div>
 			</div>
 			{/* <div className="flex w-full flex-col justify-start">
