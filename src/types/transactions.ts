@@ -17,3 +17,11 @@ export interface PaymentQuery {
 	size?: number
 	sort?: string
 }
+
+export interface PageParamProps {
+	searchParams: Promise<{
+		assetCurrency?: "USDT" | "SATS"
+		page?: string
+		size?: string
+	}>
+}

@@ -61,6 +61,7 @@ const Client = ({
 	const [totalPagesData, setTotalPagesData] = useState(totalPages)
 
 	const { refreshingSections, setSectionRefreshing, refreshData } = useRefresh()
+	console.log(selectedCurrency, "is selectedcee")
 
 	const handleRefresh = useCallback(async () => {
 		setSectionRefreshing("transactions", true)
@@ -74,7 +75,7 @@ const Client = ({
 					size: 10,
 					sort: "createdDate,desc",
 				}),
-				getExchangeRate(),
+				getExchangeRate(selectedCurrency),
 			])
 
 			setTransactions(transactionsRes.data.content ?? [])
@@ -282,8 +283,8 @@ const Client = ({
 									<p className="flex items-center gap-1 text-xs text-black-400">
 										<WarningCircle className="text-alt-orange-100" />
 										{selectedCurrency === "BTC"
-											? `Exchange rate: 1 BTC = ${formatCurrency(data.pricePerBtc)}`
-											: `Exchange rate: 1 USDT = ${formatCurrency(data.pricePerUsd)}`}
+											? `Exchange rate: 1 BTC = ${formatCurrency(data?.pricePerBtc ?? 0)}`
+											: `Exchange rate: 1 USDT = ${formatCurrency(data?.price ?? 0)}`}
 									</p>
 								</div>
 								<div className="grid w-full gap-6">

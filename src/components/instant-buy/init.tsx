@@ -198,10 +198,10 @@ const Init = (props: Props) => {
 			amount: cleanAmount,
 			pricePerSat: props.exchangeRate.pricePerSat,
 			pricePerUsd: props.exchangeRate.pricePerUsd,
+			price: props.exchangeRate.price,
 		})
 
 		if (!isNaN(assetValue) && isFinite(assetValue)) {
-			// ✅ Only floor for BTC/SATS — USDT needs decimal precision
 			const formatted =
 				props.chosenCurrency === "BTC"
 					? Math.floor(assetValue).toString()
@@ -210,7 +210,6 @@ const Init = (props: Props) => {
 		} else {
 			props.setAssetValue("0")
 		}
-		// ✅ Add reversed to deps so the effect re-evaluates when direction changes
 	}, [fields.amount, reversed, props.chosenCurrency])
 
 	// when sats/usdt field is being edited
@@ -236,9 +235,9 @@ const Init = (props: Props) => {
 
 		let amountInNaira
 		if (props.chosenCurrency === "BTC") {
-			amountInNaira = numericSats * props.exchangeRate.pricePerSat
+			amountInNaira = numericSats * (props.exchangeRate?.pricePerSat ?? 0)
 		} else {
-			amountInNaira = numericSats * props.exchangeRate.pricePerUsd
+			amountInNaira = numericSats * (props.exchangeRate.price ?? 0)
 		}
 
 		if (!isNaN(amountInNaira) && isFinite(amountInNaira)) {
@@ -248,7 +247,6 @@ const Init = (props: Props) => {
 		} else {
 			handleChange({ target: { name: "amount", value: "0" } } as any)
 		}
-		// ✅ Add reversed to deps here too
 	}, [fields.assetValue, reversed, props.chosenCurrency])
 
 	return (
@@ -305,7 +303,13 @@ const Init = (props: Props) => {
 				</div>
 				<p className="flex items-center gap-1 text-xs text-black-400">
 					<WarningCircle className="text-alt-orange-100" />
-					Exchange rate: 1BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
+					{props.chosenCurrency === "BTC"
+						? `Exchange rate: 1 BTC = ${formatCurrency(
+								props.exchangeRate.pricePerBtc ?? 0
+						  )}`
+						: `Exchange rate: 1 USDT = ${formatCurrency(
+								props.exchangeRate?.price ?? 0
+						  )}`}
 				</p>
 			</div>
 			{props.paymentConfig.length > 0 && props.chosenCurrency === "BTC" && (

@@ -149,7 +149,13 @@ const LinkGenerateInit = (props: Props) => {
 				</div>
 				<p className="flex items-center gap-1 text-[14px] text-black-400">
 					<WarningCircle className="text-alt-orange-100" />
-					Exchange rate: 1 BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
+					{props.chosenCurrency === "BTC"
+						? `Exchange rate: 1 BTC = ${formatCurrency(
+								props.exchangeRate.pricePerBtc ?? 0
+						  )}`
+						: `Exchange rate: 1 USDT = ${formatCurrency(
+								props.exchangeRate?.price ?? 0
+						  )}`}
 				</p>
 			</div>
 			<div className="relative my-6">

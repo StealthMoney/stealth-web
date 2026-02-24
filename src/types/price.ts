@@ -5,9 +5,10 @@ export type ExchangeRateProps = {
 	_links: string | null
 	data: {
 		currency: string
-		pricePerBtc: number
-		pricePerUsd: number
-		pricePerSat: number
+		pricePerBtc?: number
+		pricePerUsd?: number
+		pricePerSat?: number
+		price?: number
 	}
 }
 

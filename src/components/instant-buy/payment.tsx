@@ -152,7 +152,9 @@ export const Payment = (props: Props) => {
 
 			<div className="my-4 w-full">
 				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-					<p>Amount of {props.chosenCurrency ? "Bitcoin" : "USDT"} Purchase</p>
+					<p>
+						Amount of {props.chosenCurrency === "BTC" ? "Bitcoin" : "USDT"} Purchase
+					</p>
 					<p>Fees</p>
 				</div>
 				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">

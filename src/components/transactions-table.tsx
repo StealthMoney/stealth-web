@@ -97,10 +97,9 @@ export const TableHead = ({
 			<div className="w-[15%] text-sm font-medium text-[#AAAAAA]">Date</div>
 			<div className="flex w-[15%] items-center gap-2">
 				<span className="text-sm font-medium text-[#AAAAAA]">Amount</span>
-				<Select.Root value={currency} onValueChange={setCurrency}>
+				<Select.Root value={currency} onValueChange={setCurrency} disabled>
 					<Select.Trigger className="text-white flex items-center gap-1 rounded border border-gray-600 bg-[#010101] px-2 py-1 text-sm font-medium hover:border-gray-500">
 						<Select.Value />
-						<ChevronDownIcon className="h-4 w-4" />
 					</Select.Trigger>
 					<Select.Portal>
 						<Select.Content className="z-50 rounded-md border border-[#2B2B2B] bg-[#494949] shadow-lg">

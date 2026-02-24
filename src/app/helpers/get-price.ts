@@ -13,12 +13,15 @@ import {
 import { getAuthHeaders } from "@/shared/functions"
 import { PaymentQuery } from "@/types/transactions"
 
-export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
+export const getExchangeRate = async (
+	params: string
+): Promise<ExchangeRateProps | Error> => {
 	const session = await getAuthHeaders(false)
 	if (!session) {
 		return new Error("No session found!")
 	}
-	const url = endpoints().price.btc
+	const derivedParam = params === "SATS" || params === "BTC" ? "BTC" : "TRC20"
+	const url = endpoints(derivedParam).price.btc
 	const response = await fetch(url, {
 		headers: session,
 		// revalidate data every 30 seconds

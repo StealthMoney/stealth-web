@@ -10,16 +10,9 @@ import {
 	normalizeAssetCurrency,
 } from "@/shared/functions"
 export const dynamic = "force-dynamic"
+import { PageParamProps } from "@/types/transactions"
 
-interface PageProps {
-	searchParams: Promise<{
-		assetCurrency?: "USDT" | "SATS"
-		page?: string
-		size?: string
-	}>
-}
-
-const Page = async ({ searchParams }: PageProps) => {
+const Page = async ({ searchParams }: PageParamProps) => {
 	const resolvedParams = await searchParams
 	const data = await auth()
 	let shouldRedirect = await verifyAuthTokenExpiry(data)
@@ -35,8 +28,9 @@ const Page = async ({ searchParams }: PageProps) => {
 		sort: "createdDate,desc",
 	})
 
-	const rate = await getExchangeRate()
+	const rate = await getExchangeRate(resolvedParams.assetCurrency ?? "BTC")
 	const profile = await getProfile()
+	console.log(rate, resolvedParams, "is rate")
 
 	if (rate instanceof Error) {
 		return (
