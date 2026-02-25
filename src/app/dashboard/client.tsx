@@ -244,8 +244,18 @@ const Client = ({
 								<div>
 									<p className="font-satoshi text-xl font-medium">Instant Buy</p>
 									<p className="mb-4 text-xs text-black-400">
-										Instantly buy Bitcoin into your self custody hardware wallet. Remember
-										it&apos;s not your Bitcoin until you self-custody it.
+										<span>
+											Instantly buy {selectedCurrency === "BTC" ? "Bitcoin" : "USDT"} into
+											your
+											{selectedCurrency === "BTC" ? " self custody hardware" : ""} wallet.
+										</span>
+
+										{selectedCurrency === "BTC" && (
+											<span>
+												{" "}
+												Remember it&apos;s not your Bitcoin until you self-custody it.
+											</span>
+										)}
 									</p>
 									<CurrencyInput
 										disableInput={profile.kycInfo.level === "ONE"}
@@ -275,7 +285,8 @@ const Client = ({
 									) : Number(fields.amount) < profile.kycInfo.minAmount ? (
 										<p className="flex items-center gap-1 text-xs text-red-100">
 											<WarningCircle className="text-red-100" />
-											Due to dust transactions, your purchase must be{" "}
+											{selectedCurrency === "BTC" ? "Due to dust transactions," : ""}{" "}
+											{selectedCurrency === "BTC" ? "y" : "Y"}our purchase must be{" "}
 											{formatDigits(profile.kycInfo.minAmount)} or higher.
 										</p>
 									) : null}
