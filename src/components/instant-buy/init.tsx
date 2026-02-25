@@ -357,8 +357,10 @@ const Init = (props: Props) => {
 						}
 					/>
 					<p className="text-xs">
-						Please paste in your wallet address here. (Avoid reusing the same address
-						for privacy reasons)
+						Please paste in your wallet address here.{" "}
+						{props.chosenCurrency === "BTC"
+							? "(Avoid reusing the same address for privacy reasons)"
+							: "(Please provide a valid TRC20 wallet address)"}
 					</p>
 				</div>
 

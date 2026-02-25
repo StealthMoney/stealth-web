@@ -10,7 +10,8 @@ export const validateWalletAddress = (
 ) => {
 	if (!address) return false
 	const env = process.env.NEXT_PUBLIC_APP_ENV || process.env.NODE_ENV
-	if (env === "staging" || env === "development") return true
+	if ((env === "staging" && chosenCurrency === "BTC") || env === "development")
+		return true
 
 	if (chosenCurrency === "BTC") {
 		return validate(address, network)
