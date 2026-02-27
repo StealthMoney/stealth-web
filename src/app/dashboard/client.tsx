@@ -26,6 +26,7 @@ import { triggerRefresh, REFRESH_EVENT } from "@/lib/refresh_bus"
 import { useRefresh } from "../context/refreshProvider"
 import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import Loading from "@/components/shared/loading"
+import Image from "next/image"
 
 const CurrencyList = ["NGN"] // just ngn for now
 
@@ -62,6 +63,26 @@ const Client = ({
 
 	const { refreshingSections, setSectionRefreshing, refreshData } = useRefresh()
 	console.log(selectedCurrency, "is selectedcee")
+
+	const handleAssentBuyAmounts = (
+		assetType: "USDT" | "BTC",
+		userProfile: UserProps
+	): {
+		minAmount: number
+		maxAmount: number
+	} => {
+		if (assetType === "BTC") {
+			return {
+				minAmount: userProfile.kycInfo.limits[0].minAmountInNaira ?? 0,
+				maxAmount: userProfile.kycInfo.limits[0].maxAmountInNaira ?? 0,
+			}
+		} else {
+			return {
+				minAmount: userProfile.kycInfo.limits[1].minAmountInNaira ?? 0,
+				maxAmount: userProfile.kycInfo.limits[1].maxAmountInNaira ?? 0,
+			}
+		}
+	}
 
 	const handleRefresh = useCallback(async () => {
 		setSectionRefreshing("transactions", true)
@@ -273,21 +294,31 @@ const Client = ({
 											</option>
 										))}
 									</CurrencyInput>
-									{Number(fields.amount) > profile.kycInfo.maxAmount ? (
+
+									{Number(fields.amount) >
+									handleAssentBuyAmounts(selectedCurrency, profile)?.maxAmount ? (
 										(profile.kycInfo.level === "ONE" ||
 											profile.kycInfo.level === "TWO") && (
 											<p className="flex items-center gap-1 text-xs text-red-100">
 												<WarningCircle className="text-red-100" />
-												Upgrade your KYC to buy BTC above{" "}
-												{formatDigits(profile.kycInfo.maxAmount)}.
+												Upgrade your KYC to buy{" "}
+												{selectedCurrency === "BTC" ? "BTC" : "USDT"} above{" "}
+												{formatDigits(
+													handleAssentBuyAmounts(selectedCurrency, profile)?.maxAmount
+												)}
+												.
 											</p>
 										)
-									) : Number(fields.amount) < profile.kycInfo.minAmount ? (
+									) : Number(fields.amount) <
+									  handleAssentBuyAmounts(selectedCurrency, profile)?.minAmount ? (
 										<p className="flex items-center gap-1 text-xs text-red-100">
 											<WarningCircle className="text-red-100" />
 											{selectedCurrency === "BTC" ? "Due to dust transactions," : ""}{" "}
 											{selectedCurrency === "BTC" ? "y" : "Y"}our purchase must be{" "}
-											{formatDigits(profile.kycInfo.minAmount)} or higher.
+											{formatDigits(
+												handleAssentBuyAmounts(selectedCurrency, profile)?.minAmount
+											)}{" "}
+											or higher.
 										</p>
 									) : null}
 
@@ -313,7 +344,8 @@ const Client = ({
 										disabled={
 											profile.kycInfo.level === "ONE" ||
 											(profile.kycInfo.level === "TWO" &&
-												Number(fields.amount) < profile.kycInfo.minAmount)
+												Number(fields.amount) <
+													handleAssentBuyAmounts(selectedCurrency, profile)?.minAmount)
 										}
 										onClick={handleSubmit1}
 										// width="w-full"
@@ -323,7 +355,19 @@ const Client = ({
 								</div>
 							</div>
 							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 md:col-span-3 md:flex lg:col-span-3">
-								<BtcPriceChart />
+								{selectedCurrency === "BTC" ? (
+									<BtcPriceChart />
+								) : (
+									<>
+										<Image
+											src={"/usdtimg.svg"}
+											width={100}
+											height={100}
+											alt="placeholder"
+											className="h-full w-full object-cover object-center"
+										/>
+									</>
+								)}
 							</div>
 						</div>
 

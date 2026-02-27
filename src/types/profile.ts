@@ -19,9 +19,21 @@ export type UserProps = {
 	email: string
 	imageUrl: string | null
 	kycInfo: {
-		level: string
-		minAmount: number
-		maxAmount: number
+		level: String
+		limits: [
+			{
+				asset: String
+				network: string
+				minAmountInNaira: number
+				maxAmountInNaira: number
+			},
+			{
+				asset: string
+				network: string
+				minAmountInNaira: number
+				maxAmountInNaira: number
+			},
+		]
 	}
 	activated: boolean
 	langKey: string
