@@ -8,15 +8,20 @@ import {
 	PaymentDetailsProps,
 	PaymentStatusProps,
 	fetchMeta,
+	PaymentsResponse,
 } from "@/types/price"
 import { getAuthHeaders } from "@/shared/functions"
+import { PaymentQuery } from "@/types/transactions"
 
-export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
+export const getExchangeRate = async (
+	params: string
+): Promise<ExchangeRateProps | Error> => {
 	const session = await getAuthHeaders(false)
 	if (!session) {
 		return new Error("No session found!")
 	}
-	const url = endpoints().price.btc
+	const derivedParam = params === "SATS" || params === "BTC" ? "BTC" : "TRC20"
+	const url = endpoints(derivedParam).price.btc
 	const response = await fetch(url, {
 		headers: session,
 		// revalidate data every 30 seconds
@@ -33,7 +38,8 @@ interface PaymentPayload {
 	amount: string | number
 	walletAddress?: string
 	walletId?: string
-	amountInSats?: string | number
+	assetCurrency?: string | number
+	network?: string
 	narration?: string
 	generatePaymentLink?: boolean
 }
@@ -59,24 +65,33 @@ export const getPaymentDetails = async (
 	return data
 }
 
-export const getAllPaymentDetails = async (): Promise<
-	fetchMeta & { data: PaymentDetail[] }
-> => {
+export const getAllPaymentDetails = async (
+	query: PaymentQuery = {}
+): Promise<PaymentsResponse> => {
 	const session = await getAuthHeaders()
 	if (!session) {
 		throw new Error("No session found!")
 	}
-	const url = endpoints().payment.list
+
+	const params = new URLSearchParams()
+
+	if (query.assetCurrency) params.set("assetCurrency", query.assetCurrency)
+	if (query.page !== undefined) params.set("page", String(query.page))
+	if (query.size !== undefined) params.set("size", String(query.size))
+	if (query.sort) params.set("sort", query.sort)
+
+	const url = `${endpoints().payment.list}?${params.toString()}`
+
 	const response = await fetch(url, {
 		method: "GET",
 		headers: session,
-		next: { revalidate: 10, tags: ["paid", "approved"] },
 	})
+
 	if (!response.ok) {
 		throw new Error("Failed to fetch payment details!")
 	}
-	const data = await response.json()
-	return data as fetchMeta & { data: PaymentDetail[] }
+
+	return response.json()
 }
 
 export const confirmPayment = async (

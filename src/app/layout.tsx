@@ -5,6 +5,7 @@ import type { Metadata } from "next"
 import AuthProvider from "@/app/context/AuthProvider"
 import QueryProvider from "@/app/context/QueryProvider"
 import "./globals.css"
+import { RefreshProvider } from "./context/refreshProvider"
 
 const nunito = Nunito({
 	style: ["normal", "italic"],
@@ -63,7 +64,9 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${nunito.variable} ${satoshi.variable} font-nunito`}>
 				<QueryProvider>
-					<AuthProvider>{children}</AuthProvider>
+					<AuthProvider>
+						<RefreshProvider>{children}</RefreshProvider>
+					</AuthProvider>
 				</QueryProvider>
 			</body>
 		</html>

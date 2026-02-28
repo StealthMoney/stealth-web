@@ -5,9 +5,10 @@ export type ExchangeRateProps = {
 	_links: string | null
 	data: {
 		currency: string
-		pricePerBtc: number
-		pricePerUsd: number
-		pricePerSat: number
+		pricePerBtc?: number
+		pricePerUsd?: number
+		pricePerSat?: number
+		price?: number
 	}
 }
 
@@ -22,9 +23,10 @@ export type PaymentDetailsProps = {
 		amount: string
 		feeAmount: string
 		amountDue: string
-		amountInSats: string
+		assetValue: string
 		paymentLink?: string
 		narration: string
+		assetAmount: string
 	}
 }
 
@@ -41,7 +43,8 @@ export type PaymentDetail = {
 	accountNumber: number
 	amount: number
 	amountDue: number
-	amountInSats: string
+	assetValue: string
+	assetAmount: string
 	walletAddress: string
 	narration: string
 	paymentState: "INITIATED" | "PROCESSING" | "SUCCESSFUL" | "FAILED"
@@ -52,6 +55,19 @@ export type PaymentDetail = {
 	processorPaymentReference: string
 	createdDate: string
 	paymentDate: Date | string
+}
+
+export type PaginatedPayments = {
+	content: PaymentDetail[]
+	pageNo: number
+	pageSize: number
+	totalElements: number
+	totalPages: number
+	last: boolean
+}
+
+export type PaymentsResponse = fetchMeta & {
+	data: PaginatedPayments
 }
 
 export type PaymentStatusProps = fetchMeta & {

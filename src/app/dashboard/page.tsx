@@ -1,12 +1,19 @@
+// import { unstable_noStore as noStore } from "next/cache"
 import { RedirectClient } from "@/components/shared/redirectClient"
 import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"
 import { ExpiredSessionError } from "@/shared/error"
 import { auth } from "@/auth"
-import { verifyAuthTokenExpiry } from "@/shared/functions"
+import {
+	verifyAuthTokenExpiry,
+	normalizeAssetCurrency,
+} from "@/shared/functions"
+export const dynamic = "force-dynamic"
+import { PageParamProps } from "@/types/transactions"
 
-const Page = async () => {
+const Page = async ({ searchParams }: PageParamProps) => {
+	const resolvedParams = await searchParams
 	const data = await auth()
 	let shouldRedirect = await verifyAuthTokenExpiry(data)
 
@@ -14,9 +21,16 @@ const Page = async () => {
 		return <RedirectClient to="/account/login" />
 	}
 
-	const transactionsRes = await getAllPaymentDetails()
-	const rate = await getExchangeRate()
+	const transactionsRes = await getAllPaymentDetails({
+		assetCurrency: normalizeAssetCurrency(resolvedParams.assetCurrency ?? "SATS"),
+		page: Number(resolvedParams.page ?? 0),
+		size: Number(resolvedParams.size ?? 10),
+		sort: "createdDate,desc",
+	})
+
+	const rate = await getExchangeRate(resolvedParams.assetCurrency ?? "BTC")
 	const profile = await getProfile()
+	console.log(profile, "is profile")
 
 	if (rate instanceof Error) {
 		return (
@@ -47,7 +61,9 @@ const Page = async () => {
 		<Client
 			exchangeRate={rate}
 			profile={profile}
-			transactions={transactionsRes.data ?? []}
+			transactions={transactionsRes.data.content ?? []}
+			totalPages={transactionsRes.data.totalPages}
+			currentPage={transactionsRes.data.pageNo}
 		/>
 	)
 }

@@ -42,7 +42,7 @@ const endpoints = (params?: string | number) => {
 	}
 
 	const price = {
-		btc: `${baseUrl}/btc/price`,
+		btc: `${baseUrl}/${params}/price`,
 	}
 
 	const payment = {

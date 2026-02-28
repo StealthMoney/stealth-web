@@ -168,6 +168,7 @@ export default function Create({ exchangeRate, profile }: any) {
 							<Dialog isOpen={openModal} onDismiss={closeModal}>
 								{exchangeRate && exchangeRate.data ? (
 									<InstantBuy
+										chosenCurrency="BTC"
 										paymentConfig={paymentConfig}
 										amount={buyPrice}
 										currency={formData.currency}

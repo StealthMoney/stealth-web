@@ -7,6 +7,7 @@ import Init from "./init"
 type BuyState = "init" | "success"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	amount: string
 	currency: string
 	exchangeRate: ExchangeRateProps["data"]
@@ -49,6 +50,7 @@ const GeneratePayLink = (props: Props) => {
 		<div className="min-h-[70dvh] w-full">
 			{screen === "init" && (
 				<Init
+					chosenCurrency={props.chosenCurrency}
 					fields={fields}
 					handleChange={handleChange}
 					exchangeRate={props.exchangeRate}

@@ -7,6 +7,7 @@ import {
 	useCallback,
 	useEffect,
 	useState,
+	useMemo,
 } from "react"
 
 import { formatCurrency, getCurrencyValue } from "@/app/helpers/amount"
@@ -23,15 +24,18 @@ import { UserProps } from "@/types/profile"
 import { XpubSelect } from "../xpubSelect"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	paymentConfig: UserProps["physicalWallets"] | []
 	exchangeRate: ExchangeRateProps["data"]
 	fields: {
 		amount: string
 		currency: string
-		amountInSats: string
+		assetValue: string
 		walletAddress?: string
 		walletId?: string
 		usexpub: boolean
+		network: string
+		assetCurrency: string
 	}
 	handleChange: (
 		e:
@@ -39,7 +43,7 @@ interface Props {
 			| { target: { name: string; value: boolean } }
 	) => void
 	pasteWalletAddress: () => void
-	setAmountInSats: (value: string) => void
+	setAssetValue: (value: string) => void
 	setDepositInfo: Dispatch<SetStateAction<PaymentDetails>>
 	next: () => void
 	close: () => void
@@ -47,43 +51,86 @@ interface Props {
 
 const CurrencyList = ["NGN", "SATS"] // removed USD for now
 
+const getCurrencyList = (chosenCurrency: "BTC" | "USDT") => {
+	if (chosenCurrency === "BTC") return ["NGN", "SATS"]
+	if (chosenCurrency === "USDT") return ["NGN", "USDT"]
+	return ["NGN"]
+}
+
 const Init = (props: Props) => {
 	const [reversed, setReversed] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState("")
-	const [displayAmount, setDisplayAmount] = useState("")
-	const [displayAmount1, setDisplayAmount1] = useState("")
-	const [buttonDisableld, setButtonDisabled] = useState(false)
+	// const [displayAmount, setDisplayAmount] = useState("")
+	// const [displayAmount1, setDisplayAmount1] = useState("")
+	// const [buttonDisableld, setButtonDisabled] = useState(false)
 	const { fields, handleChange } = props
 	const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null)
 
+	const displayAmount = useMemo(
+		() => formatAmountForDisplay(fields.amount),
+		[fields.amount]
+	)
+	const displayAmount1 = useMemo(
+		() => formatAmountForDisplay(fields.assetValue),
+		[fields.assetValue]
+	)
+
+	const assetCurrency = useMemo(
+		() => (props.chosenCurrency === "BTC" ? "SATS" : "USDT"),
+		[props.chosenCurrency]
+	)
+
+	const network = useMemo(
+		() => (props.chosenCurrency === "BTC" ? "BTC" : "TRC20"),
+		[props.chosenCurrency]
+	)
+
+	console.log(props.chosenCurrency) // user chose currency to purchase
+
 	const handleSubmit = async () => {
-		const { amount, amountInSats, walletAddress, usexpub } = fields
+		const { amount, assetValue, walletAddress, usexpub } = fields
+
+		console.log(assetValue, "in sats")
 
 		const cleanAmount = amount.replace(/,/g, "")
 		const numericAmount = parseFloat(cleanAmount)
-		const cleanSats = amountInSats.replace(/,/g, "")
-		const numericAmountInSats = parseFloat(cleanSats)
+		const cleanSats = assetValue.replace(/,/g, "")
+		const numericAssetvalue = parseFloat(cleanSats)
+
+		if (!assetCurrency) {
+			return alert("Can't determine currency")
+		}
+
+		if (!network) {
+			return alert("Can't determine network")
+		}
 
 		if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
 			return alert("Please enter amount!")
 		}
 
-		if (isNaN(numericAmountInSats)) {
+		if (isNaN(numericAssetvalue)) {
 			return alert("Invalid amount in sats!")
+		}
+
+		if (!selectedWalletId && usexpub && props.chosenCurrency === "BTC") {
+			setError("Please Choose your x-pub key")
+			return
 		}
 
 		if (!walletAddress && !usexpub) {
 			setError("Please enter a wallet address")
 			return
 		}
-		setButtonDisabled(false)
 		setLoading(true)
 		try {
 			const res = await getPaymentDetails({
 				amount: numericAmount,
-				amountInSats: numericAmountInSats,
-				...(fields.usexpub
+				network,
+				assetCurrency,
+				// amountInSats: numericAssetvalue,
+				...(props.chosenCurrency === "BTC" && fields.usexpub
 					? {
 							walletId:
 								props.paymentConfig.length === 1
@@ -106,35 +153,35 @@ const Init = (props: Props) => {
 		}
 	}
 
-	const validate = useCallback((value: string) => {
-		const isValidAddress = value && validateWalletAddress(value)
-
-		if (!isValidAddress && value) {
-			setButtonDisabled(true)
-			setError("Invalid wallet address!")
-		} else {
-			setButtonDisabled(false)
-			setError("")
-		}
-	}, [])
-
-	useEffect(() => {
+	const walletError = useMemo(() => {
 		const { walletAddress, usexpub } = fields
-
-		if (!usexpub && walletAddress) {
-			validate(walletAddress)
-		} else if (usexpub) {
-			setButtonDisabled(false)
-			setError("")
+		if (usexpub) return ""
+		if (
+			walletAddress &&
+			!validateWalletAddress(props.chosenCurrency, walletAddress)
+		) {
+			return "Invalid wallet address!"
 		}
-	}, [fields, validate])
+		return ""
+	}, [fields, props.chosenCurrency])
+
+	const isButtonDisabled = useMemo(() => {
+		const { walletAddress, usexpub } = fields
+		if (usexpub) return false
+		if (
+			walletAddress &&
+			!validateWalletAddress(props.chosenCurrency, walletAddress)
+		)
+			return true
+		return false
+	}, [fields, props.chosenCurrency])
 
 	// when amount field is being edited
 	useEffect(() => {
 		if (reversed) return
 
 		if (!fields.amount || fields.amount === "" || fields.amount === "0") {
-			props.setAmountInSats("0")
+			props.setAssetValue("0")
 			return
 		}
 
@@ -142,38 +189,43 @@ const Init = (props: Props) => {
 		const numericAmount = parseFloat(cleanAmount)
 
 		if (isNaN(numericAmount) || !isFinite(numericAmount)) {
-			props.setAmountInSats("0")
+			props.setAssetValue("0")
 			return
 		}
 
-		const { amountInSats } = getCurrencyValue({
+		const { assetValue } = getCurrencyValue({
+			currency: props.chosenCurrency,
 			amount: cleanAmount,
 			pricePerSat: props.exchangeRate.pricePerSat,
 			pricePerUsd: props.exchangeRate.pricePerUsd,
+			price: props.exchangeRate.price,
 		})
 
-		if (!isNaN(amountInSats) && isFinite(amountInSats)) {
-			props.setAmountInSats(Math.floor(amountInSats).toString())
+		if (!isNaN(assetValue) && isFinite(assetValue)) {
+			const formatted =
+				props.chosenCurrency === "BTC"
+					? Math.floor(assetValue).toString()
+					: assetValue.toFixed(2)
+			props.setAssetValue(formatted)
 		} else {
-			props.setAmountInSats("0")
+			props.setAssetValue("0")
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fields.amount, reversed])
+	}, [fields.amount, reversed, props.chosenCurrency])
 
-	// when sats field is being edited
+	// when sats/usdt field is being edited
 	useEffect(() => {
 		if (!reversed) return
 
 		if (
-			!fields.amountInSats ||
-			fields.amountInSats === "" ||
-			fields.amountInSats === "0"
+			!fields.assetValue ||
+			fields.assetValue === "" ||
+			fields.assetValue === "0"
 		) {
 			handleChange({ target: { name: "amount", value: "0" } } as any)
 			return
 		}
 
-		const cleanSats = fields.amountInSats.replace(/,/g, "")
+		const cleanSats = fields.assetValue.replace(/,/g, "")
 		const numericSats = parseFloat(cleanSats)
 
 		if (isNaN(numericSats) || !isFinite(numericSats)) {
@@ -181,7 +233,12 @@ const Init = (props: Props) => {
 			return
 		}
 
-		const amountInNaira = numericSats * props.exchangeRate.pricePerSat
+		let amountInNaira
+		if (props.chosenCurrency === "BTC") {
+			amountInNaira = numericSats * (props.exchangeRate?.pricePerSat ?? 0)
+		} else {
+			amountInNaira = numericSats * (props.exchangeRate.price ?? 0)
+		}
 
 		if (!isNaN(amountInNaira) && isFinite(amountInNaira)) {
 			handleChange({
@@ -190,13 +247,7 @@ const Init = (props: Props) => {
 		} else {
 			handleChange({ target: { name: "amount", value: "0" } } as any)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fields.amountInSats, reversed])
-
-	useEffect(() => {
-		setDisplayAmount(formatAmountForDisplay(fields.amount))
-		setDisplayAmount1(formatAmountForDisplay(fields.amountInSats))
-	}, [fields.amount, fields.amountInSats])
+	}, [fields.assetValue, reversed, props.chosenCurrency])
 
 	return (
 		<div className="h-full w-full">
@@ -237,13 +288,13 @@ const Init = (props: Props) => {
 					</div>
 					<CurrencyInput
 						amount={displayAmount1}
-						currency="SATS"
-						inputName="amountInSats"
+						currency={props.chosenCurrency === "BTC" ? "SATS" : "USDT"}
+						inputName="assetValue"
 						disableInput={!reversed}
 						disableSelect
 						handleAmountChange={handleChange}
 						handleCurrencyChange={handleChange}>
-						{CurrencyList.map((currency) => (
+						{getCurrencyList(props.chosenCurrency).map((currency) => (
 							<option key={currency} value={currency}>
 								{currency}
 							</option>
@@ -252,10 +303,16 @@ const Init = (props: Props) => {
 				</div>
 				<p className="flex items-center gap-1 text-xs text-black-400">
 					<WarningCircle className="text-alt-orange-100" />
-					Exchange rate: 1BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
+					{props.chosenCurrency === "BTC"
+						? `Exchange rate: 1 BTC = ${formatCurrency(
+								props.exchangeRate.pricePerBtc ?? 0
+						  )}`
+						: `Exchange rate: 1 USDT = ${formatCurrency(
+								props.exchangeRate?.price ?? 0
+						  )}`}
 				</p>
 			</div>
-			{props.paymentConfig.length > 0 && (
+			{props.paymentConfig.length > 0 && props.chosenCurrency === "BTC" && (
 				<>
 					<div className="flex w-full items-center justify-between">
 						<div className="flex items-center gap-x-2">
@@ -299,12 +356,11 @@ const Init = (props: Props) => {
 							</button>
 						}
 					/>
-					{error && !fields.usexpub && (
-						<small className="text-[#B31919]">{error}</small>
-					)}
 					<p className="text-xs">
-						Please paste in your wallet address here. (Avoid reusing the same address
-						for privacy reasons)
+						Please paste in your wallet address here.{" "}
+						{props.chosenCurrency === "BTC"
+							? "(Avoid reusing the same address for privacy reasons)"
+							: "(Please provide a valid TRC20 wallet address)"}
 					</p>
 				</div>
 
@@ -326,9 +382,6 @@ const Init = (props: Props) => {
 								{props.paymentConfig[0]?.xpubKey}
 							</small>
 						</div>
-						{fields.usexpub && error && (
-							<small className="mt-2 block text-[#B31919]">{error}</small>
-						)}
 					</div>
 				)}
 
@@ -351,12 +404,21 @@ const Init = (props: Props) => {
 					</div>
 				)}
 			</div>
+			{fields.usexpub && walletError && (
+				<small className="mb-2 block text-[#B31919]">{walletError}</small>
+			)}
+
+			{walletError && !fields.usexpub && (
+				<small className="mb-2 text-[#B31919]">{walletError}</small>
+			)}
+
+			{error && <small className="mb-2 text-[#B31919]">{error}</small>}
 
 			<div className="pb-10">
 				<Button
 					type="button"
 					onClick={handleSubmit}
-					disabled={buttonDisableld}
+					disabled={isButtonDisabled}
 					width="w-full">
 					{loading ? <Spinner /> : "Buy Now"}
 				</Button>

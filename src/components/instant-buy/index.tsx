@@ -10,6 +10,7 @@ import { UserProps } from "@/types/profile"
 type BuyState = "init" | "payment" | "processing" | "success"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	paymentConfig: UserProps["physicalWallets"] | []
 	amount: string
 	currency: string
@@ -25,9 +26,10 @@ export type PaymentDetails = Pick<
 	| "paymentReference"
 	| "feeAmount"
 	| "amountDue"
-	| "amountInSats"
+	| "assetValue"
 	| "amount"
 	| "narration"
+	| "assetAmount"
 >
 
 const InstantBuy = (props: Props) => {
@@ -42,18 +44,21 @@ const InstantBuy = (props: Props) => {
 		paymentReference: "",
 		feeAmount: "",
 		amountDue: "",
-		amountInSats: "",
+		assetValue: "",
 		amount: "",
 		narration: "",
+		assetAmount: "",
 	})
 	const [fields, setFields] = useState({
 		amount: props.amount.replace(/,/g, ""),
 		currency: props.currency,
-		amountInSats: "",
+		assetValue: "",
 		narration: "",
 		walletAddress: "",
 		walletId: "",
 		usexpub: false,
+		assetCurrency: "",
+		network: "",
 	})
 
 	const pasteWalletAddress = async () => {
@@ -71,7 +76,7 @@ const InstantBuy = (props: Props) => {
 	) => {
 		const { name, value } = e.target
 		if (
-			(name === "amount" || name === "amountInSats") &&
+			(name === "amount" || name === "assetValue") &&
 			typeof value === "string"
 		) {
 			setFields({ ...fields, [name]: value.replace(/,/g, "") })
@@ -84,14 +89,15 @@ const InstantBuy = (props: Props) => {
 		<div className="min-h-[70dvh] w-full">
 			{screen === "init" && (
 				<Init
+					chosenCurrency={props.chosenCurrency}
 					paymentConfig={props.paymentConfig}
 					fields={fields}
 					handleChange={handleChange}
 					exchangeRate={props.exchangeRate}
 					pasteWalletAddress={pasteWalletAddress}
 					setDepositInfo={setDepositInfo}
-					setAmountInSats={(value: string) =>
-						setFields({ ...fields, amountInSats: value })
+					setAssetValue={(value: string) =>
+						setFields({ ...fields, assetValue: value })
 					}
 					next={() => setScreen("payment")}
 					close={() => props.dismiss()}
@@ -99,6 +105,7 @@ const InstantBuy = (props: Props) => {
 			)}
 			{screen === "payment" && (
 				<Payment
+					chosenCurrency={props.chosenCurrency}
 					amount={fields.amount}
 					depositInfo={depositInfo}
 					next={() => setScreen("processing")}
@@ -110,6 +117,7 @@ const InstantBuy = (props: Props) => {
 			)}
 			{screen === "processing" && (
 				<Processing
+					chosenCurrency={props.chosenCurrency}
 					amountPayable={depositInfo.amountDue}
 					paymentReference={depositInfo.paymentReference}
 					setTxnHash={(value) => setTxnHash(value)}
@@ -119,7 +127,11 @@ const InstantBuy = (props: Props) => {
 				/>
 			)}
 			{screen === "success" && (
-				<Success txnHash={txnHash} next={() => props.dismiss()} />
+				<Success
+					chosenCurrency={props.chosenCurrency}
+					txnHash={txnHash}
+					next={() => props.dismiss()}
+				/>
 			)}
 		</div>
 	)

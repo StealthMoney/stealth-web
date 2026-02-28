@@ -10,3 +10,18 @@ export type TransactionProps = {
 	amount: string
 	value: string
 }
+
+export interface PaymentQuery {
+	assetCurrency?: "USDT" | "SATS"
+	page?: number
+	size?: number
+	sort?: string
+}
+
+export interface PageParamProps {
+	searchParams: Promise<{
+		assetCurrency?: "USDT" | "SATS"
+		page?: string
+		size?: string
+	}>
+}

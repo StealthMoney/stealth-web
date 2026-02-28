@@ -15,6 +15,7 @@ import { getBaseUrl } from "@/app/helpers/string"
 import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
+	chosenCurrency: "BTC" | "USDT"
 	exchangeRate: ExchangeRateProps["data"]
 	fields: Fields
 	handleChange: (
@@ -50,7 +51,10 @@ const LinkGenerateInit = (props: Props) => {
 			setError(() => ({ ...error, walletAddress: "Please enter wallet address!" }))
 			return
 		}
-		const isValidAddress = validateWalletAddress(walletAddress)
+		const isValidAddress = validateWalletAddress(
+			props.chosenCurrency,
+			walletAddress
+		)
 		if (!isValidAddress) {
 			setError(() => ({ ...error, walletAddress: "Invalid wallet address!" }))
 			return
@@ -78,12 +82,13 @@ const LinkGenerateInit = (props: Props) => {
 	}
 
 	useEffect(() => {
-		const { amountInSats } = getCurrencyValue({
+		const { assetValue } = getCurrencyValue({
 			amount: fields.amount,
 			pricePerSat: props.exchangeRate.pricePerSat,
 			pricePerUsd: props.exchangeRate.pricePerUsd,
+			currency: props.chosenCurrency,
 		})
-		props.setAmountInSats(amountInSats.toString())
+		props.setAmountInSats(assetValue.toString())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fields.amount])
 
@@ -144,7 +149,13 @@ const LinkGenerateInit = (props: Props) => {
 				</div>
 				<p className="flex items-center gap-1 text-[14px] text-black-400">
 					<WarningCircle className="text-alt-orange-100" />
-					Exchange rate: 1 BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
+					{props.chosenCurrency === "BTC"
+						? `Exchange rate: 1 BTC = ${formatCurrency(
+								props.exchangeRate.pricePerBtc ?? 0
+						  )}`
+						: `Exchange rate: 1 USDT = ${formatCurrency(
+								props.exchangeRate?.price ?? 0
+						  )}`}
 				</p>
 			</div>
 			<div className="relative my-6">
