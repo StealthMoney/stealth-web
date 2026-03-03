@@ -33,8 +33,6 @@ const TransactionsTable = ({
 	const [currency, setCurrency] = useState("NGN")
 	const [showAll, setShowAll] = useState(false)
 
-	console.log(transactions, "is tra")
-
 	const displayedTransactions = showAll ? transactions : transactions.slice(0, 4)
 
 	return (

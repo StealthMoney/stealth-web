@@ -8,10 +8,22 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // import ECPairFactory from "ecpair"
 
 type JwtPayload = { exp: number }
-export const formatAmountForDisplay = (amount: string): string => {
-	if (!amount) return ""
-	const clean = amount.replace(/,/g, "")
-	return new Intl.NumberFormat("en-US").format(Number(clean))
+export const formatAmountForDisplay = (value: string): string => {
+	if (!value) return ""
+
+	const cleanValue = value.replace(/,/g, "")
+
+	if (isNaN(Number(cleanValue)) && cleanValue !== ".") return value
+
+	const parts = cleanValue.split(".")
+	const integerPart = parts[0]
+	const decimalPart = parts[1]
+
+	const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+	return decimalPart !== undefined
+		? `${formattedInteger}.${decimalPart}`
+		: formattedInteger
 }
 
 export const createResponse = (
