@@ -38,7 +38,8 @@ export const Payment = (props: Props) => {
 		navigator.clipboard.writeText(`
 		${depositInfo.bankName} \n
 		${depositInfo.accountName} \n
-		${depositInfo.accountNumber}
+		${depositInfo.accountNumber} \n
+		${depositInfo.amountDue}
 		`)
 	}
 
