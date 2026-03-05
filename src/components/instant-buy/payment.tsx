@@ -32,15 +32,36 @@ interface Props {
 export const Payment = (props: Props) => {
 	const [timer, setTimer] = useState(1800)
 	const [copied, setCopied] = useState(false)
+	const [copied1, setCopied1] = useState(false)
+	const [copied2, setCopied2] = useState(false)
 	const { amount, depositInfo } = props
 
 	const copyPaymentDetails = () => {
-		navigator.clipboard.writeText(`
-		${depositInfo.bankName} \n
-		${depositInfo.accountName} \n
-		${depositInfo.accountNumber} \n
-		${depositInfo.amountDue}
-		`)
+		if (!copied1)
+			navigator.clipboard
+				.writeText(depositInfo.amountDue)
+				.then(() => {
+					setCopied1(true)
+				})
+				.finally(() =>
+					setTimeout(() => {
+						setCopied1(false)
+					}, 1000)
+				)
+	}
+
+	const copyNarration = () => {
+		if (!copied2)
+			navigator.clipboard
+				.writeText(depositInfo.narration)
+				.then(() => {
+					setCopied2(true)
+				})
+				.finally(() =>
+					setTimeout(() => {
+						setCopied2(false)
+					}, 1000)
+				)
 	}
 
 	const copyAccountNumber = () => {
@@ -67,11 +88,11 @@ export const Payment = (props: Props) => {
 		try {
 			const res = await confirmPayment(depositInfo.paymentReference)
 			if (res instanceof Error) {
+				console.log(res, "is res")
 				alert("An error occurred while confirming payment")
 				return
 			}
 			const { data } = res as PaymentStatusProps
-			console.log(data, "isss")
 
 			if (
 				data.paymentState === "PROCESSING" ||
@@ -81,6 +102,7 @@ export const Payment = (props: Props) => {
 				props.next()
 			}
 		} catch (error) {
+			console.log(error, "is error")
 			alert("An error occurred while confirming payment")
 		}
 	}
@@ -126,7 +148,11 @@ export const Payment = (props: Props) => {
 					<button
 						onClick={copyPaymentDetails}
 						className="flex items-center gap-1 self-start text-xl text-[#AAAAAA] sm:self-auto">
-						Copy
+						{!copied1 ? (
+							<Copy size={24} color="#F7931A" />
+						) : (
+							<Check size={24} color="#66bc74" />
+						)}
 					</button>
 				</div>
 			</div>
@@ -175,12 +201,21 @@ export const Payment = (props: Props) => {
 
 			<hr className="w-full" />
 
-			<div className="mb-10 mt-8 w-full">
+			<div className="mb-10 mt-8 flex w-full justify-between">
 				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] bg-[#161616] px-4 py-2 font-satoshi text-xl font-medium">
 					<p className="text-[14px] text-[#AAAAAA]">
 						When making your bank transfer, kindly use this as narration:
 					</p>
-					<p className="text-[16px] text-white-100">{depositInfo.narration}</p>
+					<p className="flex w-full items-center justify-between text-[16px] text-white-100">
+						<span>{depositInfo.narration}</span>
+						<span role="button" aria-label="copy" onClick={copyNarration}>
+							{!copied2 ? (
+								<Copy size={24} color="#F7931A" />
+							) : (
+								<Check size={24} color="#66bc74" />
+							)}
+						</span>
+					</p>
 				</div>
 			</div>
 

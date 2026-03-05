@@ -1,5 +1,6 @@
-import { useState } from "react"
+"use client"
 
+import { useState } from "react"
 import { ExchangeRateProps } from "@/types/price"
 import Success from "./success"
 import Init from "./init"

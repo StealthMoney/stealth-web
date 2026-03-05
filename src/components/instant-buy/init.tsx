@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 import { ArrowsDownUp, Copy, WarningCircle } from "@phosphor-icons/react"
 import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
@@ -125,9 +125,11 @@ const Init = (props: Props) => {
 					  }
 					: { walletAddress: fields.walletAddress }),
 			})
-			if (res instanceof Error) {
-				setError(res.message)
+			if (!res.ok) {
+				const message = res?.message
+				setError(message || "Something went wrong with request")
 				setLoading(false)
+				return
 			}
 			props.setDepositInfo(res.data)
 			props.next()
