@@ -30,7 +30,6 @@ const Page = async ({ searchParams }: PageParamProps) => {
 
 	const rate = await getExchangeRate(resolvedParams.assetCurrency ?? "BTC")
 	const profile = await getProfile()
-	console.log(profile, "is profile")
 
 	if (rate instanceof Error) {
 		return (

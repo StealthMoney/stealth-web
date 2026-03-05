@@ -62,7 +62,6 @@ const Client = ({
 	const [totalPagesData, setTotalPagesData] = useState(totalPages)
 
 	const { refreshingSections, setSectionRefreshing, refreshData } = useRefresh()
-	console.log(selectedCurrency, "is selectedcee")
 
 	const handleAssentBuyAmounts = (
 		assetType: "USDT" | "BTC",
@@ -142,7 +141,10 @@ const Client = ({
 		const { name, value } = e.target
 
 		if (name === "amount") {
-			const cleanValue = value.replace(/\D/g, "")
+			const cleanValue = value.replace(/[^\d.]/g, "")
+			const decimalCount = (cleanValue.match(/\./g) || []).length
+			if (decimalCount > 1) return
+			if (cleanValue === ".") return
 			setFields({ ...fields, [name]: cleanValue })
 			return
 		}
@@ -152,10 +154,15 @@ const Client = ({
 	const handleSubmit1 = async () => {
 		const { amount } = fields
 
-		const cleanAmount = amount.replace(/[^\d]/g, "")
+		const numericAmount = parseFloat(amount)
 
-		if (Number(cleanAmount) <= 0) {
+		if (numericAmount <= 0 || isNaN(numericAmount)) {
 			return setError("Please enter an amount greater than 0!")
+		}
+
+		const decimalParts = amount.split(".")
+		if (decimalParts.length > 1 && decimalParts[1].length > 2) {
+			return setError("Please enter an amount with maximum 2 decimal places!")
 		}
 		//checks if the amount includes only integers to avoid exponential notation e.g 3.9e10
 		if (!INT_REGEX.test(amount)) {
@@ -167,11 +174,17 @@ const Client = ({
 	const handleSubmit2 = async () => {
 		const { amount } = fields
 
-		const cleanAmount = amount.replace(/[^\d]/g, "")
+		const numericAmount = parseFloat(amount)
 
-		if (Number(cleanAmount) <= 0) {
+		if (numericAmount <= 0 || isNaN(numericAmount)) {
 			return setError("Please enter an amount greater than 0!")
 		}
+
+		const decimalParts = amount.split(".")
+		if (decimalParts.length > 1 && decimalParts[1].length > 2) {
+			return setError("Please enter an amount with maximum 2 decimal places!")
+		}
+
 		//checks if the amount includes only integers to avoid exponential notation e.g 3.9e10
 		if (!INT_REGEX.test(amount)) {
 			return setError("Please enter a valid amount!")
@@ -213,6 +226,7 @@ const Client = ({
 					profile.physicalWallets.length === 0)) && (
 				<section>
 					<Start
+						chosenCurrency={selectedCurrency}
 						open={openModal}
 						setOpen={closeModal}
 						setKycProgress={IncreaseKycProgress}
@@ -263,7 +277,14 @@ const Client = ({
 						<div className="grid h-[350px] w-full grid-cols-5 gap-6 md:mb-12">
 							<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 lg:col-span-2">
 								<div>
-									<p className="font-satoshi text-xl font-medium">Instant Buy</p>
+									<p className="font-satoshi text-xl font-medium">
+										Instant Buy{" "}
+										{selectedCurrency === "USDT" ? (
+											<span className="font-semibold">(TRC20)</span>
+										) : (
+											""
+										)}
+									</p>
 									<p className="mb-4 text-xs text-black-400">
 										<span>
 											Instantly buy {selectedCurrency === "BTC" ? "Bitcoin" : "USDT"} into
@@ -279,6 +300,7 @@ const Client = ({
 										)}
 									</p>
 									<CurrencyInput
+										// type="number"
 										disableInput={profile.kycInfo.level === "ONE"}
 										amount={displayAmount}
 										currency={fields.currency}
@@ -360,7 +382,7 @@ const Client = ({
 								) : (
 									<>
 										<Image
-											src={"/usdtimg.svg"}
+											src={"/placeholder1.svg"}
 											width={100}
 											height={100}
 											alt="placeholder"
