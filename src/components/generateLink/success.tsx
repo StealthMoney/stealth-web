@@ -1,6 +1,5 @@
 "use client"
 import { CheckCircle, Copy } from "@phosphor-icons/react"
-import React, { useRef } from "react"
 import { Button } from ".."
 
 interface Props {

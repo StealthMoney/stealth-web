@@ -1,7 +1,6 @@
 "use client"
 import { UpdateIcon } from "@radix-ui/react-icons"
 import { usePathname } from "next/navigation"
-import { useEffect } from "react"
 import { useRefresh } from "@/app/context/refreshProvider"
 
 interface CurrencyToggleProps {

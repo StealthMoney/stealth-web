@@ -1,5 +1,6 @@
-import { useState } from "react"
+"use client"
 
+import { useState } from "react"
 import { ExchangeRateProps, PaymentDetailsProps } from "@/types/price"
 import Processing from "./processing"
 import Success from "./success"

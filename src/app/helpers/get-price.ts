@@ -46,23 +46,39 @@ interface PaymentPayload {
 
 export const getPaymentDetails = async (
 	payload: PaymentPayload
-): Promise<PaymentDetailsProps> => {
-	const session = await getAuthHeaders()
-	if (!session) {
-		throw new Error("No session found!")
+): Promise<
+	(PaymentDetailsProps & { ok: true }) | { ok: false; message: string }
+> => {
+	try {
+		const session = await auth()
+		if (!session) return { ok: false, message: "No session found!" }
+
+		const { accessToken } = session
+		const url = endpoints().payment["get-details"]
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(payload),
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json",
+			},
+			cache: "no-store",
+		})
+		const data = await response.json()
+		if (!response.ok) {
+			return {
+				ok: false,
+				message: data?.message || "Failed to fetch payment details!",
+			}
+		}
+		return { ok: true, ...data }
+	} catch (error) {
+		return {
+			ok: false,
+			message:
+				error instanceof Error ? error.message : "An unexpected error occurred",
+		}
 	}
-	const url = endpoints().payment["get-details"]
-	const response = await fetch(url, {
-		method: "POST",
-		body: JSON.stringify(payload),
-		headers: session,
-		next: { revalidate: 60, tags: ["paid"] },
-	})
-	const data = await response.json()
-	if (!response.ok) {
-		throw new Error(data?.message || "Failed to fetch payment details!")
-	}
-	return data
 }
 
 export const getAllPaymentDetails = async (
