@@ -62,7 +62,6 @@ export const Payment = (props: Props) => {
 						setCopied2(false)
 					}, 1000)
 				)
-
 	}
 
 	const copyAccountNumber = () => {
