@@ -54,7 +54,9 @@ const Button = (props: Props) => {
 	return (
 		<button
 			className={`text-white flex h-[60px] items-center justify-center gap-1 rounded ${
-				props.isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-alt-orange-100 cursor-pointer"
+				props.isDisabled
+					? "cursor-not-allowed bg-gray-400"
+					: "cursor-pointer bg-alt-orange-100"
 			} px-4 font-satoshi ${
 				props.textSize ? props.textSize : "text-sm"
 			} font-medium transition-all duration-200 active:scale-[0.98] ${

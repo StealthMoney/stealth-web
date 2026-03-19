@@ -94,7 +94,8 @@ const DashboardLayoutClient = ({
 					<div className="flex w-full flex-col gap-12">
 						<Link
 							className="flex w-full justify-end md:justify-start"
-							href={"/dashboard"} onClick={toggleMobileNav}>
+							href={"/dashboard"}
+							onClick={toggleMobileNav}>
 							<Image src={logo} alt="" className="w-[100px]" />
 						</Link>
 						<div className="flex w-full flex-col gap-6">
