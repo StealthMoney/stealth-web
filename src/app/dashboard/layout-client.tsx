@@ -89,9 +89,12 @@ const DashboardLayoutClient = ({
 						showMobileNav ? "z-50" : ""
 					}`}>
 					<div className="flex w-full flex-col gap-12">
-						<div className="flex w-full justify-end md:justify-start">
-							<Image src={logo} alt="Logo" className="w-[100px]" />
-						</div>
+						<Link
+							className="flex w-full justify-end md:justify-start"
+							href={"/dashboard"}
+							onClick={toggleMobileNav}>
+							<Image src={logo} alt="" className="w-[100px]" />
+						</Link>
 						<div className="flex w-full flex-col gap-6">
 							{NavList.map((item, index) => (
 								<Link

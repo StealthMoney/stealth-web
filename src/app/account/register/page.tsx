@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRecaptcha } from "@/shared/recaptcha"
 
 import { Button, Dialog, Input, Spinner } from "@/components"
-import { PASSWORD_REGEX } from "@/config/constants"
+import { PASSWORD_REGEX, EMAIL_REGEX } from "@/config/constants"
 
 const Page = () => {
 	const isDev = process.env.NODE_ENV === "development"
@@ -84,6 +84,14 @@ const Page = () => {
 		const trimmedLastName = formFields.lastName.trim()
 		const trimmedmail = formFields.email.trim()
 
+		if (!trimmedmail || trimmedmail === "") {
+			alert("Enter a valid email address!")
+			return
+		} else if (!EMAIL_REGEX.test(trimmedmail)) {
+			alert("Email given is not a valid mail format")
+			return
+		}
+
 		setCaptchaError(null)
 		const isValid = PASSWORD_REGEX.test(formFields.password)
 		if (!isValid) {
@@ -121,6 +129,13 @@ const Page = () => {
 			token: recaptchaToken,
 		})
 	}
+
+	const isFormInvalid =
+		!formFields.email ||
+		formFields.email === "" ||
+		!EMAIL_REGEX.test(formFields.email) ||
+		!PASSWORD_REGEX.test(formFields.password) ||
+		!passwordsMatch
 
 	return (
 		<>
@@ -196,7 +211,6 @@ const Page = () => {
 							name="password"
 							onChange={handleChange}
 							label="Password"
-							message="(Minimum of 8 characters, a symbol and an uppercase letter)"
 							error={
 								passwordWarning && formFields.password !== ""
 									? "Include at least one uppercase letter, one number and one symbol."
@@ -217,7 +231,11 @@ const Page = () => {
 						)}
 					</div>
 					<div className="mt-20 flex w-full flex-col">
-						<Button type="submit" width="w-full" disabled={isPending}>
+						<Button
+							isDisabled={isPending || isFormInvalid}
+							type="submit"
+							width="w-full"
+							disabled={isPending || isFormInvalid}>
 							{isPending ? <Spinner /> : "Create Account"}
 						</Button>
 						<p className="mt-4 flex items-center justify-center text-center">

@@ -45,6 +45,8 @@ const LoginForm = () => {
 		}
 	}
 
+	const isFormInvalid = !formFields.email.trim() || !formFields.password.trim()
+
 	return (
 		<>
 			{error && (
@@ -90,7 +92,11 @@ const LoginForm = () => {
 						</div>
 					</div>
 					<div className="absolute bottom-0 flex w-full flex-col gap-5">
-						<Button type="submit" width="w-full" disabled={loading}>
+						<Button
+							isDisabled={loading || error !== "" || isFormInvalid}
+							type="submit"
+							width="w-full"
+							disabled={loading || error !== "" || isFormInvalid}>
 							{loading ? <Spinner /> : "Log In"}
 						</Button>
 						<p className="flex items-center justify-center text-center">
