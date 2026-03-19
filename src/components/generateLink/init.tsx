@@ -67,7 +67,7 @@ const LinkGenerateInit = (props: Props) => {
 			generatePaymentLink: true,
 		})
 		setLoading(false)
-		if (res instanceof Error) {
+		if (!res.ok) {
 			alert("An error occurred while generating payment link! Please try again")
 			return
 		}
