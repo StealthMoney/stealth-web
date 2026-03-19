@@ -92,9 +92,11 @@ const DashboardLayoutClient = ({
 						!showMobileNav ? "hidden" : "flex"
 					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
 					<div className="flex w-full flex-col gap-12">
-						<div className="flex w-full justify-end md:justify-start">
+						<Link
+							className="flex w-full justify-end md:justify-start"
+							href={"/dashboard"} onClick={toggleMobileNav}>
 							<Image src={logo} alt="" className="w-[100px]" />
-						</div>
+						</Link>
 						<div className="flex w-full flex-col gap-6">
 							{NavList.map((item, index) => (
 								<Link

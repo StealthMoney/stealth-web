@@ -341,6 +341,12 @@ const Client = ({
 									)}
 									<Button
 										type="button"
+										isDisabled={
+											profile.kycInfo.level === "ONE" ||
+											(profile.kycInfo.level === "TWO" &&
+												Number(fields.amount) <
+													handleAssentBuyAmounts(selectedCurrency, profile)?.minAmount)
+										}
 										disabled={
 											profile.kycInfo.level === "ONE" ||
 											(profile.kycInfo.level === "TWO" &&

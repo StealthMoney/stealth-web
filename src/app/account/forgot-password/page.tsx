@@ -1,7 +1,8 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 import Link from "next/link"
+import { EMAIL_REGEX } from "@/config/constants"
 
 import { Button, Dialog, Input, Spinner } from "@/components"
 
@@ -12,9 +13,15 @@ const Page = () => {
 	const [success, setSuccess] = useState(false)
 	const [email, setEmail] = useState("")
 	const [error, setError] = useState("")
+	const [buttonError, setButtonError] = useState("")
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
+		if (email === "" || !EMAIL_REGEX.test(email)) {
+			setButtonError("Invalid Email format given")
+			return
+		}
+
 		try {
 			setLoading(true)
 			const trimmedmail = email.trim()
@@ -38,6 +45,8 @@ const Page = () => {
 			setLoading(false)
 		}
 	}
+
+	const isInputValid = email !== "" && EMAIL_REGEX.test(email)
 
 	return (
 		<>
@@ -72,6 +81,7 @@ const Page = () => {
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							label="Email Address"
+							error={buttonError !== "" ? buttonError : ""}
 						/>
 					</div>
 					<div className="absolute bottom-0 mt-[450px] flex w-full flex-col gap-5 lg:bottom-0">
@@ -82,7 +92,11 @@ const Page = () => {
 								width="w-full bg-black-600">
 								Back to Log In
 							</Button>
-							<Button type="submit" width="w-full" disabled={loading}>
+							<Button
+								isDisabled={loading || !isInputValid}
+								type="submit"
+								width="w-full"
+								disabled={loading || !isInputValid}>
 								{loading ? <Spinner /> : "Send Reset Email"}
 							</Button>
 						</div>

@@ -7,6 +7,7 @@ type Props =
 			as?: "button"
 			width?: string
 			textSize?: string
+			isDisabled?: boolean
 	  })
 	| (LinkProps & {
 			as: "link"
@@ -52,7 +53,9 @@ const Button = (props: Props) => {
 
 	return (
 		<button
-			className={`text-white flex h-[60px] items-center justify-center gap-1 rounded bg-alt-orange-100 px-4 font-satoshi ${
+			className={`text-white flex h-[60px] items-center justify-center gap-1 rounded ${
+				props.isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-alt-orange-100 cursor-pointer"
+			} px-4 font-satoshi ${
 				props.textSize ? props.textSize : "text-sm"
 			} font-medium transition-all duration-200 active:scale-[0.98] ${
 				props.width ? props.width : "w-fit"

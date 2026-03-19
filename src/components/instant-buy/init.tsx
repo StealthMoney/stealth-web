@@ -166,15 +166,25 @@ const Init = (props: Props) => {
 	}, [fields, props.chosenCurrency])
 
 	const isButtonDisabled = useMemo(() => {
-		const { walletAddress, usexpub } = fields
-		if (usexpub) return false
-		if (
-			walletAddress &&
-			!validateWalletAddress(props.chosenCurrency, walletAddress)
-		)
-			return true
+		const { walletAddress, usexpub, amount, assetValue } = fields
+		const cleanAmount = amount.replace(/,/g, "")
+		const numericAmount = parseFloat(cleanAmount)
+
+		const cleanAsset = assetValue.replace(/,/g, "")
+		const numericAsset = parseFloat(cleanAsset)
+
+		if (!amount || isNaN(numericAmount) || numericAmount <= 0) return true
+
+		if (!assetValue || isNaN(numericAsset)) return true
+
+		if (usexpub) {
+			if (props.chosenCurrency === "BTC" && !selectedWalletId) return true
+		} else {
+			if (!walletAddress) return true
+			if (!validateWalletAddress(props.chosenCurrency, walletAddress)) return true
+		}
 		return false
-	}, [fields, props.chosenCurrency])
+	}, [fields, props.chosenCurrency, selectedWalletId])
 
 	// when amount field is being edited
 	useEffect(() => {
@@ -416,6 +426,7 @@ const Init = (props: Props) => {
 
 			<div className="pb-10">
 				<Button
+					isDisabled={isButtonDisabled}
 					type="button"
 					onClick={handleSubmit}
 					disabled={isButtonDisabled}
