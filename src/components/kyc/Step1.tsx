@@ -1,3 +1,4 @@
+"use client"
 import Input from "../shared/input"
 import Button from "../shared/button"
 import Image from "next/image"

@@ -1,14 +1,7 @@
-"use client"
+// "use client"
 
 import { ArrowsDownUp, Copy, WarningCircle } from "@phosphor-icons/react"
-import {
-	Dispatch,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useState,
-	useMemo,
-} from "react"
+import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
 
 import { formatCurrency, getCurrencyValue } from "@/app/helpers/amount"
 import { getPaymentDetails } from "@/app/helpers/get-price"
@@ -61,9 +54,6 @@ const Init = (props: Props) => {
 	const [reversed, setReversed] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState("")
-	// const [displayAmount, setDisplayAmount] = useState("")
-	// const [displayAmount1, setDisplayAmount1] = useState("")
-	// const [buttonDisableld, setButtonDisabled] = useState(false)
 	const { fields, handleChange } = props
 	const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null)
 
@@ -86,12 +76,8 @@ const Init = (props: Props) => {
 		[props.chosenCurrency]
 	)
 
-	console.log(props.chosenCurrency) // user chose currency to purchase
-
 	const handleSubmit = async () => {
 		const { amount, assetValue, walletAddress, usexpub } = fields
-
-		console.log(assetValue, "in sats")
 
 		const cleanAmount = amount.replace(/,/g, "")
 		const numericAmount = parseFloat(cleanAmount)
@@ -139,9 +125,11 @@ const Init = (props: Props) => {
 					  }
 					: { walletAddress: fields.walletAddress }),
 			})
-			if (res instanceof Error) {
-				setError(res.message)
+			if (!res.ok) {
+				const message = res?.message
+				setError(message || "Something went wrong with request")
 				setLoading(false)
+				return
 			}
 			props.setDepositInfo(res.data)
 			props.next()
@@ -370,7 +358,7 @@ const Init = (props: Props) => {
 						Please paste in your wallet address here.{" "}
 						{props.chosenCurrency === "BTC"
 							? "(Avoid reusing the same address for privacy reasons)"
-							: "(Please provide a valid TRC20 wallet address)"}
+							: "(Provide a valid TRC20 wallet address)"}
 					</p>
 				</div>
 
