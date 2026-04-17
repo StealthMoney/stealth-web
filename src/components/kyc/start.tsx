@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import Image from "next/image"
 import { ChevronRightIcon } from "@radix-ui/react-icons"
@@ -20,6 +21,7 @@ interface StartPropsTypes {
 	reverseKycProgress: () => void
 	paymentConfig: UserProps["physicalWallets"]
 	kycInfo: UserProps["kycInfo"]
+	chosenCurrency: "BTC" | "USDT"
 }
 
 export default function Start({
@@ -30,6 +32,7 @@ export default function Start({
 	reverseKycProgress,
 	paymentConfig,
 	kycInfo,
+	chosenCurrency,
 }: StartPropsTypes) {
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true)
 
@@ -123,22 +126,32 @@ gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 					<div className="flex w-full flex-col gap-y-4 md:w-3/4 md:max-w-[80%] md:gap-y-2">
 						{shouldShowIntro && (
 							<h2 className="text-[12px] font-bold lg:text-[24px]">
-								{kycInfo.level === "ONE" && kycProgress === 0
+								{kycInfo.level === "ONE" &&
+								kycProgress === 0 &&
+								chosenCurrency === "BTC"
 									? "Complete your KYC and Set-up your Account"
 									: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
-									  paymentConfig.length === 0
+									  paymentConfig.length === 0 &&
+									  chosenCurrency === "BTC"
 									? "Add your x-pub key"
+									: chosenCurrency === "USDT"
+									? "Order Your Hardware Wallet"
 									: ""}
 							</h2>
 						)}
 
 						{shouldShowIntro && (
 							<p className="text-[15px] text-[#808080] lg:text-[20px]">
-								{kycInfo.level === "ONE" && kycProgress === 0
+								{kycInfo.level === "ONE" &&
+								kycProgress === 0 &&
+								chosenCurrency === "BTC"
 									? "Please kindly verify your identity and set up your profile to complete the registration process and unlock all features in two easy steps."
 									: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
-									  paymentConfig.length === 0
+									  paymentConfig.length === 0 &&
+									  chosenCurrency === "BTC"
 									? "You can now add your x-pub key in the profile page."
+									: chosenCurrency === "USDT"
+									? "You can proceed to the website to get your hardware wallet"
 									: ""}
 							</p>
 						)}
@@ -147,30 +160,50 @@ gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 							<div>
 								<button
 									title={
-										kycInfo.level === "ONE" && kycProgress === 0
+										kycInfo.level === "ONE" &&
+										kycProgress === 0 &&
+										chosenCurrency === "BTC"
 											? "complete KYC"
-											: "Add x-pub key"
+											: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+											  paymentConfig.length === 0 &&
+											  chosenCurrency === "BTC"
+											? "Add x-pub key"
+											: chosenCurrency === "USDT"
+											? "Order wallet"
+											: ""
 									}
 									className="flex items-center justify-center bg-transparent font-semibold text-orange-100"
 									onClick={() => {
-										if (kycInfo.level === "ONE" && kycProgress === 0) {
+										if (
+											kycInfo.level === "ONE" &&
+											kycProgress === 0 &&
+											chosenCurrency === "BTC"
+										) {
 											setKycProgress()
 										} else if (
 											(kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+											chosenCurrency === "BTC" &&
 											paymentConfig.length === 0
 										) {
 											handleProfileNavigate()
+										} else if (chosenCurrency === "USDT") {
+											window.open("https://www.stealth.money/order-wallet", "_blank")
 										} else {
 											null
 										}
 									}}>
 									{shouldShowIntro && (
 										<span className="flex items-center gap-x-2">
-											{kycInfo.level === "ONE" && kycProgress === 0
+											{kycInfo.level === "ONE" &&
+											kycProgress === 0 &&
+											chosenCurrency === "BTC"
 												? "Complete Registration"
 												: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
-												  paymentConfig.length === 0
+												  paymentConfig.length === 0 &&
+												  chosenCurrency === "BTC"
 												? "Add x-pub key"
+												: chosenCurrency === "USDT"
+												? "Proceed"
 												: ""}{" "}
 											<ChevronRightIcon />
 										</span>

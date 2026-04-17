@@ -28,20 +28,15 @@ const DashboardLayoutClient = ({
 		})
 	}
 
-	const [mobileViewPort, setMobileViewPort] = useState(window.innerWidth)
+	// Fix: Initialize with a safe default value (false) and update in useEffect
 	const [isMobileView, setIsMobileView] = useState(false)
 	const [showMobileNav, setShowMobileNav] = useState(false)
 
 	useEffect(() => {
+		// Safe to use window here because we're in useEffect (client-side only)
 		const handleResize = () => {
 			const newViewportWidth = window.innerWidth
-			setMobileViewPort(newViewportWidth)
-
-			if (newViewportWidth > 767) {
-				setIsMobileView(false)
-			} else {
-				setIsMobileView(true)
-			}
+			setIsMobileView(newViewportWidth <= 767)
 		}
 
 		// Initial check
@@ -90,11 +85,16 @@ const DashboardLayoutClient = ({
 				<div
 					className={`fixed left-0 top-0 ${
 						!showMobileNav ? "hidden" : "flex"
-					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
+					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5 ${
+						showMobileNav ? "z-50" : ""
+					}`}>
 					<div className="flex w-full flex-col gap-12">
-						<div className="flex w-full justify-end md:justify-start">
+						<Link
+							className="flex w-full justify-end md:justify-start"
+							href={"/dashboard"}
+							onClick={toggleMobileNav}>
 							<Image src={logo} alt="" className="w-[100px]" />
-						</div>
+						</Link>
 						<div className="flex w-full flex-col gap-6">
 							{NavList.map((item, index) => (
 								<Link
@@ -117,7 +117,8 @@ const DashboardLayoutClient = ({
 						<Power size={24} /> Log Out
 					</button>
 				</div>
-				<div className="flex h-full w-4/5 flex-1 flex-col">
+
+				<div className="flex h-full w-full flex-1 flex-col md:w-4/5">
 					<div className="flex w-full items-center justify-end border-b border-black-500 p-6 md:justify-between">
 						<div className="flex w-full items-center justify-end gap-5">
 							<button title="notification" className="rounded-full border p-2">
@@ -128,7 +129,7 @@ const DashboardLayoutClient = ({
 								title="logout"
 								type="button"
 								onClick={() => setIsOpen(true)}
-								className="flex items-center gap-2 rounded-lg p-3 font-satoshi font-medium text-red-800 transition-all duration-300 hover:bg-red-800 hover:text-white-100">
+								className="hidden items-center gap-2 rounded-lg p-3 font-satoshi font-medium text-red-800 transition-all duration-300 hover:bg-red-800 hover:text-white-100 md:flex">
 								<Power size={24} />
 							</button>
 						</div>

@@ -128,6 +128,7 @@ type CurrencyInputProps = {
 	note?: string
 	error?: string
 	label?: string
+	type?: string
 }
 
 export const CurrencyInput = (props: CurrencyInputProps) => {
@@ -139,7 +140,7 @@ export const CurrencyInput = (props: CurrencyInputProps) => {
 			<div className="flex h-[60px] w-full items-center rounded border bg-black-100 pr-2 transition-all duration-300 focus-within:border-alt-orange-100">
 				<input
 					title={props.selectName}
-					type="text"
+					type={props.type || "text"}
 					name={props.inputName}
 					value={props.amount}
 					onChange={props.handleAmountChange}

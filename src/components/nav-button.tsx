@@ -2,6 +2,7 @@
 import { CaretDown } from "@phosphor-icons/react"
 import React, { useRef, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 
 import { UserProps } from "@/types/profile"
 
@@ -24,7 +25,7 @@ const NavButton = (props: Props) => {
 		: props.user.email.split("@")[0]
 
 	return (
-		<div className="flex items-center gap-2">
+		<Link className="flex items-center gap-2" href={"/dashboard/profile"}>
 			<div className="mr-1 aspect-square w-8 rounded-full">
 				{props.user.imageUrl ? (
 					<div className="relative aspect-square w-full rounded-full">
@@ -56,7 +57,7 @@ const NavButton = (props: Props) => {
 					ref={ref}
 					className="absolute bottom-0 left-0 w-[200px] bg-black-700 p-2"></div>
 			)}
-		</div>
+		</Link>
 	)
 }
 

@@ -5,3 +5,4 @@ export const PASSWORD_REGEX =
 // Regex to validate an integer
 export const INT_REGEX = /^\d*\.?\d*$/
 export const TXN_CHARGE = 230 // in naira
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

@@ -1,3 +1,4 @@
+"use client"
 export const REFRESH_EVENT = "app:refresh"
 
 export const triggerRefresh = () => {

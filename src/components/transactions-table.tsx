@@ -33,8 +33,6 @@ const TransactionsTable = ({
 	const [currency, setCurrency] = useState("NGN")
 	const [showAll, setShowAll] = useState(false)
 
-	console.log(transactions, "is tra")
-
 	const displayedTransactions = showAll ? transactions : transactions.slice(0, 4)
 
 	return (
@@ -195,7 +193,7 @@ export const TableBody = ({
 									<div className="w-[20%] text-sm text-gray-300">
 										{chosenCurrency === "BTC"
 											? (Number(transaction?.assetAmount) / SATS_PER_BTC || 0).toFixed(8)
-											: Number(transaction.assetAmount).toFixed(8)}{" "}
+											: Number(transaction.assetAmount).toFixed(2)}{" "}
 									</div>
 									<div className="w-[25%] text-sm text-gray-300">
 										{formatBtcAddress(transaction.walletAddress ?? "")}
@@ -229,6 +227,7 @@ export const MobileTableBody = ({
 	chosenCurrency: "USDT" | "BTC"
 }) => {
 	const [selected, setSelected] = useState<PaymentDetail | null>(null)
+	console.log(transactions, "is transactions")
 
 	const formatAmount = (amount: number, curr: string) => {
 		if (curr === "USD") {
@@ -289,7 +288,7 @@ export const MobileTableBody = ({
 										<span className="text-white">
 											{chosenCurrency === "BTC"
 												? (Number(transaction?.assetAmount) / SATS_PER_BTC || 0).toFixed(8)
-												: Number(transaction.assetAmount).toFixed(8)}{" "}
+												: Number(transaction.assetAmount).toFixed(2)}{" "}
 										</span>
 									</div>
 									<div className="flex justify-between">
