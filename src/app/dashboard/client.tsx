@@ -51,6 +51,7 @@ const Client = ({
 
 	const [fields, setFields] = useState({ amount: "", currency: "NGN" })
 	const [openModal, setOpenModal] = useState(false)
+	const [openMessage, setOpenMessage] = useState(false)
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
@@ -168,7 +169,8 @@ const Client = ({
 		if (!INT_REGEX.test(amount)) {
 			return setError("Please enter a valid amount!")
 		}
-		setOpenModal(true)
+		// setOpenModal(true) bring back later
+		setOpenMessage(true)
 	}
 
 	const handleSubmit2 = async () => {
@@ -196,6 +198,10 @@ const Client = ({
 		setOpenModal(false)
 		setOpenGenerateModal(false)
 		setFields({ ...fields, amount: "" })
+	}
+
+	const closeMessage = () => {
+		setOpenMessage(false)
 	}
 
 	useEffect(() => {
@@ -249,6 +255,11 @@ const Client = ({
 							exchangeRate={exchangeRateData}
 							dismiss={closeModal}
 						/>
+					</Dialog>
+					<Dialog isOpen={openMessage} onDismiss={closeMessage}>
+						<p className="text-2xl">
+							Kindly contact support for your purchase transactions
+						</p>
 					</Dialog>
 
 					<Dialog isOpen={openGenerateModal} onDismiss={closeModal}>
